@@ -1,12 +1,16 @@
 <template>
     <div class="sideBar">
         <h4 class="item">스마트목록리스트</h4>
+        <list-items-box></list-items-box>
         <h4 class="item">할일목록리스트</h4>
+        <list-items-box></list-items-box>
     </div>
   </template>
   
   <script>
+import ListItemsBox from './task_state/ListItemsBox.vue';
   export default {
+  components: { ListItemsBox },
     name: 'sideBar',
     data() {
       return {

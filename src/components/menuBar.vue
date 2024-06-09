@@ -1,6 +1,6 @@
 <template>
     <div class="menuBar">
-      <router-link to="/" class="item">
+      <router-link to="/AcountInfo" class="item">
         <i class="fa-solid fa-cat"></i>
       </router-link>
       <router-link to="/ReadTaskPage" class="item">
@@ -9,7 +9,7 @@
       <router-link to="/MonthlyBoard" class="item">
         <i class="fa-solid fa-calendar-days"></i>
       </router-link>
-      <router-link to="/" class="item">
+      <router-link to="/Search" class="item">
         <i class="fa-solid fa-gear"></i>
       </router-link>
     </div>

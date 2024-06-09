@@ -1,7 +1,6 @@
 <template>
     <div class="ListItemsBox">
-        <h4>ListItemsBox</h4>
-        {icon}{list-title}{list-color}{item-count}
+        {{icon}}{{list-title}}{{list-color}}{{item-count}}
     </div>
   </template>
   
