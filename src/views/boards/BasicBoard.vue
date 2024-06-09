@@ -1,5 +1,7 @@
 <template>
-  
+    <div class="BasicBoard">
+        <h4>BasicBoard</h4>
+    </div>
 </template>
 
 <script>
