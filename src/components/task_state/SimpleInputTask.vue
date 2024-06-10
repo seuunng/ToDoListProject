@@ -1,8 +1,11 @@
 <template>
     <div class="simple-input-task">
       <div class="input-container">
-        <input type="text" class="custom-input" placeholder="할일을 추가하세요!" v-model="newTask"/>
-        <i class="fa-solid fa-plus input-icon" @click="createTask"></i>
+        <input type="text" 
+          class="custom-input" 
+          :placeholder="`${listTitle}에 할일을 추가하세요!`"
+          v-model="newTask"
+          @keyup.enter="createTask"/>
       </div>
     </div>
   </template>
@@ -30,11 +33,12 @@
   .simple-input-task {
     display: flex;
     align-items: center;
+    width: 100%;
+    box-sizing: border-box; /* 테두리와 패딩을 포함한 너비 계산 */
   }
   .input-container {
     position: relative;
-    width: 90%;
-    overflow: hidden;
+    width: 100%;
   }
   .custom-input {
     width: 100%;
@@ -43,17 +47,12 @@
     padding: 8px; /* 여백 추가 */
     border-radius: 4px; /* 둥근 모서리 */
     font-size: 14px; /* 글꼴 크기 */
+    box-sizing: border-box;
   }
   
   .custom-input:focus {
-    outline: none; /* 포커스 시 기본 테두리 없애기 */
+    border: 1px; 
+    background-color: white;
   }
-  .input-icon {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #888; /* 아이콘 색상 */
-  }
+ 
   </style>
