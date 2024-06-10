@@ -21,7 +21,6 @@
             <div  class="d-flex align-items-center line">
               <span class="list-title">{{ listtiile }}</span>
               <span class="setting-icon"><i class="fa-solid fa-ellipsis"> </i></span> 
-   
           </div>
         </div>
       </div>

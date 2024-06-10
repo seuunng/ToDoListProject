@@ -44,7 +44,6 @@ import ReadTaskModal from '../modal/ReadTaskModal.vue';
   },
   setup() {
     const readTaskModal = ref(null);
-    const isModalVisible = ref(false);
     
     const readMemo = () => {
       if (readTaskModal.value && readTaskModal.value.showModal) {
