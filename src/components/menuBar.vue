@@ -3,13 +3,13 @@
       <router-link to="/AcountInfo" class="item">
         <i class="fa-solid fa-cat"></i>
       </router-link>
-      <router-link to="/ReadTaskPage" class="item">
+      <router-link to="/BasicBoard" class="item">
         <i class="fa-regular fa-square-check"></i>
       </router-link>
       <router-link to="/MonthlyBoard" class="item">
         <i class="fa-solid fa-calendar-days"></i>
       </router-link>
-      <router-link to="/Search" class="item">
+      <router-link to="/Setting" class="item">
         <i class="fa-solid fa-gear"></i>
       </router-link>
     </div>

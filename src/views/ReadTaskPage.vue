@@ -1,24 +1,12 @@
 <template>
     <div class="readTaskPage">
-        <h4 class="list-title">{{list-title}}</h4>
-        
-        <table class="task-table">
-          <thead>
-            <tr>
-              <td>
-                <SimpleInputTask @task-created="addTask"></SimpleInputTask>
-              </td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="task in tasks" :key="task.id">
-              <td  class="task-cell">
-                <TaskBox :task="task.text" :date="formatDate(task.date)"></TaskBox>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <div><input type="checkbox"> </div>
+      <i class="fa-regular fa-calendar"></i>
+      {{ date }}
+      <i class="fa-regular fa-flag"></i>
+      <h4 class="">{{task-title}}</h4>
+      {{ des }}
+    </div>
 </template>
 
 <script>
@@ -53,8 +41,8 @@ export default {
 </script>
 
 <style>
-.readTaskPage{
-    
+.readTaskPage {
+    margin-top: 20px;
 }
 .list-title{
 }

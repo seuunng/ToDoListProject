@@ -1,37 +1,60 @@
 <template>
-  <div class="TaskBox">
-    <div class="left-section">
-      <completed-task-check-box></completed-task-check-box>
-      <span class="task">{{ task }}</span>
+  <div>
+    <div class="TaskBox" @click="readMemo">
+      <div class="left-section">
+        <completed-task-check-box></completed-task-check-box>
+        <span class="task">{{ task }}</span>
+      </div>
+      <div class="right-section">
+        <span class="repeat"><i class="fa-solid fa-repeat"></i></span>
+        <span class="alarm"><i class="fa-solid fa-bell"></i></span>
+        <span class="date">{{ date }} </span> 
+        <span class="setting"><i class="fa-solid fa-ellipsis"> </i></span> 
+      </div>
     </div>
-    <div class="right-section">
-      <span class="repeat"><i class="fa-solid fa-repeat"></i></span>
-      <span class="alarm"><i class="fa-solid fa-bell"></i></span>
-      <span class="date">{{ date }} </span> 
-      <span class="setting"><i class="fa-solid fa-ellipsis"> </i></span> 
-      
-    </div>
+    <ReadTaskModal
+      ref="readTaskModal"
+      :date="date"
+      :tasktitle="task"
+      :description="description"
+      :listtitle="listtitle"
+    />
   </div>
 </template>
   
   <script>
+import { ref } from 'vue';
 import CompletedTaskCheckBox from './CompletedTaskCheckBox.vue';
+import ReadTaskModal from '../modal/ReadTaskModal.vue';
+
   export default {
-  components: { CompletedTaskCheckBox },
+  components: { CompletedTaskCheckBox, ReadTaskModal,},
     name: 'TaskBox',
     props: {
-      task: {
-        type: String,
-        required: true
-      },
-      repeat: String,
-      alarm: String,
-      date: {
-        type: String,
-        required: true
-      },
+    task: {
+      type: String,
+      required: true
     },
-  };
+    repeat: String,
+    alarm: String,
+    date: {
+      type: String,
+      required: true
+    },
+  },
+  setup() {
+    const ReadTaskModal = ref(null);
+    
+    const readMemo = () => {
+      if (ReadTaskModal.value && ReadTaskModal.value.showModal) {
+        ReadTaskModal.value.showModal();
+      } else {
+        console.error("readTaskModal is not available yet");
+      }
+    };
+    return { ReadTaskModal,readMemo };
+  },
+};
   </script>
   
   <style scoped>

@@ -44,6 +44,6 @@
     z-index: 2;
   }
   #app {
-    padding-left: 60px; /* Adjusted to avoid overlapping with the menu bar */
+    padding-left: 50px; /* Adjusted to avoid overlapping with the menu bar */
   }
   </style>

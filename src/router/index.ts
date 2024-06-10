@@ -15,6 +15,7 @@ import Search from '@/components/modal/Search.vue';
 import SignUp from '@/components/modal/SignUp.vue';
 import UpdatePW from '@/components/modal/UpdatePW.vue';
 import UpdateSimplePW from '@/components/modal/UpdateSimplePW.vue';
+import Setting from '@/components/modal/Setting.vue';
 
 
 const routes =[
@@ -34,6 +35,7 @@ const routes =[
     {path: '/SignUp', name: 'SignUp', component: SignUp},
     {path: '/UpdatePW', name: 'UpdatePW', component: UpdatePW},
     {path: '/UpdateSimplePW', name: 'UpdateSimplePW', component: UpdateSimplePW},
+    {path: '/Setting', name: 'Setting', component: Setting},
 ]
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
