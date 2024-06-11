@@ -50,7 +50,6 @@ export default {
 
 <style>
 .MonthlyBoard{
-    
 }
 .carlendar-table{
     width: 80vw;
@@ -66,7 +65,7 @@ export default {
     flex-direction: column;
     height: 100%;
     box-sizing: border-box;
-    padding: 10px;
+    padding: 3px;
     height: 120px;
 }
 .date-cell {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="menuBar">
-      <div @click="showAcountInfo" class="item">
+      <div class="item" @click="showAcountInfo" >
         <i class="fa-solid fa-cat"></i>
       </div>
       <router-link to="/BasicBoard" class="item">
@@ -10,45 +10,66 @@
       <router-link to="/MonthlyBoard" class="item">
         <i class="fa-solid fa-calendar-days"></i>
       </router-link>
-      <router-link to="/Setting" class="item">
+      <div class="item" @click="showSettingModal" >
         <i class="fa-solid fa-gear"></i>
-      </router-link>
+      </div>
     </div>
     <AcountInfo
-      ref="acountInfo"
+      ref="acountInfoModal"
       :id="id"
       :nickname="nickname"
       :created_at="created_at"
+    />
+    <Setting
+      ref="settingModal"
     />
   </div>
 </template>
   
   <script>
-import { ref } from "vue";
-import AcountInfo from "./modal/AcountInfo.vue";
-export default {
-  name: "menuBar",
-  props: {
-    id: String,
-    nickname: String,
-    created_at: String,
-  },
-  components: {
-    AcountInfo,
-  },
-  setup() {
-    const acountInfo = ref(null);
+    import { ref } from 'vue';
+    import AcountInfo from './modal/AcountInfo.vue';
+    import Setting from './modal/Setting.vue';
 
-    const showAcountInfo = () => {
-      if (acountInfo.value && acountInfo.value.showModal) {
-        acountInfo.value.showModal();
-      } else {
-        console.error("acountInfo is not available yet");
-      }
+    export default {
+      components: { AcountInfo, Setting },
+      name: "menuBar",
+      props: {
+        id: {
+          type: String,
+          required: true,
+        },
+        nickname: String,
+        created_at: String,
+      },
+      setup() {
+        const acountInfoModal = ref(null);
+        const settingModal = ref(null);
+
+      
+        const showAcountInfo = () => {
+          console.log("showAcountInfo click!!")
+          console.log("acountInfoModal.value :", acountInfoModal.value)
+          console.log("acountInfoModal.value.showModal:", acountInfoModal.value ? acountInfoModal.value.showModal : null)
+          if (acountInfoModal.value && acountInfoModal.value.showModal) {
+            acountInfoModal.value.showModal();
+          } else {
+            console.error("acountInfoModal is not available yet");
+          }
+        };
+        const showSettingModal = () => {
+          console.log("showSettingModal click!!")
+          console.log("settingModal.value :", settingModal.value)
+          console.log("settingModal.value.showModal:", settingModal.value ? settingModal.value.showModal : null)
+          if (settingModal.value && settingModal.value.showModal) {
+            settingModal.value.showModal();
+          } else {
+            console.error("settingModal is not available yet");
+          }
+        };
+        return { acountInfoModal, settingModal, showAcountInfo, showSettingModal };
+      },
     };
-    return { acountInfo, showAcountInfo };
-  },
-};
 </script>
   
 <style scoped>
@@ -69,5 +90,6 @@ export default {
   color: white;
   padding-top: 15px;
   padding-bottom: 15px;
+  cursor: pointer;
 }
 </style>

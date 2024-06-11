@@ -1,5 +1,11 @@
 <template>
-    <div class="modal fade ReadTaskModal" id="readTaskModal" tabindex="-1" aria-labelledby="readTaskModalLabel" aria-hidden="true" ref="readTaskModal">
+    <div 
+      class="modal fade ReadTaskModal" 
+      id="readTaskModal" 
+      tabindex="-1" 
+      aria-labelledby="readTaskModalLabel" 
+      aria-hidden="true" 
+      ref="readTaskModal">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
@@ -35,11 +41,6 @@ import CompletedTaskCheckBox from '../task_state/CompletedTaskCheckBox.vue';
 export default {
   components: { CompletedTaskCheckBox },
   name: "ReadTaskModal",
-  data() {
-    return {
-      listtiile: "2024년 해야할 일"
-    };
-  },
   props: {
     date: String,
     tasktitle: String,

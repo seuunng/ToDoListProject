@@ -26,7 +26,6 @@
     name: 'TaskBoxForCal',
     data() {
       return {
-        task: "코딩하기",
       };
     },
     props: {
@@ -43,7 +42,6 @@
   },
   setup() {
     const readTaskModal = ref(null);
-    const isModalVisible = ref(false);
     
     const readMemo = () => {
       if (readTaskModal.value && readTaskModal.value.showModal) {

@@ -5,7 +5,10 @@ import router from './router';
 import 'normalize.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import * as bootstrap from 'bootstrap'; 
 
+window.bootstrap = bootstrap;
 createApp(App)
     .use(router)
-    .mount('#app')
+    .mount('#app');
+

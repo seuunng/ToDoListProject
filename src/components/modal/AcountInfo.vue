@@ -1,11 +1,11 @@
 <template>
   <div
-    class="modal fade ReadTaskModal"
-    id="readTaskModal"
+    class="modal fade acountInfo"
+    id="acountInfoModal"
     tabindex="-1"
-    aria-labelledby="readTaskModalLabel"
+    aria-labelledby="acountInfoLabel"
     aria-hidden="true"
-    ref="readTaskModal"
+    ref="acountInfoModal"
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -19,7 +19,7 @@
           ></button>
         </div>
         <div class="modal-body">
-          <div class="AcountInfo container">
+          <div class="acountInfo container">
             <div>
               <div class="d-flex align-items-center line">
                 <h5>이메일</h5>
@@ -43,8 +43,9 @@
               </div>
             </div>
             <hr />
-            <div class="fourth-container d-flex align-items-center line">
+            <div class="footer d-flex align-items-center line">
               <span><h5>회원가입</h5></span>
+            <hr />
               <span><h5>로그인</h5> </span>
               <span><h5>로그아웃</h5> </span>
               <span><h5>회원탈퇴</h5></span>
@@ -58,23 +59,24 @@
   
   <script>
 import { ref, onMounted } from "vue";
-import 'bootstrap/dist/css/bootstrap.css';
-import * as bootstrap from 'bootstrap';
-import btn from "../button/basicbutton.vue";
-import switchbuton from "../button/switchbuton.vue";
+import btn from '../button/basicbutton.vue';
+import switchbuton from '../button/switchbuton.vue';
+import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.js';
 
 export default {
   components: { switchbuton, btn },
   name: "AcountInfo",
+  data() {
+      return {
+        id: "mnbxox@naver.com",
+        nickname: "betty",
+        created_at: "2024-06-08",
+      };
+    },
   props: {
     id: String,
     nickname: String,
     created_at: String,
-  },
-  methods: {
-    toggleAllSwitches() {
-      this.allSwitches = !this.allSwitches;
-    },
   },
   setup() {
     const acountInfoModal = ref(null);
@@ -83,6 +85,7 @@ export default {
       const modal = new bootstrap.Modal(acountInfoModal.value);
       modal.show();
     };
+
     onMounted(() => {
       if (acountInfoModal.value) {
         acountInfoModal.value.showModal = showModal;

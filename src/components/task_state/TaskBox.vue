@@ -28,7 +28,7 @@ import CompletedTaskCheckBox from './CompletedTaskCheckBox.vue';
 import ReadTaskModal from '../modal/ReadTaskModal.vue';
 
   export default {
-  components: { CompletedTaskCheckBox, ReadTaskModal,},
+    components: { CompletedTaskCheckBox, ReadTaskModal,},
     name: 'TaskBox',
     props: {
     task: {
@@ -43,6 +43,11 @@ import ReadTaskModal from '../modal/ReadTaskModal.vue';
     },
   },
   setup() {
+    const date = ref("2023.01.01.월");
+    const task = ref("Task Title");
+    const description = ref("Task Description");
+    const listtitle = ref("2024년 해야할 일");
+    
     const readTaskModal = ref(null);
     
     const readMemo = () => {
@@ -52,7 +57,14 @@ import ReadTaskModal from '../modal/ReadTaskModal.vue';
         console.error('readTaskModal is not available yet');
       }
     };
-    return { readTaskModal, readMemo };
+    return { 
+      readTaskModal, 
+      readMemo, 
+      date,
+      task,
+      description,
+      listtitle,
+    };
   },
 };
   </script>

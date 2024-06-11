@@ -52,7 +52,7 @@ export default {
 </script>
 
 <style>
-.readTaskPage{
+.BasicBoard {
     
 }
 .list-title{
