@@ -28,7 +28,7 @@ import CompletedTaskCheckBox from './CompletedTaskCheckBox.vue';
 import ReadTaskModal from '../modal/ReadTaskModal.vue';
 
   export default {
-  components: { CompletedTaskCheckBox, ReadTaskModal,},
+    components: { CompletedTaskCheckBox, ReadTaskModal,},
     name: 'TaskBox',
     props: {
     task: {
@@ -43,16 +43,28 @@ import ReadTaskModal from '../modal/ReadTaskModal.vue';
     },
   },
   setup() {
-    const ReadTaskModal = ref(null);
+    const date = ref("2023.01.01.월");
+    const task = ref("Task Title");
+    const description = ref("Task Description");
+    const listtitle = ref("2024년 해야할 일");
+    
+    const readTaskModal = ref(null);
     
     const readMemo = () => {
-      if (ReadTaskModal.value && ReadTaskModal.value.showModal) {
-        ReadTaskModal.value.showModal();
+      if (readTaskModal.value && readTaskModal.value.showModal) {
+        readTaskModal.value.showModal();
       } else {
-        console.error("readTaskModal is not available yet");
+        console.error('readTaskModal is not available yet');
       }
     };
-    return { ReadTaskModal,readMemo };
+    return { 
+      readTaskModal, 
+      readMemo, 
+      date,
+      task,
+      description,
+      listtitle,
+    };
   },
 };
   </script>
@@ -70,7 +82,6 @@ import ReadTaskModal from '../modal/ReadTaskModal.vue';
     flex-grow: 1; 
   }
   .task {
-    margin-left: 8px; /* 체크박스와 텍스트 사이에 간격 추가 */
     flex-grow: 1; /* 할 일이 가능한 공간을 차지하도록 설정 */
     min-width: 50px; /* 최소 너비 설정 */
     max-width: 100%; /* 최대 너비 설정 */
@@ -82,7 +93,9 @@ import ReadTaskModal from '../modal/ReadTaskModal.vue';
     display: flex;
     align-items: center; /* 수직 정렬 */
   }
+  
   .right-section > span {
-    margin-left: 8px; /* 옵션 사이에 간격 추가 */
+    margin-left: 8px; /*옵션 사이에 간격 추가 */
   }
   </style>
+  

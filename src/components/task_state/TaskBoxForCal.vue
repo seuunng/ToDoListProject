@@ -1,20 +1,31 @@
 <template>
+  <div>
     <div class="TaskBoxForCal">
       <div class="color-box" @click="readMemo">
         <span class="repeat"><i class="fa-solid fa-repeat"></i></span>
         <span class="task">{{ task }}</span>
       </div>
     </div>
+    <ReadTaskModal
+      ref="readTaskModal"
+      :date="date"
+      :tasktitle="task"
+      :description="description"
+      :listtitle="listtitle"
+    />
+    </div>
   </template>
   
   <script>
-  import { useRouter } from 'vue-router';
-
+  import { ref } from 'vue';
+  import CompletedTaskCheckBox from './CompletedTaskCheckBox.vue';
+  import ReadTaskModal from '../modal/ReadTaskModal.vue';
+  
   export default {
+    components: { CompletedTaskCheckBox, ReadTaskModal,},
     name: 'TaskBoxForCal',
     data() {
       return {
-        task: "코딩하기",
       };
     },
     props: {
@@ -30,12 +41,16 @@
     },
   },
   setup() {
-    const router = useRouter();
+    const readTaskModal = ref(null);
     
     const readMemo = () => {
-      router.push({ name: 'ReadTaskModal' });
+      if (readTaskModal.value && readTaskModal.value.showModal) {
+        readTaskModal.value.showModal();
+      } else {
+        console.error('readTaskModal is not available yet');
+      }
     };
-    return { readMemo };
+    return { readTaskModal, readMemo };
   },
   };
   </script>
