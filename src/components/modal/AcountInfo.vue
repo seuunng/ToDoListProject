@@ -66,13 +66,7 @@ import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.js';
 export default {
   components: { switchbuton, btn },
   name: "AcountInfo",
-  data() {
-      return {
-        id: "mnbxox@naver.com",
-        nickname: "betty",
-        created_at: "2024-06-08",
-      };
-    },
+ 
   props: {
     id: String,
     nickname: String,

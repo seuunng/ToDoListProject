@@ -8,10 +8,10 @@
     </div>
     <ReadTaskModal
       ref="readTaskModal"
-      :date="date"
-      :tasktitle="task"
-      :description="description"
-      :listtitle="listtitle"
+      :read_date="read_date"
+      :read_tasktitle="read_task"
+      :read_description="read_description"
+      :read_listtitle="read_listtitle"
     />
     </div>
   </template>
@@ -26,19 +26,20 @@
     name: 'TaskBoxForCal',
     data() {
       return {
+        //ReadTaskModal로 넘기는 데이터
+        read_date: '2024-06-14',
+        read_task: 'Buy groceries',
+        read_description: 'description',
+        read_listtitle: '할일목록',
       };
     },
     props: {
-    task: {
-      type: String,
-      required: true
-    },
-    repeat: String,
-    alarm: String,
-    date: {
-      type: String,
-      required: true
-    },
+    //달력에서 받은 데이터
+    showdate: String,
+    tasktitle: String,
+    description: String,
+    listtitle: String,
+    task: String,
   },
   setup() {
     const readTaskModal = ref(null);
