@@ -6,9 +6,9 @@
           <list-items-box :value="''" />
         </div>
       </div>
-      <hr/>
+      <hr />
       <div class="listCont">
-        <div class="d-flex align-items-center title">
+        <div class="d-flex align-items-center title" @click="showCreateList">
           <h6 class="item">Lists</h6>
           <i class="fa-solid fa-plus"></i>
         </div>
@@ -17,14 +17,40 @@
         </div>
       </div>
     </div>
+    <create-list 
+      ref="showCreateListModal"
+      :icon="'&'"
+      :list="'할일목록'"
+      :count="'20'"
+      :color="'red'" />
   </div>
 </template>
   
 <script>
+import { ref } from "vue";
+import CreateList from "./modal/CreateList.vue";
 import ListItemsBox from "./task_state/ListItemsBox.vue";
+
 export default {
-  components: { ListItemsBox },
+  components: { ListItemsBox, CreateList },
   name: "sideBar",
+  data() {
+    return {
+    };
+  },
+  setup() {
+    const showCreateListModal = ref(null);
+
+    const showCreateList = () => {
+      console.log("showCreateList click!!");
+      if (showCreateListModal.value && showCreateListModal.value.showModal) {
+        showCreateListModal.value.showModal();
+      } else {
+        console.error("showCreateList is not available yet");
+      }
+    };
+    return { showCreateList, showCreateListModal};
+  },
 };
 </script>
   

@@ -51,7 +51,7 @@
            if (acountInfoModal.value && acountInfoModal.value.showModal) {
             acountInfoModal.value.showModal();
           } else {
-            console.error("acountInfoModal is not available yet");
+            console.error("showAcountInfo is not available yet");
           }
         };
         const showSettingModal = () => {
@@ -59,7 +59,7 @@
             if (settingModal.value && settingModal.value.showModal) {
             settingModal.value.showModal();
           } else {
-            console.error("settingModal is not available yet");
+            console.error("showSettingModal is not available yet");
           }
         };
         return { acountInfoModal, settingModal, showAcountInfo, showSettingModal };

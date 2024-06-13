@@ -9,8 +9,8 @@
   
   <script>
   import { ref, onMounted } from 'vue';
-  import EmojiButton from '@joeattardi/emoji-button';
-  
+  import { EmojiButton } from '@joeattardi/emoji-button';
+
   export default {
     name: 'EmojiPicker',
     setup() {
@@ -18,7 +18,7 @@
       let picker;
   
       onMounted(() => {
-        picker = new window.EmojiButton();
+        picker = new EmojiButton();
   
         picker.on('emoji', emoji => {
           emojiText.value += emoji;
