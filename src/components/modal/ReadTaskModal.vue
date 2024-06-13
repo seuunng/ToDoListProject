@@ -12,7 +12,7 @@
             <div class="d-flex align-items-center line">
                 <completed-task-check-box></completed-task-check-box>
                 <span class="date-icon"><i class="fa-regular fa-calendar"></i> </span>
-                <span class="date"> {{ date }} </span>
+                <span class="date"> {{ showdate }} </span>
             </div>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
@@ -25,7 +25,7 @@
           </div>
           <hr/>
             <div  class="d-flex align-items-center line">
-              <span class="list-title">{{ listtiile }}</span>
+              <span class="list-title">{{ listtitle }}</span>
               <span class="setting-icon"><i class="fa-solid fa-ellipsis"> </i></span> 
           </div>
         </div>
@@ -42,7 +42,7 @@ export default {
   components: { CompletedTaskCheckBox },
   name: "ReadTaskModal",
   props: {
-    date: String,
+    showdate: String,
     tasktitle: String,
     description: String,
     listtitle: String,

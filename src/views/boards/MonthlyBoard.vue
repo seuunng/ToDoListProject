@@ -16,11 +16,16 @@
                 </thead>
                 <tbody>
                     <tr v-for="week in 5" :key="week">
-                      <td v-for="day in 7" :key="day">
+                      <td v-for="day in 7" :key="day" @click="createMemo(getDate(week, day))">
                         <div class="day-cell">
-                          <div class="date-cell">{{ date }}</div>
-                          <div class="task-cell">
-                            <TaskBoxForCal :task="'Task ' + day" />
+                          <div class="date-cell">{{ getDate(week, day) }}</div>
+                          <div class="task-cell" >
+                            <TaskBoxForCal 
+                              :showdate="getDate(week, day).toString()"
+                              :task="'Task ' + day"
+                              :description="'Description for task ' + day"
+                              :listtitle="'List title for task ' + day"
+                            />
                           </div>
                         </div>
                       </td>
@@ -28,23 +33,44 @@
                   </tbody>
             </table>
         </div>
+      <CreateTask
+        ref="createTaskModal"
+        :date="selectedDate"
+      />
     </div>
 </template>
 
 <script>
+import { ref } from 'vue';
 import TaskBoxForCal from '@/components/task_state/TaskBoxForCal.vue';
+import CreateTask from '@/components/modal/CreateTask.vue';
+
 export default {
-  components: { TaskBoxForCal },
+  components: { TaskBoxForCal, CreateTask },
     name: 'MonthlyBoard',
-    data() {
-        return {
-        date: 1, // 예시를 위해 임시로 설정한 날짜
-        Task: '커밋하기'
-        };
-    },
-    methods: {
-      
-    }
+    
+    setup() {
+    const createTaskModal = ref(null);
+    const selectedDate = ref('');
+
+    const getDate = (week, day) => {
+      const current = new Date();
+      current.setDate(current.getDate() - current.getDay() + day + (week - 1) * 7);
+      return current.getDate();
+    };
+    
+    const createMemo = (date) => {
+      console.log("createTaskModal click!!")
+      selectedDate.value = date.toString(); // 클릭된 날짜를 설정
+      if (createTaskModal.value && createTaskModal.value.showModal) {
+        createTaskModal.value.showModal();
+      } else {
+        console.error('createTaskModal is not available yet');
+      }
+    };
+
+    return { createTaskModal, selectedDate, createMemo, getDate };
+  },  
 }
 </script>
 

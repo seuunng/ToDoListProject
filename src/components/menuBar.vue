@@ -34,14 +34,13 @@
     export default {
       components: { AcountInfo, Setting },
       name: "menuBar",
-      props: {
-        id: {
-          type: String,
-          required: true,
-        },
-        nickname: String,
-        created_at: String,
-      },
+      data() {
+      return {
+        id: "mnbxox@naver.com",
+        nickname: "betty",
+        created_at: "2024-06-08",
+      };
+       },
       setup() {
         const acountInfoModal = ref(null);
         const settingModal = ref(null);
@@ -49,9 +48,7 @@
       
         const showAcountInfo = () => {
           console.log("showAcountInfo click!!")
-          console.log("acountInfoModal.value :", acountInfoModal.value)
-          console.log("acountInfoModal.value.showModal:", acountInfoModal.value ? acountInfoModal.value.showModal : null)
-          if (acountInfoModal.value && acountInfoModal.value.showModal) {
+           if (acountInfoModal.value && acountInfoModal.value.showModal) {
             acountInfoModal.value.showModal();
           } else {
             console.error("acountInfoModal is not available yet");
@@ -59,9 +56,7 @@
         };
         const showSettingModal = () => {
           console.log("showSettingModal click!!")
-          console.log("settingModal.value :", settingModal.value)
-          console.log("settingModal.value.showModal:", settingModal.value ? settingModal.value.showModal : null)
-          if (settingModal.value && settingModal.value.showModal) {
+            if (settingModal.value && settingModal.value.showModal) {
             settingModal.value.showModal();
           } else {
             console.error("settingModal is not available yet");

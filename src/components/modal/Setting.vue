@@ -170,7 +170,6 @@ export default {
     };
 
     onMounted(() => {
-      console.log('onMounted - settingModal:', settingModal.value);
       if (settingModal.value) {
         settingModal.value.showModal = showModal;
       }
