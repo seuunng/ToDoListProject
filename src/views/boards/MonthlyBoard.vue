@@ -1,6 +1,7 @@
 <template>
     <div class="MonthlyBoard">
         <h4  class="list-title">MonthlyBoard</h4>
+        <h3  class="month">JUNE, 2024</h3>
         <div class="carlendar">
             <table  class="carlendar-table">
                 <thead class="days_of_the_week">
@@ -76,6 +77,9 @@ export default {
 
 <style>
 .MonthlyBoard{
+}
+.month{
+  margin: 10px;
 }
 .carlendar-table{
     width: 80vw;

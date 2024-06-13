@@ -24,14 +24,14 @@
         <div class="modal-body">
           <div class="d-flex align-items-center line">
             <span class="task-title">
-              <input type="text" name="" id="" placeholder="할일을 입력하세요">
+              <input type="text" class="task-title-input" id="" placeholder="할일을 입력하세요">
             </span>
             <span class="flag-icon">
               <i class="fa-regular fa-flag"></i>
             </span>
           </div>
           <div class="description">
-            <input type="textarea" name="" id="" placeholder="description">
+            <textarea class="description-input" placeholder="description"></textarea>
           </div>
           <hr />
           <div class="d-flex align-items-center line">
@@ -90,7 +90,22 @@ export default {
 .checkbox {
   margin-right: 10px; /* 체크박스와 날짜 아이콘 사이에 공백 추가 */
 }
-
+.task-title-input, .description-input {
+  border: none;
+  width: 400px;
+  outline: none;
+  margin: 5px;
+  padding: 5px;
+  box-sizing: border-box;
+}
+.task-title-input{
+  font-weight: bold;
+}
+.description-input {
+  height: 100%;
+  resize: none;
+  font-weight: bold;
+}
 .date-icon {
   margin-right: 10px; /* 날짜 아이콘과 날짜 사이에 공백 추가 */
 }
