@@ -1,7 +1,6 @@
 <template>
-    <div class="ListTitleBox">
-        <h4>ListTitleBox</h4>
-        {icon}{list-title}
+    <div class="d-flex align-items-center ListTitleBox">
+      ListTitleBox{icon}{listTitle}
     </div>
   </template>
   
@@ -21,6 +20,7 @@
   
   <style scoped>
   .ListTitleBox {
-
+    display: inline;
+    justify-content: space-between;
   }
   </style>

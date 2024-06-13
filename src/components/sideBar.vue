@@ -1,45 +1,61 @@
 <template>
-    <div class="sideBar">
-        <h4 class="item">스마트목록리스트</h4>
-        <list-items-box></list-items-box>
-        <h4 class="item">할일목록리스트</h4>
-        <list-items-box></list-items-box>
+  <div class="sideBar">
+    <div class="content">
+      <div class="listCont">
+        <div class="list">
+          <list-items-box :value="''" />
+        </div>
+      </div>
+      <hr/>
+      <div class="listCont">
+        <div class="d-flex align-items-center title">
+          <h6 class="item">Lists</h6>
+          <i class="fa-solid fa-plus"></i>
+        </div>
+        <div class="list">
+          <list-items-box :value="''" />
+        </div>
+      </div>
     </div>
-  </template>
+  </div>
+</template>
   
-  <script>
-import ListItemsBox from './task_state/ListItemsBox.vue';
-  export default {
+<script>
+import ListItemsBox from "./task_state/ListItemsBox.vue";
+export default {
   components: { ListItemsBox },
-    name: 'sideBar',
-    data() {
-      return {
-        
-      };
-    },
-    methods: {
-      
-    }
-  };
-  </script>
+  name: "sideBar",
+};
+</script>
   
-  <style scoped>
-  .sideBar {
-    height: 100vh; /* Full height */
-    width: 200px; /* Adjust the width as needed */
-    background-color: lightgray;
-    color: gray;
-    position: fixed;
-    top: 0;
-    left: 50px; /* Adjust this value to align with the menu bar */
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    justify-content: flex-start;
-    transition: transform 0.3s ease; /* Smooth transition */
-    padding-top: 20px;
-  }
-  .item {
-    padding-left: 10px;
-  }
-  </style>
+<style scoped>
+.sideBar {
+  height: 100vh; /* Full height */
+  width: 200px; /* Adjust the width as needed */
+  background-color: lightgray;
+  color: gray;
+  position: fixed;
+  top: 0;
+  left: 50px; /* Adjust this value to align with the menu bar */
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: flex-start;
+  transition: transform 0.3s ease; /* Smooth transition */
+  padding-top: 20px;
+}
+.content {
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 20px;
+}
+.listCont {
+  margin: 5px;
+}
+.title {
+  display: inline;
+  justify-content: space-between;
+}
+.list {
+}
+</style>
