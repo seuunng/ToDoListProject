@@ -9,17 +9,9 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <div class="d-flex align-items-center line">
-            <completed-task-check-box></completed-task-check-box>
-            <span class="date-icon"><i class="fa-regular fa-calendar"></i> </span>
-            <span class="date"> {{ date }} </span>
+          <div class="d-flex align-items-center">
+            <datepicker :start-date="new Date(date)" />
         </div>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
         </div>
         <div class="modal-body">
           <div class="d-flex align-items-center line">
@@ -47,12 +39,14 @@
 </template>
   
   <script>
-  import { ref, onMounted } from "vue";
+  import { ref, computed, onMounted } from "vue";
   import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.js';
   import CompletedTaskCheckBox from '../task_state/CompletedTaskCheckBox.vue';
+  import datepicker from '../button/datepicker.vue';
+  import moment from 'moment';
   
 export default {
-  components: { CompletedTaskCheckBox },
+  components: { CompletedTaskCheckBox, datepicker },
   name: "CreateTask",
   props: {
     //달력으로 부터 받아온 날짜
@@ -64,6 +58,10 @@ export default {
   },
   setup(props) {
     const createTaskModal = ref(null);
+    
+    const formattedDate = computed(() => {
+      return moment(props.date).format('YYYY-MM-DD');
+    });
 
     const showModal = () => {
       const modal = new bootstrap.Modal(createTaskModal.value);
@@ -79,6 +77,7 @@ export default {
     return {
       createTaskModal,
       showModal,
+      formattedDate
     };
   },
 };

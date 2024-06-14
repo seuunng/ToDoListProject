@@ -6,10 +6,11 @@ import 'normalize.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import * as bootstrap from 'bootstrap'; 
-//import modules from './modules';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 window.bootstrap = bootstrap;
 createApp(App)
     .use(router)
-    .mount('#app');
-
+    .component('VueDatePicker', VueDatePicker)
+    .mount('#app')
