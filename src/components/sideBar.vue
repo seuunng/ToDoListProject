@@ -1,23 +1,25 @@
 <template>
-  <div class="sideBar">
-    <div class="content">
-      <div class="listCont">
-        <div class="list">
-          <list-items-box :value="''" />
+  <div>
+    <div class="sideBar">
+      <div class="content">
+        <div class="listCont">
+          <div class="list">
+            <list-items-box :value="''" />
+          </div>
         </div>
-      </div>
-      <hr />
-      <div class="listCont">
-        <div class="d-flex align-items-center title" @click="showCreateList">
-          <h6 class="item">Lists</h6>
-          <i class="fa-solid fa-plus"></i>
-        </div>
-        <div class="list">
-          <list-items-box :value="''" />
+        <hr />
+        <div class="listCont">
+          <div class="d-flex align-items-center title" @click="showCreateList">
+            <h6 class="item">Lists</h6>
+            <i class="fa-solid fa-plus"></i>
+          </div>
+          <div class="list">
+            <list-items-box :value="''" />
+          </div>
         </div>
       </div>
     </div>
-    <create-list 
+    <CreateList 
       ref="showCreateListModal"
       :icon="'&'"
       :list="'할일목록'"
@@ -69,6 +71,7 @@ export default {
   justify-content: flex-start;
   transition: transform 0.3s ease; /* Smooth transition */
   padding-top: 20px;
+  z-index: 2; /* 모달보다 낮은 z-index */
 }
 .content {
   padding-left: 10px;
