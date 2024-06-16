@@ -10,9 +10,10 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <div class="title">
+          <div class="d-flex align-items-center line title">
             <h4>Add List</h4>
           </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
          <EmojiPicker />
@@ -63,13 +64,11 @@ export default {
       const modal = new bootstrap.Modal(showCreateListModal.value);
       modal.show();
     };
-
     onMounted(() => {
       if (showCreateListModal.value) {
         showCreateListModal.value.showModal = showModal;
       }
     });
-
     return {
       showCreateListModal,
       showModal,
@@ -79,8 +78,7 @@ export default {
 </script>
   
   <style scoped>
-.showCreateListModal {
-}
+/* 기본 백드롭 스타일 */
 .custom-input {
   width: 100%;
   border: none; /* 테두리 없애기 */

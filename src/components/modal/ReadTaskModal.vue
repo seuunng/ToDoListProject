@@ -10,9 +10,8 @@
         <div class="modal-content">
           <div class="modal-header">
             <div class="d-flex align-items-center line">
-                <completed-task-check-box></completed-task-check-box>
-                <span class="date-icon"><i class="fa-regular fa-calendar"></i> </span>
-                <span class="date"> {{ showdate }} </span>
+              <completed-task-check-box></completed-task-check-box>
+              <datepicker :start-date="new Date(date)" />
             </div>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
