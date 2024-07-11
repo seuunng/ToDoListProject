@@ -25,8 +25,8 @@
     />
   </div>
 </template>
-  
-  <script>
+  <!-- 이것이 메뉴바 -->
+  <script> 
     import { ref } from 'vue';
     import AcountInfo from './modal/AcountInfo.vue';
     import Setting from './modal/Setting.vue';
