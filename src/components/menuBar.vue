@@ -47,7 +47,6 @@
 
       
         const showAcountInfo = () => {
-          console.log("showAcountInfo click!!")
            if (acountInfoModal.value && acountInfoModal.value.showModal) {
             acountInfoModal.value.showModal();
           } else {

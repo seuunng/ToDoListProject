@@ -10,7 +10,7 @@
         <input type="password" placeholder="Password">
       </div>
       <div class="btn">
-        <basicbutton>Logoin</basicbutton>
+        <basicbutton>Login</basicbutton>
       </div>
     </div>
   </template>
