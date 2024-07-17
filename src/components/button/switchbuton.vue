@@ -1,8 +1,16 @@
 <template>
-    <div class="form-check form-switch form-check-reverse">
-        <input class="form-check-input" type="checkbox" id="flexSwitchCheckReverse">
-    </div>
-  </template>
+  <div class="switch-button">
+    <b-form-checkbox 
+      v-model="isChecked" 
+      name="check-button" 
+      :disabled="disabled"
+      switch
+      @change="handleChange"
+      >
+      {{ label }}
+    </b-form-checkbox>
+  </div>
+</template>
   
   <script>
   export default {
@@ -10,12 +18,30 @@
     props: {
     checked: {
       type: Boolean,
+      default: true
+    },
+    disabled: {
+      type: Boolean,
       default: false
+    },
+    label: {
+      type: String,
+      default: ""
+    }
+  },
+  data() {
+    return {
+      isChecked: this.checked
+    }
+  },
+  watch: {
+    checked(newVal) {
+      this.isChecked = newVal;
     }
   },
   methods: {
-    handleChange(event) {
-      this.$emit('change', event.target.checked);
+    handleChange() {
+      this.$emit('change', this.isChecked);
     }
   }
   };
@@ -23,6 +49,6 @@
   
   <style scoped>
   .switch-button {
-    margin: 20px;
+    margin: 5px;
   }
   </style>
