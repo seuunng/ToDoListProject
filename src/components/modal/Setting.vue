@@ -45,7 +45,8 @@
               <div class="d-flex align-items-center line">
                 <h4>알람 설정</h4>
                 <switchbuton
-                  v-model="allSwitches" 
+                  v-model="allSwitches_alram" 
+                  @click="toggleAllSwitches_alram"
                 ></switchbuton>
               </div>
               <hr />
@@ -54,6 +55,7 @@
                 <h5>기본 알림기간</h5>
                 <dropdownbtn
                   :options="dropdownOptions_alarmtime"
+                  :disabled="!allSwitches_alram"
                   :selectedOption="selectedOptions.alarmtime"
                   @option-selected="option => handleOptionSelected('alarmtime', option)"
                 >{{ selectedOptions.alarmtime }}</dropdownbtn>
@@ -62,6 +64,7 @@
                 <h5>기본 알림방법</h5>
                 <dropdownbtn
                   :options="dropdownOptions_alarmmethod"
+                  :disabled="!allSwitches_alram"
                   :selectedOption="selectedOptions.alarmmethod"
                   @option-selected="option => handleOptionSelected('alarmmethod', option)"
                 >{{ selectedOptions.alarmmethod }}</dropdownbtn>
@@ -70,6 +73,7 @@
                 <h5>기본 알림소리</h5>
                 <dropdownbtn
                   :options="dropdownOptions_alarmsound"
+                  :disabled="!allSwitches_alram"
                   :selectedOption="selectedOptions.alarmsound"
                   @option-selected="option => handleOptionSelected('alarmsound', option)"
                 >{{ selectedOptions.alarmsound }}</dropdownbtn>
@@ -80,8 +84,8 @@
               <div class="d-flex align-items-center line">
                 <h4>스마트목록 설정</h4>
                 <switchbuton
-                  v-model="allSwitches"
-                  @click="toggleAllSwitches"
+                  v-model="allSwitches_list" 
+                  @click="toggleAllSwitches_list"
                 ></switchbuton>
               </div>
               <hr />
@@ -91,7 +95,7 @@
                 <switchbuton 
                   v-model="switches.today"
                   :checked="switches.today"
-                  :disabled="!allSwitches"
+                  :disabled="!allSwitches_list"
                 ></switchbuton>
               </div>
               <div class="d-flex align-items-center line">
@@ -99,7 +103,7 @@
                 <switchbuton 
                   v-model="switches.tomorrow"
                   :checked="switches.tomorrow"
-                  :disabled="!allSwitches"
+                  :disabled="!allSwitches_list"
                 ></switchbuton>
               </div>
               <div class="d-flex align-items-center line">
@@ -107,7 +111,7 @@
                 <switchbuton 
                   v-model="switches.next7Days"
                   :checked="switches.next7Days"
-                  :disabled="!allSwitches"
+                  :disabled="!allSwitches_list"
                 ></switchbuton>
               </div>
               <div class="d-flex align-items-center line">
@@ -115,7 +119,7 @@
                 <switchbuton 
                   v-model="switches.defaultBox"
                   :checked="switches.defaultBox"
-                  :disabled="!allSwitches"
+                  :disabled="!allSwitches_list"
                 ></switchbuton>
               </div>
               <br>
@@ -139,7 +143,8 @@ export default {
   name: "Setting",
   setup() {
     const settingModal = ref(null);
-    const allSwitches = ref(true);
+    const allSwitches_list = ref(true);
+    const allSwitches_alram = ref(true);
     const dropdownOptions_week = ["월요일", "일요일"];
     const dropdownOptions_time = ["12시간", "24시간"];
     const dropdownOptions_alarmtime = ["정각", "10분전", "30분전", "하루전"];
@@ -167,27 +172,18 @@ export default {
       selectedOptions[type] = option;
     };
 
-    const toggleAllSwitches = () => {
-      const newState = !allSwitches.value;
-      allSwitches.value = newState;
+    const toggleAllSwitches_list = () => {
+      const newState = !allSwitches_list.value;
+      allSwitches_list.value = newState;
       switches.today = newState;
       switches.tomorrow = newState;
       switches.next7Days = newState;
       switches.defaultBox = newState;
-      console.log(newState);
-      console.log("토글올스위치 동작");
     };
-    // const disabledSwitches = computed(() => {
-    //   !allSwitches.value;
-    //   console.log(allSwitches.value);
-    // });
-    // watch(allSwitches, (newValue) => {
-    //   console.log(newValue);
-    //   switches.today = newValue;
-    //   switches.tomorrow = newValue;
-    //   switches.next7Days = newValue;
-    //   switches.defaultBox = newValue;
-    // });
+    const toggleAllSwitches_alram = () => {
+      const newState = !allSwitches_alram.value;
+      allSwitches_alram.value = newState;
+    };
 
     const showModal = () => {
       const modal = new bootstrap.Modal(settingModal.value);
@@ -200,10 +196,10 @@ export default {
       }
     });
 
-   
     return {
       settingModal,
-      allSwitches,
+      allSwitches_list,
+      allSwitches_alram,
       dropdownOptions_week,
       dropdownOptions_time,
       dropdownOptions_alarmtime,
@@ -212,7 +208,8 @@ export default {
       selectedOptions,
       switches,
       handleOptionSelected,
-      toggleAllSwitches,
+      toggleAllSwitches_list,
+      toggleAllSwitches_alram,
       showModal,
       // disabledSwitches
     };

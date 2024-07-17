@@ -17,6 +17,7 @@
       <b-dropdown-item
         v-for="(option, index) in options"
         :key="index"
+        :disabled="disabled"
         @click="handleOptionClick(option)"
       >
         {{ option }}
@@ -33,10 +34,14 @@
         type: Array,
         required: true
       },
-      selectedOption: {
-      type: String,
-      default: "선택"
-    }
+      disabled: {
+      type: Boolean,
+      default: false
+      },
+        selectedOption: {
+        type: String,
+        default: "선택"
+      }
   },
   methods: {
     handleOptionClick(option) {
