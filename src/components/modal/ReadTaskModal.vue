@@ -9,7 +9,7 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <div class="d-flex align-items-center line">
+            <div class="d-flex align-items-center line ">
               <completed-task-check-box></completed-task-check-box>
               <datepicker :start-date="new Date(date)" />
             </div>

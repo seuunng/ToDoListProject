@@ -82,13 +82,12 @@ export default {
   margin: 10px;
 }
 .carlendar-table{
-    width: 80vw;
+    width: 90vw;
     border-collapse: collapse;
 }
 .carlendar-table td{
     padding: 0px;
     vertical-align: top; /* 내용이 위쪽에 정렬되도록 설정 */
-
 }
 .day-cell {
     display: flex;

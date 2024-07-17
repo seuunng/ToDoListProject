@@ -5,25 +5,34 @@
     tabindex="-1"
     aria-labelledby="CreateTaskModalLabel"
     aria-hidden="true"
-    ref="createTaskModal"  >
+    ref="createTaskModal"
+  >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <div class="d-flex align-items-center">
             <datepicker :start-date="new Date(date)" />
-        </div>
+          </div>
         </div>
         <div class="modal-body">
           <div class="d-flex align-items-center line">
             <span class="task-title">
-              <input type="text" class="task-title-input" id="" placeholder="할일을 입력하세요">
+              <input
+                type="text"
+                class="task-title-input"
+                id=""
+                placeholder="할일을 입력하세요"
+              />
             </span>
             <span class="flag-icon">
               <i class="fa-regular fa-flag"></i>
             </span>
           </div>
           <div class="description">
-            <textarea class="description-input" placeholder="description"></textarea>
+            <textarea
+              class="description-input"
+              placeholder="description"
+            ></textarea>
           </div>
           <hr />
           <div class="d-flex align-items-center line">
@@ -39,12 +48,12 @@
 </template>
   
   <script>
-  import { ref, computed, onMounted } from "vue";
-  import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.js';
-  import CompletedTaskCheckBox from '../task_state/CompletedTaskCheckBox.vue';
-  import datepicker from '../button/datepicker.vue';
-  import moment from 'moment';
-  
+import { ref, computed, onMounted } from "vue";
+import bootstrap from "bootstrap/dist/js/bootstrap.bundle.js";
+import CompletedTaskCheckBox from "../task_state/CompletedTaskCheckBox.vue";
+import datepicker from "../button/datepicker.vue";
+import moment from "moment";
+
 export default {
   components: { CompletedTaskCheckBox, datepicker },
   name: "CreateTask",
@@ -53,14 +62,13 @@ export default {
     date: {
       type: String,
       required: true,
-    }
-    
+    },
   },
   setup(props) {
     const createTaskModal = ref(null);
-    
+
     const formattedDate = computed(() => {
-      return moment(props.date).format('YYYY-MM-DD');
+      return moment(props.date).format("YYYY-MM-DD");
     });
 
     const showModal = () => {
@@ -77,7 +85,7 @@ export default {
     return {
       createTaskModal,
       showModal,
-      formattedDate
+      formattedDate,
     };
   },
 };
@@ -89,7 +97,8 @@ export default {
 .checkbox {
   margin-right: 10px; /* 체크박스와 날짜 아이콘 사이에 공백 추가 */
 }
-.task-title-input, .description-input {
+.task-title-input,
+.description-input {
   border: none;
   width: 400px;
   outline: none;
@@ -97,7 +106,7 @@ export default {
   padding: 5px;
   box-sizing: border-box;
 }
-.task-title-input{
+.task-title-input {
   font-weight: bold;
 }
 .description-input {
