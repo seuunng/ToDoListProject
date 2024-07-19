@@ -122,8 +122,12 @@
                   :disabled="!allSwitches_list"
                 ></switchbuton>
               </div>
-              <br>
-            </div>
+            </div>  
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="btn">
+            <basicbutton>저장</basicbutton>
           </div>
         </div>
       </div>
