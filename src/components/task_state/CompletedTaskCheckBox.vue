@@ -20,6 +20,6 @@
   
   <style scoped>
   .CompletedTaskCheckBox {
-    margin-right: 15px;
+    margin-right: 5px;
   }
   </style>

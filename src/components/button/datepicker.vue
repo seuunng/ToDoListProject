@@ -1,6 +1,6 @@
 <template>
     <div class="field p-fluid">
-        <label>{{ label }}</label>
+        <!-- <label>{{ label }}</label> -->
         <VueDatePicker
             v-model="pickerDate"
             :year-picker="setMode === 'year'"

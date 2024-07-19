@@ -1,7 +1,7 @@
 <template>
-  <div class="dropdownbutton">
-    <div class="btn-group">
-      <button type="button" class="btn btn-primary btn-sm"><slot></slot></button>
+  <!-- <div class="dropdownbutton">
+    <div >
+      <button type="button" class="btn btn-sm"><slot></slot></button>
       <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
         <span class="visually-hidden"></span>
       </button>
@@ -11,6 +11,18 @@
         </li>
       </ul>
     </div>
+  </div> -->
+  <div class="dropdownbutton">
+    <b-dropdown id="dropdown-dropright" dropright :text="selectedOption" variant="outline" class="m-2" size="sm">
+      <b-dropdown-item
+        v-for="(option, index) in options"
+        :key="index"
+        :disabled="disabled"
+        @click="handleOptionClick(option)"
+      >
+        {{ option }}
+      </b-dropdown-item>
+    </b-dropdown>
   </div>
   </template>
   
@@ -21,6 +33,14 @@
       options: {
         type: Array,
         required: true
+      },
+      disabled: {
+      type: Boolean,
+      default: false
+      },
+        selectedOption: {
+        type: String,
+        default: "선택"
       }
   },
   methods: {

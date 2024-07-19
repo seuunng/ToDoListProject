@@ -48,9 +48,12 @@
             </div>
             <hr />
             <div class="footer d-flex align-items-center line">
-              <span><h5 v-if="!isLoggedIn && isGuest">{{ '회원가입' }}</h5></span>
+              <span v-if="!isLoggedIn && isGuest"><h5>{{ '회원가입' }}</h5></span>
               <span v-if="!isLoggedIn && isGuest"><h5>게스트 로그인</h5></span>
-              <span v-if="!isLoggedIn && !isGuest"><h5 @click="toggleEdit">{{ isEditing ? '저장' : '로그인' }}</h5></span>
+
+              <span v-if="!isLoggedIn && !isGuest"><h5 @click="toggleEdit">{{ isEditing ? '로그인' : '로그인' }}</h5></span>
+              <span v-if="!isLoggedIn && !isGuest"><h5 @click="toggleEdit">{{ isEditing ? '로그인' : '간편로그인' }}</h5></span>
+
               <span v-if="isLoggedIn"><h5>로그아웃</h5></span>
               <span v-if="isLoggedIn"><h5>회원탈퇴</h5></span>
             </div>
@@ -61,7 +64,7 @@
   </div>
 </template>
   
-  <script>
+<script>
 import { ref, onMounted } from "vue";
 import btn from '../button/basicbutton.vue';
 import switchbuton from '../button/switchbuton.vue';
