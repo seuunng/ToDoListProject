@@ -43,8 +43,9 @@
   },
   setup() {
     const readTaskModal = ref(null);
-    
-    const readMemo = () => {
+   
+    const readMemo = (event) => {
+      event.stopPropagation();
       if (readTaskModal.value && readTaskModal.value.showModal) {
         readTaskModal.value.showModal();
       } else {
