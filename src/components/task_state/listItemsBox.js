@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../styles/basicStyle.css';
 
 const ListItemsBox = ({ value }) => {
   return (
