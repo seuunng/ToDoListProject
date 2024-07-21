@@ -1,0 +1,39 @@
+.MonthlyBoard{
+}
+.month{
+  margin: 10px;
+}
+.carlendar-table{
+    width: 90vw;
+    border-collapse: collapse;
+}
+.carlendar-table td{
+    padding: 0px;
+    vertical-align: top; /* 내용이 위쪽에 정렬되도록 설정 */
+}
+.day-cell {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 3px;
+    height: 120px;
+}
+.date-cell {
+    text-align: left;
+    }
+  
+.task-cell {
+    flex-grow: 1;
+    width: 100%;
+  }
+.carlendar-table .task-cell {
+    width: 100%; /* 셀 너비 설정 */
+    
+  }
+.days_of_the_week{
+    text-align: center;
+}
+.carlendar{
+
+}

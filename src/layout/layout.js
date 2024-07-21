@@ -3,6 +3,7 @@ import '../styles/layout.css';
 import MenuBar from '../components/menuBar';
 import SideBar from '../components/sideBar';
 
+
 import { Outlet } from 'react-router-dom';
 
 const Layout = () => {
@@ -16,13 +17,14 @@ const Layout = () => {
     return(
         <div>
             <MenuBar/>
-            {sidebarVisible && <SideBar />}
             <div className="icon" onClick={toggleSidebar}>
                 <i 
                 className="fa-solid fa-bars" 
-                style={{ color: '#00000' }} 
+                style={{ color: '#000000' }} 
                 alt="Toggle Sidebar"></i>
             </div>
+            {sidebarVisible && <SideBar />}
+           
             <main className="layout-main-content">
                 <Outlet />
             </main>

@@ -22,7 +22,7 @@ const MonthlyBoard = () => {
 
   return (
     <div className="MonthlyBoard">
-    <h4 className="list-title">MonthlyBoard</h4>
+    <h4 className="list-title" style={{fontSize:"100"}}>MonthlyBoard</h4>
     <h3 className="month">JUNE, 2024</h3>
     <div className="calendar">
       <table className="calendar-table">
