@@ -7,8 +7,8 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCat, faGear, faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 import { faSquareCheck } from '@fortawesome/free-regular-svg-icons';
-import AccountInfo from './acountInfoModal';
-import Setting from './settingModal';
+import AccountInfo from '../components/acountInfoModal';
+import Setting from '../components/settingModal';
 
 class MenuBar extends React.Component {
     constructor(props) {
@@ -39,10 +39,10 @@ class MenuBar extends React.Component {
       <div className="item" onClick={this.showAccountInfo}>
         <FontAwesomeIcon icon={faCat} />
       </div>
-      <Link to="/BasicBoard" className="item">
+      <Link to="/basicBoard" className="item">
         <FontAwesomeIcon icon={faSquareCheck} />
       </Link>
-      <Link to="/MonthlyBoard" className="item">
+      <Link to="/monthlyBoard" className="item">
         <FontAwesomeIcon icon={faCalendarDays} />
       </Link>
       <div className="item" onClick={this.showSettingModal}>

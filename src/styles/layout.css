@@ -1,0 +1,7 @@
+.icon {
+    position: fixed;
+    top: 10px;
+    left: 60px;
+    cursor: pointer;
+    z-index: 3;
+  }
