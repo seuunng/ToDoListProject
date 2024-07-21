@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import '../../styles/basicStyle.css';
+import '../../styles/monthlyBoard.css';
 import TaskBoxForCal from '../../components/task_state/taskBoxForCal';
 import CreateTask from '../../components/task_state/createTaskModal';
+import ReadTaskModal from '../../components/task_state/readTaskModal';
+
 const MonthlyBoard = () => {
   const [selectedDate, setSelectedDate] = useState(null);
+  const readTaskModalRef = useRef(null);
 
   const getDate = (week, day) => {
     // Week and day are 1-based
@@ -20,9 +24,14 @@ const MonthlyBoard = () => {
   const weeks = [1, 2, 3, 4, 5];
   const days = [1, 2, 3, 4, 5, 6, 7];
 
+  const handleOpenModal = () => {
+    if (readTaskModalRef.current) {
+      readTaskModalRef.current.openModal();
+    }
+  };
   return (
     <div className="MonthlyBoard">
-    <h4 className="list-title" style={{fontSize:"100"}}>MonthlyBoard</h4>
+    <h4 className="list-title">MonthlyBoard</h4>
     <h3 className="month">JUNE, 2024</h3>
     <div className="calendar">
       <table className="calendar-table">
@@ -50,6 +59,7 @@ const MonthlyBoard = () => {
                         task={`Task ${day}`}
                         description={`Description for task ${day}`}
                         listtitle={`List title for task ${day}`}
+                        onClick={handleOpenModal}
                       />
                     </div>
                   </div>

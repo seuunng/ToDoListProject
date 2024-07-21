@@ -7,7 +7,7 @@ import SideBar from '../components/sideBar';
 import { Outlet } from 'react-router-dom';
 
 const Layout = () => {
-    const [sidebarVisible, setSidebarVisible] = useState(true);
+    const [sidebarVisible, setSidebarVisible] = useState(false);
 
     const toggleSidebar = () => {
       setSidebarVisible(!sidebarVisible);

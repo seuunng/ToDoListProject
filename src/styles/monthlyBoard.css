@@ -3,11 +3,11 @@
 .month{
   margin: 10px;
 }
-.carlendar-table{
-    width: 90vw;
+.calendar-table{
+    width: 100%;
     border-collapse: collapse;
 }
-.carlendar-table td{
+.calendar-table td{
     padding: 0px;
     vertical-align: top; /* 내용이 위쪽에 정렬되도록 설정 */
 }
@@ -27,13 +27,19 @@
     flex-grow: 1;
     width: 100%;
   }
-.carlendar-table .task-cell {
+.calendar-table .task-cell {
     width: 100%; /* 셀 너비 설정 */
     
   }
 .days_of_the_week{
     text-align: center;
 }
-.carlendar{
-
+.calendar{
+}
+/* sideBar 토글 스위치랑 위치 일치시키기 */
+.list-title {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 0;
+    margin-right: 0;
 }
