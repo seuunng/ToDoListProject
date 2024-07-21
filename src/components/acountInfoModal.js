@@ -1,43 +1,39 @@
 import React, { useState }  from 'react';
 import '../styles/basicStyle.css';
 
-const AcountInfoModal = () => {
+const AcountInfoModal = ({ id, nickname, created_at }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isGuest, setIsGuest] = useState(false);
-  const [editableId, setEditableId] = useState('');
-  const [editableNickname, setEditableNickname] = useState('');
-  const [editableCreatedAt, setEditableCreatedAt] = useState('');
-
-  const id = 'example@example.com';
-  const nickname = 'JohnDoe';
-  const created_at = '2023-01-01';
+  const [editableId, setEditableId] = useState(id);
+  const [editableNickname, setEditableNickname] = useState(nickname);
+  const [editableCreatedAt, setEditableCreatedAt] = useState(created_at);
 
   const toggleEdit = () => {
     setIsEditing(!isEditing);
   };
   return (
-    <div
-    className="modal fade acountInfo"
-    id="acountInfoModal"
-    tabIndex="-1"
-    aria-labelledby="acountInfoLabel"
-    aria-hidden="true"
-  >
-    <div className="modal-dialog modal-dialog-centered">
-      <div className="modal-content">
-        <div className="modal-header">
-          <div>
-            <h4>{isEditing ? 'Login' : 'AccountInfo'}</h4>
-          </div>
-          <button
-            type="button"
-            className="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div className="modal-body">
+  //   <div
+  //   className="modal fade acountInfo"
+  //   id="acountInfoModal"
+  //   tabIndex="-1"
+  //   aria-labelledby="acountInfoLabel"
+  //   aria-hidden="true"
+  // >
+  //   <div className="modal-dialog modal-dialog-centered">
+  //     <div className="modal-content">
+  //       <div className="modal-header">
+  //         <div>
+  //           <h4>{isEditing ? 'Login' : 'AccountInfo'}</h4>
+  //         </div>
+  //         <button
+  //           type="button"
+  //           className="btn-close"
+  //           data-bs-dismiss="modal"
+  //           aria-label="Close"
+  //         ></button>
+  //       </div>
+  //       <div className="modal-body">
           <div className="acountInfo container">
             <div>
               <div className="d-flex align-items-center line">
@@ -61,7 +57,7 @@ const AcountInfoModal = () => {
                 <button className="btn">변경</button>
               </div>
             </div>
-            <hr />
+            {/* <hr />
             <div className="footer d-flex align-items-center line">
               {!isLoggedIn && isGuest && <h5>회원가입</h5>}
               {!isLoggedIn && isGuest && <h5>게스트 로그인</h5>}
@@ -69,12 +65,12 @@ const AcountInfoModal = () => {
               {!isLoggedIn && !isGuest && <h5 onClick={toggleEdit}>{isEditing ? '로그인' : '간편로그인'}</h5>}
               {isLoggedIn && <h5>로그아웃</h5>}
               {isLoggedIn && <h5>회원탈퇴</h5>}
-            </div>
+            </div> */}
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  //       </div>
+  //     </div>
+  //   </div>
+  // </div>
   );
 };
 

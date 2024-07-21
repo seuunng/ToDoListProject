@@ -57,26 +57,26 @@ const SettingModal = () => {
   };
 
   return (
-    <div
-      className="modal fade settingModal"
-      id="settingModal"
-      tabIndex="-1"
-      aria-labelledby="settingModalLabel"
-      aria-hidden="true"
-      ref={settingModalRef}
-    >
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h4>Setting</h4>
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div className="modal-body">
+    // <div
+    //   className="modal fade settingModal"
+    //   id="settingModal"
+    //   tabIndex="-1"
+    //   aria-labelledby="settingModalLabel"
+    //   aria-hidden="true"
+    //   ref={settingModalRef}
+    // >
+    //   <div className="modal-dialog modal-dialog-centered">
+    //     <div className="modal-content">
+    //       <div className="modal-header">
+    //         <h4>Setting</h4>
+    //         <button
+    //           type="button"
+    //           className="btn-close"
+    //           data-bs-dismiss="modal"
+    //           aria-label="Close"
+    //         ></button>
+    //       </div>
+    //       <div className="modal-body">
             <div className="setting container">
               <div>
                 <h4>날짜&시간 설정</h4>
@@ -180,15 +180,15 @@ const SettingModal = () => {
                 </div>
               </div>
             </div>
-          </div>
-          <div className="modal-footer">
-            <div className="btn">
-              <BasicBtn>저장</BasicBtn>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    //       </div>
+    //       <div className="modal-footer">
+    //         <div className="btn">
+    //           <BasicBtn>저장</BasicBtn>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </div>
   );
 };
 

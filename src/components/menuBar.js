@@ -10,6 +10,9 @@ import { faSquareCheck } from '@fortawesome/free-regular-svg-icons';
 import AccountInfo from '../components/acountInfoModal';
 import Setting from '../components/settingModal';
 
+import ModalModule from '../modules/modalModule';
+import SettingModal from '../components/settingModal';
+
 class MenuBar extends React.Component {
     constructor(props) {
       super(props);
@@ -26,8 +29,16 @@ class MenuBar extends React.Component {
       this.setState({ showAccountInfo: true });
     };
   
+    hideAccountInfo = () => {
+      this.setState({ showAccountInfo: false });
+    };
+  
     showSettingModal = () => {
       this.setState({ showSettingModal: true });
+    };
+  
+    hideSettingModal = () => {
+      this.setState({ showSettingModal: false });
     };
   
     render() {
@@ -49,10 +60,25 @@ class MenuBar extends React.Component {
         <FontAwesomeIcon icon={faGear} />
       </div>
     </div>
-    {showAccountInfo && (
+    {/* {showAccountInfo && (
       <AccountInfo id={id} nickname={nickname} created_at={created_at} />
     )}
-    {showSettingModal && <Setting />}
+    {showSettingModal && <Setting />} */}
+     <ModalModule
+          show={showAccountInfo}
+          onHide={this.hideAccountInfo}
+          modalTitle="Account Info"
+          context={<AccountInfo/>}
+          btnTitle="Close"
+        />
+
+        <ModalModule
+          show={showSettingModal}
+          onHide={this.hideSettingModal}
+          modalTitle="Settings"
+          context={<Setting/>}
+          btnTitle="Close"
+        />
   </div>
   );
 }

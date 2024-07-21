@@ -1,0 +1,30 @@
+import * as React from 'react'
+import '../styles/basicStyle.css';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+
+const ModalModule = ({ show, onHide, modalTitle, context, btnTitle }) => {
+  return (
+    <Modal
+      show={show}
+      onHide={onHide}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+  >
+    <Modal.Header closeButton>
+      <Modal.Title id="contained-modal-title-vcenter">
+      {modalTitle}
+      </Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+        {context}
+    </Modal.Body>
+    <Modal.Footer>
+      <Button onClick={onHide}>{btnTitle}</Button>
+    </Modal.Footer>
+  </Modal>
+  );
+}
+
+export default ModalModule;
