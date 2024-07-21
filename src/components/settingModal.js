@@ -2,9 +2,10 @@ import React, { useState, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../styles/basicStyle.css';
-import DropdownBtn from '../modules/dropdownModule'; 
-import SwitchBtn from '../modules/switchButtonModule'; 
-import BasicBtn from '../modules/BasicButton'; 
+import DropdownBtn from '../modules/dropdownModule';
+import SwitchBtn from '../modules/switchButtonModule';
+import BasicBtn from '../modules/BasicButton';
+import Col from 'react-bootstrap/Col';
 
 const SettingModal = () => {
   const settingModalRef = useRef(null);
@@ -57,138 +58,153 @@ const SettingModal = () => {
   };
 
   return (
-    // <div
-    //   className="modal fade settingModal"
-    //   id="settingModal"
-    //   tabIndex="-1"
-    //   aria-labelledby="settingModalLabel"
-    //   aria-hidden="true"
-    //   ref={settingModalRef}
-    // >
-    //   <div className="modal-dialog modal-dialog-centered">
-    //     <div className="modal-content">
-    //       <div className="modal-header">
-    //         <h4>Setting</h4>
-    //         <button
-    //           type="button"
-    //           className="btn-close"
-    //           data-bs-dismiss="modal"
-    //           aria-label="Close"
-    //         ></button>
-    //       </div>
-    //       <div className="modal-body">
-            <div className="setting container">
-              <div>
-                <h4>날짜&시간 설정</h4>
-                <hr />
-                <div className="d-flex align-items-center line">
-                  <h5>시간형식</h5>
-                  <DropdownBtn
-                    options={dropdownOptionsTime}
-                    selectedOption={selectedOptions.time}
-                    onOptionSelected={(option) => handleOptionSelected('time', option)}
-                  />
-                </div>
-                <div className="d-flex align-items-center line">
-                  <h5>주시작날짜</h5>
-                  <DropdownBtn
-                    options={dropdownOptionsWeek}
-                    selectedOption={selectedOptions.week}
-                    onOptionSelected={(option) => handleOptionSelected('week', option)}
-                  />
-                </div>
-              </div>
-              <hr />
-              <div>
-                <div className="d-flex align-items-center line">
-                  <h4>알람 설정</h4>
-                  <SwitchBtn
-                    checked={allSwitchesAlarm}
-                    onChange={toggleAllSwitchesAlarm}
-                  />
-                </div>
-                <hr />
-                <div className="d-flex align-items-center line">
-                  <h5>기본 알림기간</h5>
-                  <DropdownBtn
-                    options={dropdownOptionsAlarmTime}
-                    disabled={!allSwitchesAlarm}
-                    selectedOption={selectedOptions.alarmTime}
-                    onOptionSelected={(option) => handleOptionSelected('alarmTime', option)}
-                  />
-                </div>
-                <div className="d-flex align-items-center line">
-                  <h5>기본 알림방법</h5>
-                  <DropdownBtn
-                    options={dropdownOptionsAlarmMethod}
-                    disabled={!allSwitchesAlarm}
-                    selectedOption={selectedOptions.alarmMethod}
-                    onOptionSelected={(option) => handleOptionSelected('alarmMethod', option)}
-                  />
-                </div>
-                <div className="d-flex align-items-center line">
-                  <h5>기본 알림소리</h5>
-                  <DropdownBtn
-                    options={dropdownOptionsAlarmSound}
-                    disabled={!allSwitchesAlarm}
-                    selectedOption={selectedOptions.alarmSound}
-                    onOptionSelected={(option) => handleOptionSelected('alarmSound', option)}
-                  />
-                </div>
-              </div>
-              <hr />
-              <div>
-                <div className="d-flex align-items-center line">
-                  <h4>스마트목록 설정</h4>
-                  <SwitchBtn
-                    checked={allSwitchesList}
-                    onChange={toggleAllSwitchesList}
-                  />
-                </div>
-                <hr />
-                <div className="d-flex align-items-center line">
-                  <h5>오늘 할 일</h5>
-                  <SwitchBtn
-                    checked={switches.today}
-                    disabled={!allSwitchesList}
-                    onChange={() => setSwitches({ ...switches, today: !switches.today })}
-                  />
-                </div>
-                <div className="d-flex align-items-center line">
-                  <h5>내일 할 일</h5>
-                  <SwitchBtn
-                    checked={switches.tomorrow}
-                    disabled={!allSwitchesList}
-                    onChange={() => setSwitches({ ...switches, tomorrow: !switches.tomorrow })}
-                  />
-                </div>
-                <div className="d-flex align-items-center line">
-                  <h5>다음 7일 할 일</h5>
-                  <SwitchBtn
-                    checked={switches.next7Days}
-                    disabled={!allSwitchesList}
-                    onChange={() => setSwitches({ ...switches, next7Days: !switches.next7Days })}
-                  />
-                </div>
-                <div className="d-flex align-items-center line">
-                  <h5>기본함</h5>
-                  <SwitchBtn
-                    checked={switches.defaultBox}
-                    disabled={!allSwitchesList}
-                    onChange={() => setSwitches({ ...switches, defaultBox: !switches.defaultBox })}
-                  />
-                </div>
-              </div>
-            </div>
-    //       </div>
-    //       <div className="modal-footer">
-    //         <div className="btn">
-    //           <BasicBtn>저장</BasicBtn>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
+    <div className="setting container">
+      <div>
+        <h4>날짜&시간 설정</h4>
+        <hr />
+        <div className="d-flex align-items-center line row">
+          <Col>
+            <h5>시간형식</h5>
+          </Col>
+          <Col className='righted'>
+            <DropdownBtn
+              options={dropdownOptionsTime}
+              selectedOption={selectedOptions.time}
+              onOptionSelected={(option) => handleOptionSelected('time', option)}
+            />
+          </Col>
+        </div>
+        <div className="d-flex align-items-center line row">
+          <Col>
+            <h5>주시작날짜</h5>
+          </Col>
+          <Col className='righted'>
+            <DropdownBtn
+              options={dropdownOptionsWeek}
+              selectedOption={selectedOptions.week}
+              onOptionSelected={(option) => handleOptionSelected('week', option)}
+            />
+          </Col>
+        </div>
+      </div>
+      <hr />
+      <div>
+        <div className="d-flex align-items-center line row">
+          <Col>
+            <h4>알람 설정</h4>
+          </Col>
+          <Col className='righted'>
+            <SwitchBtn
+              checked={allSwitchesAlarm}
+              onChange={toggleAllSwitchesAlarm}
+            />
+          </Col>
+        </div>
+        <hr />
+        <div className="d-flex align-items-center line row">
+          <Col>
+            <h5>기본 알림기간</h5>
+          </Col>
+          <Col className='righted'>
+            <DropdownBtn
+              options={dropdownOptionsAlarmTime}
+              disabled={!allSwitchesAlarm}
+              selectedOption={selectedOptions.alarmTime}
+              onOptionSelected={(option) => handleOptionSelected('alarmTime', option)}
+            />
+          </Col>
+        </div>
+        <div className="d-flex align-items-center line row">
+          <Col>
+            <h5>기본 알림방법</h5>
+          </Col>
+          <Col className='righted'>
+            <DropdownBtn
+              options={dropdownOptionsAlarmMethod}
+              disabled={!allSwitchesAlarm}
+              selectedOption={selectedOptions.alarmMethod}
+              onOptionSelected={(option) => handleOptionSelected('alarmMethod', option)}
+            />
+          </Col>
+        </div>
+        <div className="d-flex align-items-center line row">
+          <Col>
+            <h5>기본 알림소리</h5>
+          </Col>
+          <Col className='righted'>
+            <DropdownBtn
+              options={dropdownOptionsAlarmSound}
+              disabled={!allSwitchesAlarm}
+              selectedOption={selectedOptions.alarmSound}
+              onOptionSelected={(option) => handleOptionSelected('alarmSound', option)}
+            />
+          </Col>
+        </div>
+      </div>
+      <hr />
+      <div>
+        <div className="d-flex align-items-center line row">
+          <Col>
+            <h4>스마트목록 설정</h4>
+          </Col>
+          <Col className='righted'>
+            <SwitchBtn
+              checked={allSwitchesList}
+              onChange={toggleAllSwitchesList}
+            />
+          </Col>
+        </div>
+        <hr />
+        <div className="d-flex align-items-center line row">
+          <Col>
+            <h5>오늘 할 일</h5>
+          </Col>
+          <Col className='righted'>
+            <SwitchBtn
+              checked={switches.today}
+              disabled={!allSwitchesList}
+              onChange={() => setSwitches({ ...switches, today: !switches.today })}
+            />
+          </Col>
+        </div>
+        <div className="d-flex align-items-center line row">
+          <Col>
+            <h5>내일 할 일</h5>
+          </Col>
+          <Col className='righted'>
+            <SwitchBtn
+              checked={switches.tomorrow}
+              disabled={!allSwitchesList}
+              onChange={() => setSwitches({ ...switches, tomorrow: !switches.tomorrow })}
+            />
+          </Col>
+        </div>
+        <div className="d-flex align-items-center line row">
+          <Col>
+            <h5>다음 7일 할 일</h5>
+          </Col>
+          <Col className='righted'>
+            <SwitchBtn
+              checked={switches.next7Days}
+              disabled={!allSwitchesList}
+              onChange={() => setSwitches({ ...switches, next7Days: !switches.next7Days })}
+            />
+          </Col>
+        </div>
+        <div className="d-flex align-items-center line row">
+          <Col>
+            <h5>기본함</h5>
+          </Col>
+          <Col className='righted'>
+            <SwitchBtn
+              checked={switches.defaultBox}
+              disabled={!allSwitchesList}
+              onChange={() => setSwitches({ ...switches, defaultBox: !switches.defaultBox })}
+            />
+          </Col>
+        </div>
+      </div>
+    </div>
   );
 };
 

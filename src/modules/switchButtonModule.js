@@ -10,7 +10,7 @@ const SwitchButtonModule = ({ label, disabled }) => {
   };
 
   return (
-    <div className="switch-button">
+    <Form>
         <Form.Check 
             type="switch"
             checked={isChecked}
@@ -19,7 +19,7 @@ const SwitchButtonModule = ({ label, disabled }) => {
             className="form-check-input"
             label={label}
         />
-    </div>
+    </Form>
   );
 }
 
