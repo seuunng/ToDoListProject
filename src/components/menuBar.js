@@ -1,14 +1,14 @@
 import React from 'react';
 
-import basicStyle from '../styles/basicStyle.css';
-import menuBarStyle from '../styles/menuBar.css';
+import '../styles/basicStyle.css';
+import '../styles/menuBar.css';
 
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCat, faGear, faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 import { faSquareCheck } from '@fortawesome/free-regular-svg-icons';
-import AccountInfo from './modal/acountInfo';
-import Setting from './modal/setting';
+import AccountInfo from './acountInfoModal';
+import Setting from './settingModal';
 
 class MenuBar extends React.Component {
     constructor(props) {
