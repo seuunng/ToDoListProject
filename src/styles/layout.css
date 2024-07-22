@@ -1,0 +1,14 @@
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
+
+.icon {
+    position: fixed;
+    top: 10px;
+    left: 60px;
+    cursor: pointer;
+    z-index: 3;
+  }
+.layout-main-content{
+  position: fixed;
+    top: 0px;
+    left: 90px;
+}
