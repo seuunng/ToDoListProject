@@ -4,7 +4,8 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
 
-const AcountInfoModal = ({ id, nickname, created_at }) => {
+const AcountInfoModal = ({ id, nickname, created_at, onHide  }) => {
+
   const [isEditing, setIsEditing] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isGuest, setIsGuest] = useState(false);
@@ -17,18 +18,21 @@ const AcountInfoModal = ({ id, nickname, created_at }) => {
   };
   
   const navigate = useNavigate();
+
   const handleUpdateSimplePW = () => {
+    onHide();
     navigate('/updateSimplePW');
   };
 
   const handleUpdatePW = () => {
+    onHide();
     navigate('/updatePW');
   };
 
   return (
     <div className="acountInfo container">
       <div>
-        <div className="d-flex align-items-center line row">
+        <div className="d-flex align-items-center line row" style={{margin: '12px'}}>
           <Col>
             <h5>이메일</h5>
           </Col>
@@ -36,7 +40,7 @@ const AcountInfoModal = ({ id, nickname, created_at }) => {
             <div>{!isEditing ? id : <input value={editableId} onChange={(e) => setEditableId(e.target.value)} />}</div>
           </Col>
         </div>
-        <div className="d-flex align-items-center line row">
+        <div className="d-flex align-items-center line row" style={{margin: '12px'}}>
           <Col>
             <h5>닉네임</h5>
           </Col>
@@ -44,7 +48,7 @@ const AcountInfoModal = ({ id, nickname, created_at }) => {
             <div>{!isEditing ? nickname : <input value={editableNickname} onChange={(e) => setEditableNickname(e.target.value)} />}</div>
           </Col>
         </div>
-        <div className="d-flex align-items-center line row">
+        <div className="d-flex align-items-center line row" style={{margin: '12px'}}>
           <Col>
             <h5>가입일</h5>
           </Col>  
@@ -52,7 +56,7 @@ const AcountInfoModal = ({ id, nickname, created_at }) => {
             <div>{!isEditing ? created_at : <input value={editableCreatedAt} onChange={(e) => setEditableCreatedAt(e.target.value)} />}</div>
           </Col>
         </div>
-        <div className="d-flex align-items-center line row">
+        <div className="d-flex align-items-center line row" style={{margin: '12px'}}>
           <Col>
             <h5>간편로그인설정</h5>
           </Col>  
@@ -60,7 +64,7 @@ const AcountInfoModal = ({ id, nickname, created_at }) => {
           <Button variant="light" onClick={handleUpdateSimplePW}>설정</Button>
           </Col> 
         </div>
-        <div className="d-flex align-items-center line row">
+        <div className="d-flex align-items-center line row" style={{margin: '12px'}}>
           <Col>
             <h5>비밀번호 변경</h5>
           </Col>

@@ -4,7 +4,8 @@ import '../../styles/basicStyle.css';
 const upadatePW = () => {
   return (
     <div>
-      <h4 className="list-title">비밀번호 변경</h4>
+      <h4 className="list-title">To-do List</h4>
+    
     </div>
   );
 };
