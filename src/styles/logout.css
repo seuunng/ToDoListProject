@@ -1,0 +1,19 @@
+.contents {
+    /* height: 100vh; */
+}
+
+.accountInfo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Viewport Height */
+    text-align: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.login-btn {
+    margin: 10px 0;
+    width: 100vw;
+    align-items: center;
+}
