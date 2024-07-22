@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState }  from 'react';
 
 import '../styles/basicStyle.css';
 import '../styles/menuBar.css';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate  } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCat, faGear, faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 import { faSquareCheck } from '@fortawesome/free-regular-svg-icons';
@@ -11,43 +11,40 @@ import AccountInfo from '../components/acountInfoModal';
 import Setting from '../components/settingModal';
 
 import ModalModule from '../modules/modalModule';
-import SettingModal from '../components/settingModal';
 
-class MenuBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showAccountInfo: false,
-      showSettingModal: false,
-      id: 'example_id',
-      nickname: 'example_nickname',
-      created_at: '2024-01-01',
-    };
-  }
+const MenuBar = () => {
+  const [showAccountInfo, setShowAccountInfo] = useState(false);
+  const [showSettingModal, setShowSettingModal] = useState(false);
 
-  showAccountInfo = () => {
-    this.setState({ showAccountInfo: true });
+  // const showAccountInfo = () => {
+  //   setShowAccountInfo(true);
+  // };
+
+  // const hideAccountInfo = () => {
+  //   setShowAccountInfo(false);
+  // };
+
+  // const showSettingModal = () => {
+  //   setShowSettingModal(true);
+  // };
+
+  // const hideSettingModal = () => {
+  //   setShowSettingModal(false);
+  // };
+  const navigate = useNavigate();
+
+  const handleSubButtonClick = () => {
+    setShowAccountInfo(false);
+    navigate('/logout');
   };
 
-  hideAccountInfo = () => {
-    this.setState({ showAccountInfo: false });
-  };
-
-  showSettingModal = () => {
-    this.setState({ showSettingModal: true });
-  };
-
-  hideSettingModal = () => {
-    this.setState({ showSettingModal: false });
-  };
-
-  render() {
-    const { showAccountInfo, showSettingModal, id, nickname, created_at } = this.state;
+  // render() {
+  //   const { showAccountInfo, showSettingModal, id, nickname, created_at } = state;
 
     return (
       <div>
         <div className="menuBar">
-          <div className="item" onClick={this.showAccountInfo}>
+          <div className="item" onClick={() => setShowAccountInfo(true)}>
             <FontAwesomeIcon icon={faCat} />
           </div>
           <Link to="/basicBoard" className="item">
@@ -56,29 +53,38 @@ class MenuBar extends React.Component {
           <Link to="/monthlyBoard" className="item">
             <FontAwesomeIcon icon={faCalendarDays} />
           </Link>
-          <div className="item" onClick={this.showSettingModal}>
+          <div className="item" onClick={() => setShowSettingModal(true)}>
             <FontAwesomeIcon icon={faGear} />
           </div>
         </div>
 
         <ModalModule
           show={showAccountInfo}
-          onHide={this.hideAccountInfo}
+          onHide={() => setShowAccountInfo(false)}
           modalTitle="Account Info"
-          context={<AccountInfo />}
+          context={
+            <AccountInfo 
+              onHide={() => setShowAccountInfo(false)}
+            />
+          }
+          btnSubTitle="로그아웃"
           btnTitle="확인"
+          onSubButtonClick={handleSubButtonClick}
         />
 
         <ModalModule
           show={showSettingModal}
-          onHide={this.hideSettingModal}
-          modalTitle="설정"
-          context={<Setting />}
+          onHide={() => setShowSettingModal(false)}
+          modalTitle="Setting"
+          context={
+            <Setting 
+              onHide={() => setShowSettingModal(false)} />
+          }
           btnTitle="저장"
         />
       </div>
     );
   }
-}
+
 
 export default MenuBar;

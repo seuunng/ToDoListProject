@@ -3,7 +3,7 @@ import '../styles/basicStyle.css';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
-const ModalModule = ({ show, onHide, modalTitle, context, btnTitle }) => {
+const ModalModule = ({ show, onHide, modalTitle, context, btnTitle, btnSubTitle, onSubButtonClick }) => {
   return (
     <Modal
       show={show}
@@ -21,6 +21,7 @@ const ModalModule = ({ show, onHide, modalTitle, context, btnTitle }) => {
         {context}
     </Modal.Body>
     <Modal.Footer>
+      {btnSubTitle && <Button onClick={onSubButtonClick} variant="outline-secondary">{btnSubTitle}</Button>}
       <Button onClick={onHide}>{btnTitle}</Button>
     </Modal.Footer>
   </Modal>

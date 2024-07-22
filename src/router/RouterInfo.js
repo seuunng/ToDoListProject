@@ -3,9 +3,9 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import Layout from '../layout/layout.js'
 
-import Login from '../views/acountInfo/login.js';
+import FindPW from '../views/acountInfo/findPW.js';
+import Logout from '../views/acountInfo/logout.js';
 import SignUp from '../views/acountInfo/signUp.js';
-import UpdatePW from '../views/acountInfo/updatePW.js';
 import UpdateSimplePW from '../views/acountInfo/updateSimplePW.js';
 import BasicBoard from '../views/boards/basicBoard.js';
 import DailyBoard from '../views/boards/dailyBoard.js';
@@ -22,16 +22,12 @@ export const RouterInfo = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: "login",
-        element: <Login />,
+        path: "findPW",
+        element: <FindPW />,
       },
       {
         path: "signUp",
         element: <SignUp />,
-      },
-      {
-        path: "updatePW",
-        element: <UpdatePW />,
       },
       {
         path: "basicBoard",
@@ -64,6 +60,10 @@ export const RouterInfo = createBrowserRouter([
       {
         path: "readTaskPage",
         element: <ReadTaskPage />,
+      },
+      {
+        path: "logout",
+        element: <Logout />,
       },
     ]
   }
