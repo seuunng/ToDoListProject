@@ -18,6 +18,7 @@ const SwitchButtonModule = ({ label, disabled }) => {
             disabled={disabled}
             className="form-check-input"
             label={label}
+            style={{border:"none"}}
         />
     </Form>
   );

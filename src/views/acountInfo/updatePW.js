@@ -4,7 +4,7 @@ import '../../styles/basicStyle.css';
 const upadatePW = () => {
   return (
     <div>
-      {/* 모달 내용 렌더링 */}
+      <h3>비밀번호 변경</h3>
     </div>
   );
 };

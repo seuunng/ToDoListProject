@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../styles/basicStyle.css';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import { useNavigate } from 'react-router-dom';
 
 const AcountInfoModal = ({ id, nickname, created_at }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -14,6 +15,16 @@ const AcountInfoModal = ({ id, nickname, created_at }) => {
   const toggleEdit = () => {
     setIsEditing(!isEditing);
   };
+  
+  const navigate = useNavigate();
+  const handleUpdateSimplePW = () => {
+    navigate('/updateSimplePW');
+  };
+
+  const handleUpdatePW = () => {
+    navigate('/updatePW');
+  };
+
   return (
     <div className="acountInfo container">
       <div>
@@ -46,7 +57,7 @@ const AcountInfoModal = ({ id, nickname, created_at }) => {
             <h5>간편로그인설정</h5>
           </Col>  
           <Col className='righted'>
-          <Button variant="light">설정</Button>
+          <Button variant="light" onClick={handleUpdateSimplePW}>설정</Button>
           </Col> 
         </div>
         <div className="d-flex align-items-center line row">
@@ -54,7 +65,7 @@ const AcountInfoModal = ({ id, nickname, created_at }) => {
             <h5>비밀번호 변경</h5>
           </Col>
           <Col className='righted'>
-            <Button variant="light">변경</Button>
+            <Button variant="light" onClick={handleUpdatePW}>변경</Button>
           </Col>
         </div>
       </div>
