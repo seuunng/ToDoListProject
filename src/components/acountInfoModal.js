@@ -26,7 +26,7 @@ const AcountInfoModal = ({ id, nickname, created_at, onHide  }) => {
 
   const handleUpdatePW = () => {
     onHide();
-    navigate('/updatePW');
+    navigate('/findPW');
   };
 
   return (

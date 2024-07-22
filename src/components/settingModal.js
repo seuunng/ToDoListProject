@@ -46,6 +46,7 @@ const SettingModal = () => {
       next7Days: newState,
       defaultBox: newState,
     });
+    console.log(newState)
   };
 
   const toggleAllSwitchesAlarm = () => {
