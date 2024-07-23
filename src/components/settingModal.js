@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../styles/basicStyle.css';
@@ -6,9 +6,11 @@ import DropdownBtn from '../modules/dropdownModule';
 import SwitchBtn from '../modules/switchButtonModule';
 import BasicBtn from '../modules/BasicButton';
 import Col from 'react-bootstrap/Col';
+import { Modal, Button } from 'react-bootstrap';
 
-const SettingModal = () => {
-  const settingModalRef = useRef(null);
+const SettingModal = ({ show, onHide }) => {
+  // const [show, setShow] = useState(false);
+  // const settingModalRef = useRef(null);
   const [allSwitchesList, setAllSwitchesList] = useState(true);
   const [allSwitchesAlarm, setAllSwitchesAlarm] = useState(true);
 
@@ -33,6 +35,44 @@ const SettingModal = () => {
     defaultBox: false,
   });
 
+  useEffect(() => {
+    // 로컬 스토리지에서 설정 값 불러오기
+    const savedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
+    const savedSwitches = JSON.parse(localStorage.getItem('switches'));
+    const savedAllSwitchesList = JSON.parse(localStorage.getItem('allSwitchesList'));
+    const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
+
+    if (savedOptions) {
+      setSelectedOptions(savedOptions);
+    }
+    if (savedSwitches) {
+      setSwitches(savedSwitches);
+    }
+    if (savedAllSwitchesList !== null) {
+      setAllSwitchesList(savedAllSwitchesList);
+    }
+    if (savedAllSwitchesAlarm !== null) {
+      setAllSwitchesAlarm(savedAllSwitchesAlarm);
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   // 설정 값이 변경될 때마다 로컬 스토리지에 저장
+  //   localStorage.setItem('selectedOptions', JSON.stringify(selectedOptions));
+  // }, [selectedOptions]);
+
+  // useEffect(() => {
+  //   localStorage.setItem('switches', JSON.stringify(switches));
+  // }, [switches]);
+
+  // useEffect(() => {
+  //   localStorage.setItem('allSwitchesList', JSON.stringify(allSwitchesList));
+  // }, [allSwitchesList]);
+
+  // useEffect(() => {
+  //   localStorage.setItem('allSwitchesAlarm', JSON.stringify(allSwitchesAlarm));
+  // }, [allSwitchesAlarm]);
+
   const handleOptionSelected = (type, option) => {
     setSelectedOptions({ ...selectedOptions, [type]: option });
   };
@@ -46,22 +86,35 @@ const SettingModal = () => {
       next7Days: newState,
       defaultBox: newState,
     });
-    console.log(newState)
   };
 
   const toggleAllSwitchesAlarm = () => {
     setAllSwitchesAlarm(!allSwitchesAlarm);
   };
 
-  const showModal = () => {
-    const modal = new window.bootstrap.Modal(settingModalRef.current);
-    modal.show();
-  };
+  const savedSetting = () => {
+    localStorage.setItem('selectedOptions', JSON.stringify(selectedOptions));
+    localStorage.setItem('switches', JSON.stringify(switches));
+    localStorage.setItem('allSwitchesList', JSON.stringify(allSwitchesList));
+    localStorage.setItem('allSwitchesAlarm', JSON.stringify(allSwitchesAlarm));
+    console.log(JSON.stringify(selectedOptions));
+    console.log(JSON.stringify(switches));
+    console.log(JSON.stringify(allSwitchesList));
+    console.log(JSON.stringify(allSwitchesAlarm));
+    onHide();
+
+  }
+  // const handleShow = () => setShow(true);
 
   return (
+    <Modal show={show} onHide={onHide} centered>
+    <Modal.Header>
+      <Modal.Title>설정</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
     <div className="setting container">
       <div>
-        <h4>날짜&시간 설정</h4>
+        <h5><strong>날짜&시간 설정</strong></h5>
         <hr />
         <div className="d-flex align-items-center line row">
           <Col>
@@ -92,7 +145,7 @@ const SettingModal = () => {
       <div>
         <div className="d-flex align-items-center line row">
           <Col>
-            <h4>알람 설정</h4>
+            <h5><strong>알람 설정</strong></h5>
           </Col>
           <Col className='righted'>
             <SwitchBtn
@@ -146,7 +199,7 @@ const SettingModal = () => {
       <div>
         <div className="d-flex align-items-center line row">
           <Col>
-            <h4>스마트목록 설정</h4>
+            <h5><strong>스마트목록 설정</strong></h5>
           </Col>
           <Col className='righted'>
             <SwitchBtn
@@ -206,6 +259,13 @@ const SettingModal = () => {
         </div>
       </div>
     </div>
+    </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={savedSetting}>
+          저장
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 };
 
