@@ -7,8 +7,12 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { format, isValid } from 'date-fns';
 import { Modal, Button } from 'react-bootstrap';
+import { FaCalendarCheck } from "react-icons/fa";
+import ko from 'date-fns/locale/ko';
+import Checkbox from '../../modules/checkBoxModule';
+import { PiLineVerticalThin } from "react-icons/pi";
 
-const CreateTaskModal = forwardRef((props, ref) => {
+const CreateTaskModal = forwardRef((props, ref, read_listTitle ) => {
   const [show, setShow] = useState(false);
   const [taskTitle, setTaskTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -35,7 +39,13 @@ const CreateTaskModal = forwardRef((props, ref) => {
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header>
         <div className="d-flex align-items-center">
-          <DatePicker selected={startDate} onChange={(date) => setStartDate(formattedDate(date))} />
+          
+          <FaCalendarCheck />
+          <DatePicker 
+            selected={startDate} 
+            onChange={(date) => setStartDate(formattedDate(date))}
+            locale={ko}
+            dateFormat="yyyy-MM-dd" />
         </div>
       </Modal.Header>
       <Modal.Body>
@@ -64,8 +74,8 @@ const CreateTaskModal = forwardRef((props, ref) => {
       </Modal.Body>
       <Modal.Footer>
         <div className="d-flex align-items-center line row"
-        style={{width: "100vw"}}>
-          <div className="list-title col lefted">할 일 목록</div>
+          style={{width: "100vw"}}>
+          <div className="list-title col lefted">{read_listTitle}할 일 목록</div>
           <div className="setting-icon col righted">
             <i className="fa-solid fa-ellipsis"></i>
           </div>

@@ -49,3 +49,36 @@
     margin-left: 0;
     margin-right: 0;
 }
+/* 기본 스타일 정의 */
+.alram {
+  display: block; /* 기본적으로 아이콘을 보이게 설정 */
+}
+
+/* 화면 너비가 576px 이하일 때 아이콘을 숨깁니다 */
+@media (max-width: 1200px) {
+  .alram {
+    display: none;
+  }
+}
+@media (max-width: 1000px) {
+  .repeat {
+    display: none;
+  }
+}
+.month-year-title .react-datepicker__input-container input {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+.react-datepicker__input-container input {
+    border: none;
+    margin-left: 8px;
+    
+  }
+.list-title.col.lefted {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.setting-icon.col.righted{
+  margin-top: 0;
+  margin-bottom: 0;
+}
