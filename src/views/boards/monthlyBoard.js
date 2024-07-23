@@ -1,10 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import '../../styles/basicStyle.css';
 import '../../styles/monthlyBoard.css';
 import TaskBoxForCal from '../../components/task_state/taskBoxForCal';
 import CreateTask from '../../components/task_state/createTaskModal';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { Button, Col } from 'react-bootstrap';
 // import { registerLocale, setDefaultLocale } from "react-datepicker";
 // import ko from 'date-fns/locale/ko'; // 한국어 로케일 사용 (원하는 로케일을 사용할 수 있습니다)
 
@@ -15,6 +16,7 @@ const MonthlyBoard = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const createTaskModalRef = useRef(null);
+  const todayRef = useRef(null); // 오늘 날짜 셀을 참조할 ref
 
   const getDate = (week, day) => {
     // Week and day are 1-based
@@ -54,17 +56,31 @@ const MonthlyBoard = () => {
       date.getFullYear() === today.getFullYear()
     );
   };
-  
+  const scrollToToday = () => {
+    setSelectedDate(new Date());
+  };
+
+  useEffect(() => {
+    if (todayRef.current) {
+      todayRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [selectedDate]);
+
   return (
     <div className="monthly-board-container">
       <h4 className="list-title">MonthlyBoard</h4>
-      <div className="month-year-title">
-      <DatePicker
-        selected={selectedDate}
-        onChange={handleDateChange}
-        dateFormat="MMMM, yyyy"
-        showMonthYearPicker
-      />
+      <div className="month-year-title row">
+        <Col>
+          <DatePicker
+            selected={selectedDate}
+            onChange={handleDateChange}
+            dateFormat="MMMM, yyyy"
+            showMonthYearPicker
+          />
+        </Col>
+        <Col className='righted'>
+          <Button onClick={scrollToToday} className='righted' variant="outline-dark">Today</Button>
+        </Col>
       </div>
       <div className="calendar">
         <table className="calendar-table">
@@ -86,7 +102,7 @@ const MonthlyBoard = () => {
                   const date = getDate(week, day);
                   const todayClass = isToday(date) ? 'today-cell' : 'date-cell';
                   return (
-                    <td key={day}>
+                    <td key={day} ref={isToday(date) ? todayRef : null}>
                       <div className="day-cell">
                         <div className={todayClass}>{date.getDate()}</div>
                         <div className="task-cell" onClick={(e) => handleTaskCellClick(e, date)}>
