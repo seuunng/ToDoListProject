@@ -1,0 +1,40 @@
+.CreateTask {
+}
+.checkbox {
+  margin-right: 10px; /* 체크박스와 날짜 아이콘 사이에 공백 추가 */
+}
+.task-title-input,
+.description-input {
+  border: none;
+  width: 400px;
+  outline: none;
+  margin: 5px;
+  padding: 5px;
+  box-sizing: border-box;
+}
+.task-title-input {
+  font-weight: bold;
+}
+.description-input {
+  height: 100%;
+  resize: none;
+  font-weight: bold;
+}
+.date-icon {
+  margin-right: 10px; /* 날짜 아이콘과 날짜 사이에 공백 추가 */
+}
+.setting-icon {
+  margin-right: 15px; /* 날짜 아이콘과 날짜 사이에 공백 추가 */
+  margin-bottom: 15px;
+}
+.list-title {
+  margin-left: 15px; /* 날짜 아이콘과 날짜 사이에 공백 추가 */
+  margin-bottom: 15px;
+}
+.line {
+  display: inline;
+  justify-content: space-between;
+}
+.description {
+  height: 200px;
+}

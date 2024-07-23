@@ -1,10 +1,18 @@
-.MonthlyBoard{
-}
+.monthly-board-container {
+  }
 .month{
   margin: 10px;
 }
+.calendar {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /*수직 중앙 정렬*/
+    /* justify-content: center; 수평 중앙 정렬 */
+    height: 100vh; /* Viewport Height */
+  }
 .calendar-table{
-    width: 100%;
+    width: 90vw;
+    height: 90vh;
     border-collapse: collapse;
 }
 .calendar-table td{
@@ -16,7 +24,7 @@
     flex-direction: column;
     height: 100%;
     box-sizing: border-box;
-    padding: 3px;
+    padding:5px;
     height: 120px;
 }
 .date-cell {
@@ -33,8 +41,6 @@
   }
 .days_of_the_week{
     text-align: center;
-}
-.calendar{
 }
 /* sideBar 토글 스위치랑 위치 일치시키기 */
 .list-title {
