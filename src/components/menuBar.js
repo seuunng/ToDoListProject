@@ -16,31 +16,13 @@ const MenuBar = () => {
   const [showAccountInfo, setShowAccountInfo] = useState(false);
   const [showSettingModal, setShowSettingModal] = useState(false);
 
-  // const showAccountInfo = () => {
-  //   setShowAccountInfo(true);
-  // };
-
-  // const hideAccountInfo = () => {
-  //   setShowAccountInfo(false);
-  // };
-
-  // const showSettingModal = () => {
-  //   setShowSettingModal(true);
-  // };
-
-  // const hideSettingModal = () => {
-  //   setShowSettingModal(false);
-  // };
   const navigate = useNavigate();
 
   const handleSubButtonClick = () => {
     setShowAccountInfo(false);
     navigate('/logout');
   };
-
-  // render() {
-  //   const { showAccountInfo, showSettingModal, id, nickname, created_at } = state;
-
+  
     return (
       <div>
         <div className="menuBar">
@@ -72,15 +54,9 @@ const MenuBar = () => {
           onSubButtonClick={handleSubButtonClick}
         />
 
-        <ModalModule
+        <Setting
           show={showSettingModal}
           onHide={() => setShowSettingModal(false)}
-          modalTitle="Setting"
-          context={
-            <Setting 
-              onHide={() => setShowSettingModal(false)} />
-          }
-          btnTitle="저장"
         />
       </div>
     );

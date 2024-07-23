@@ -11,20 +11,21 @@ const ModalModule = ({ show, onHide, modalTitle, context, btnTitle, btnSubTitle,
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
-  >
-    <Modal.Header closeButton>
-      <Modal.Title id="contained-modal-title-vcenter">
-      {modalTitle}
-      </Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
+    >
+      <Modal.Header>
+        <Modal.Title id="contained-modal-title-vcenter">
+          {modalTitle}
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
         {context}
-    </Modal.Body>
-    <Modal.Footer>
-      {btnSubTitle && <Button onClick={onSubButtonClick} variant="outline-secondary">{btnSubTitle}</Button>}
-      <Button onClick={onHide}>{btnTitle}</Button>
-    </Modal.Footer>
-  </Modal>
+      </Modal.Body>
+      {btnTitle && 
+      <Modal.Footer>
+        {btnSubTitle && <Button onClick={onSubButtonClick} variant="outline-secondary">{btnSubTitle}</Button>}
+        <Button onClick={onHide}>{btnTitle}</Button>
+      </Modal.Footer>}
+    </Modal>
   );
 }
 

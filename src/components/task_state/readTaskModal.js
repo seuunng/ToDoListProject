@@ -1,63 +1,75 @@
-import React, { useImperativeHandle }  from 'react';
+import React, { useImperativeHandle, forwardRef, useState, useEffect } from 'react';
 import '../../styles/basicStyle.css';
+import { Modal, Button } from 'react-bootstrap';
+import { format, isValid } from 'date-fns';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { FaCalendarCheck } from "react-icons/fa";
+import ko from 'date-fns/locale/ko';
+import Checkbox from '../../modules/checkBoxModule';
+import { PiLineVerticalThin } from "react-icons/pi";
 
-const ReadTaskModal = React.forwardRef(({ read_date, read_tasktitle, read_description, read_listtitle }, ref) => {
-  const closeModal = () => {
-    const modal = new window.bootstrap.Modal(document.getElementById('readTaskModal'));
-    modal.hide();
-  };
-  const openModal = () => {
-    const modal = new window.bootstrap.Modal(document.getElementById('readTaskModal'));
-    modal.show();
-  };
-  React.useImperativeHandle(ref, () => ({
-    openModal,
+const ReadTaskModal = forwardRef(({ /*read_date,*/ read_tasktitle, read_description, read_listTitle }, ref) => {
+  const [show, setShow] = useState(false);
+  const [formattedDate, setFormattedDate] = useState('');
+  const [startDate, setStartDate] = useState(new Date());
+
+  // useEffect(() => {
+  //   if (isValid(new Date(read_date))) {
+  //     setFormattedDate(format(new Date(read_date), 'yyyy-MM-dd'));
+  //   } else {
+  //     setFormattedDate('Invalid Date');
+  //   }
+  // }, [read_date]);
+
+  const handleClose = () => {
+    setShow(false);
+  }
+  const handleShow = () => setShow(true);
+
+  useImperativeHandle(ref, () => ({
+    openModal: handleShow,
   }));
+
   return (
-    <div
-      className="modal fade ReadTaskModal"
-      id="readTaskModal"
-      tabIndex="-1"
-      aria-labelledby="readTaskModalLabel"
-      aria-hidden="true"
-    >
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content">
-          <div className="modal-header">
-            <div className="d-flex align-items-center line">
-              {/* 여기에 필요한 컴포넌트를 넣으세요 */}
-              {/* <CompletedTaskCheckBox /> */}
-              {/* <DatePicker selectedDate={new Date(read_date)} /> */}
-            </div>
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-              onClick={closeModal}
-            ></button>
-          </div>
-          <div className="modal-body">
-            <div className="d-flex align-items-center line">
-              <span className="task-title">
-                <h4>{read_tasktitle}</h4>
-              </span>
-              <span className="flag-icon">
-                <i className="fa-regular fa-flag"></i>
-              </span>
-            </div>
-            <div className="description">{read_description}</div>
-          </div>
-          <hr />
-          <div className="d-flex align-items-center line">
-            <span className="list-title">{read_listtitle}</span>
-            <span className="setting-icon">
-              <i className="fa-solid fa-ellipsis"></i>
-            </span>
+    <Modal show={show} onHide={handleClose} centered>
+      <Modal.Header>
+        <div className="d-flex align-items-center">
+          <Checkbox/>
+          <PiLineVerticalThin style={{marginLeft: "5px", marginRight: "5px"}} />
+          <FaCalendarCheck />
+          <DatePicker 
+            selected={startDate} 
+            onChange={(date) => setStartDate(date)} 
+            locale={ko}
+            dateFormat="yyyy-MM-dd" />
+        </div>
+      </Modal.Header>
+      <Modal.Body>
+        <div className="d-flex align-items-center line">
+          <span className="task-title">
+          <h4>{read_tasktitle}title</h4>
+        </span>
+          {/* <span className="flag-icon">
+            <i className="fa-regular fa-flag"></i>
+          </span> */}
+        </div>
+        <div className="description">{read_description}내용</div>
+      </Modal.Body>
+      <Modal.Footer>
+        <div className="d-flex align-items-center line row"
+          style={{ width: "100vw" }}>
+          <div className="list-title col lefted">{read_listTitle}할 일 목록</div>
+          <div className="setting-icon col righted">
+            <i className="fa-solid fa-ellipsis"></i>
           </div>
         </div>
-      </div>
-    </div>
+        {/* <button type="button" className="btn btn-secondary" onClick={handleClose}>Close</button>
+        <button type="button" className="btn btn-primary">Save changes</button> */}
+      </Modal.Footer>
+    </Modal>
   );
 });
 

@@ -1,10 +1,18 @@
-.MonthlyBoard{
-}
+.monthly-board-container {
+  }
 .month{
   margin: 10px;
 }
+.calendar {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /*수직 중앙 정렬*/
+    /* justify-content: center; 수평 중앙 정렬 */
+    height: 100vh; /* Viewport Height */
+  }
 .calendar-table{
-    width: 100%;
+    width: 90vw;
+    height: 90vh;
     border-collapse: collapse;
 }
 .calendar-table td{
@@ -16,7 +24,7 @@
     flex-direction: column;
     height: 100%;
     box-sizing: border-box;
-    padding: 3px;
+    padding:5px;
     height: 120px;
 }
 .date-cell {
@@ -34,12 +42,47 @@
 .days_of_the_week{
     text-align: center;
 }
-.calendar{
-}
 /* sideBar 토글 스위치랑 위치 일치시키기 */
 .list-title {
     margin-top: 10px;
     margin-bottom: 10px;
     margin-left: 0;
     margin-right: 0;
+}
+/* 기본 스타일 정의 */
+.alram {
+  display: block; /* 기본적으로 아이콘을 보이게 설정 */
+}
+
+/* 화면 너비가 576px 이하일 때 아이콘을 숨깁니다 */
+@media (max-width: 1200px) {
+  .alram {
+    display: none;
+  }
+}
+@media (max-width: 1000px) {
+  .repeat {
+    display: none;
+  }
+}
+.month-year-title .react-datepicker__input-container input {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+.react-datepicker__input-container input {
+    border: none;
+    margin-left: 8px;
+    
+  }
+.list-title.col.lefted {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.setting-icon.col.righted{
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.today-cell {
+  background-color: #000; /* 날짜 셀의 배경 색을 검정색으로 설정 */
+  color: #fff;
 }

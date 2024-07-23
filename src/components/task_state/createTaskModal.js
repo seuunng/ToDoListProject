@@ -1,12 +1,90 @@
-import React from 'react';
+import React, { useState, useRef, useImperativeHandle, useEffect, forwardRef } from 'react';
 import '../../styles/basicStyle.css';
+import '../../styles/createTask.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { format, isValid } from 'date-fns';
+import { Modal, Button } from 'react-bootstrap';
+import { FaCalendarCheck } from "react-icons/fa";
+import ko from 'date-fns/locale/ko';
+import Checkbox from '../../modules/checkBoxModule';
+import { PiLineVerticalThin } from "react-icons/pi";
 
-const createTaskModal = () => {
+const CreateTaskModal = forwardRef((props, ref, read_listTitle ) => {
+  const [show, setShow] = useState(false);
+  const [taskTitle, setTaskTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [startDate, setStartDate] = useState(new Date());
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  useImperativeHandle(ref, () => ({
+    showModal: handleShow,
+  }));
+
+  // useEffect(() => {
+  //   if (props.date && isValid(new Date(props.date))) {
+  //     setStartDate(new Date(props.date));
+  //   } else {
+  //     setStartDate(new Date()); // 기본 값으로 현재 날짜 설정
+  //   }
+  // }, [props.date]);
+
+  const formattedDate = format(new Date(props.date), 'yyyy-MM-dd');
+
   return (
-    <div>
-      {/* 모달 내용 렌더링 */}
-    </div>
+    <Modal show={show} onHide={handleClose} centered>
+      <Modal.Header>
+        <div className="d-flex align-items-center">
+          
+          <FaCalendarCheck />
+          <DatePicker 
+            selected={startDate} 
+            onChange={(date) => setStartDate(formattedDate(date))}
+            locale={ko}
+            dateFormat="yyyy-MM-dd" />
+        </div>
+      </Modal.Header>
+      <Modal.Body>
+        <div className="d-flex align-items-center line">
+          <span className="task-title">
+            <input
+              type="text"
+              className="task-title-input"
+              placeholder="할일을 입력하세요"
+              value={taskTitle}
+              onChange={(e) => setTaskTitle(e.target.value)}
+            />
+          </span>
+          {/* <span className="flag-icon">
+          <i className="fa-regular fa-flag"></i>
+        </span> */}
+        </div>
+        <div className="description">
+          <textarea
+            className="description-input"
+            placeholder="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          ></textarea>
+        </div>
+      </Modal.Body>
+      <Modal.Footer>
+        <div className="d-flex align-items-center line row"
+          style={{width: "100vw"}}>
+          <div className="list-title col lefted">{read_listTitle}할 일 목록</div>
+          <div className="setting-icon col righted">
+            <i className="fa-solid fa-ellipsis"></i>
+          </div>
+        </div>
+        {/* <button type="button" className="btn btn-secondary" onClick={handleClose}>Close</button>
+        <button type="button" className="btn btn-primary">Save changes</button> */}
+      </Modal.Footer>
+    </Modal>
   );
-};
+});
 
-export default createTaskModal;
+export default CreateTaskModal;
