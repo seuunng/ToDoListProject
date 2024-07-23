@@ -3,15 +3,13 @@ import '../../styles/basicStyle.css';
 import '../../styles/monthlyBoard.css';
 import TaskBoxForCal from '../../components/task_state/taskBoxForCal';
 import CreateTask from '../../components/task_state/createTaskModal';
-import ReadTaskModal from '../../components/task_state/readTaskModal';
 
-import ModalModule from '../../modules/modalModule';
 
 const MonthlyBoard = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [showCreateTask, setShowCreateTask] = useState(false);
-  const [showReadTask, setShowReadTask] = useState(false);
-  const readTaskModalRef = useRef(null);
+  // const [showReadTask, setShowReadTask] = useState(false);
+  const createTaskModalRef = useRef(null);
 
   const getDate = (week, day) => {
     // Week and day are 1-based
@@ -23,6 +21,9 @@ const MonthlyBoard = () => {
 
   const createMemo = (date) => {
     setSelectedDate(date);
+    if (createTaskModalRef.current) {
+      createTaskModalRef.current.showModal();
+    }
   };
 
   const weeks = [1, 2, 3, 4, 5];
@@ -63,7 +64,6 @@ const MonthlyBoard = () => {
                           task={`Task ${day}`}
                           description={`Description for task ${day}`}
                           listtitle={`List title for task ${day}`}
-                          // onClick={() => setShowReadTask(true)}
                           style={{ backgroundColor: "lightblue" }}
                         />
                       </div>
@@ -75,30 +75,7 @@ const MonthlyBoard = () => {
           </tbody>
         </table>
       </div>
-      <ModalModule
-        show={showCreateTask}
-        onHide={() => setShowCreateTask(false)}
-        // modalTitle="Account Info"
-        context={
-          <CreateTask />
-        }
-        btnTitle="저장"
-      />
-      {/* <ModalModule
-        show={showReadTask}
-        onHide={() => setShowReadTask(false)}
-        // modalTitle="Account Info"
-        context={
-          <ReadTaskModal
-            ref={readTaskModalRef}
-            // read_date={selectedDate}
-            read_tasktitle={`Task ${selectedDate}`}
-            read_description={`Description for task ${selectedDate}`}
-            read_listtitle={`List title for task ${selectedDate}`}
-          />
-        }
-        btnTitle="저장"
-      /> */}
+      <CreateTask ref={createTaskModalRef} date={selectedDate}  />
     </div>
   );
 };
