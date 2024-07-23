@@ -82,3 +82,7 @@
   margin-top: 0;
   margin-bottom: 0;
 }
+.today-cell {
+  background-color: #000; /* 날짜 셀의 배경 색을 검정색으로 설정 */
+  color: #fff;
+}
