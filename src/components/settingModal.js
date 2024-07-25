@@ -56,23 +56,6 @@ const SettingModal = ({ show, onHide }) => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   // 설정 값이 변경될 때마다 로컬 스토리지에 저장
-  //   localStorage.setItem('selectedOptions', JSON.stringify(selectedOptions));
-  // }, [selectedOptions]);
-
-  // useEffect(() => {
-  //   localStorage.setItem('switches', JSON.stringify(switches));
-  // }, [switches]);
-
-  // useEffect(() => {
-  //   localStorage.setItem('allSwitchesList', JSON.stringify(allSwitchesList));
-  // }, [allSwitchesList]);
-
-  // useEffect(() => {
-  //   localStorage.setItem('allSwitchesAlarm', JSON.stringify(allSwitchesAlarm));
-  // }, [allSwitchesAlarm]);
-
   const handleOptionSelected = (type, option) => {
     setSelectedOptions({ ...selectedOptions, [type]: option });
   };
@@ -104,7 +87,8 @@ const SettingModal = ({ show, onHide }) => {
     onHide();
 
   }
-  // const handleShow = () => setShow(true);
+
+
 
   return (
     <Modal show={show} onHide={onHide} centered>

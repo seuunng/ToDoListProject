@@ -65,7 +65,7 @@
     display: none;
   }
 }
-.month-year-title .react-datepicker__input-container input {
+/* .month-year-title .react-datepicker__input-container input {
   font-size: 36px;
   margin-bottom: 8px;
 }
@@ -73,7 +73,7 @@
     border: none;
     margin-left: 8px;
     
-  }
+  } */
 .list-title.col.lefted {
     margin-top: 0;
     margin-bottom: 0;

@@ -10,24 +10,46 @@ const Layout = () => {
     const [sidebarVisible, setSidebarVisible] = useState(false);
 
     const toggleSidebar = () => {
-      setSidebarVisible(!sidebarVisible);
+        setSidebarVisible(!sidebarVisible);
     };
-  
-  
-    return(
-        <div>
-            <MenuBar/>
-            <div className="icon" onClick={toggleSidebar}>
-                <i 
-                className="fa-solid fa-bars" 
-                style={{ color: '#000000' }} 
-                alt="Toggle Sidebar"></i>
+
+    const hideSidebar = () => {
+        if (sidebarVisible) {
+            setSidebarVisible(false);
+        }
+    };
+    return (
+        <div onClick={hideSidebar}>
+            <MenuBar />
+            <div className="icon" onClick={(e) => {e.stopPropagation(); toggleSidebar();}} 
+                style={{ zIndex: 1001, }}>
+                <i
+                    className="fa-solid fa-bars"
+                    style={{ color: '#000000' }}
+                    alt="Toggle Sidebar"></i>
             </div>
             {sidebarVisible && <SideBar />}
-           
-            <main className="layout-main-content">
-                <Outlet />
-            </main>
+            <div className="layout-content" style={{ position: 'relative' }}>
+                {sidebarVisible && (
+                    <div
+                        className="sidebar-wrapper"
+                        onClick={(e) => e.stopPropagation()}
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            height: '100%',
+                            zIndex: 1000,
+                            backgroundColor: 'white',
+                        }}
+                    >
+                        <SideBar />
+                    </div>
+                )}
+                <main className="layout-main-content">
+                    <Outlet />
+                </main>
+            </div>
         </div>
     )
 }
