@@ -17,15 +17,18 @@ const SideBar = () => {
         <div className="sideBar">
           <div className="content">
             <div className="listCont">
+              <div className="d-flex align-items-center title">
+                <h6 className="item">Smart Lists</h6>
+              </div>
               <div className="list">
                 <ListItemsBox value="" />
               </div>
             </div>
             <hr />
             <div className="listCont">
-              <div className="d-flex align-items-center title" onClick={showCreateList}>
+              <div className="d-flex align-items-center title">
                 <h6 className="item">Lists</h6>
-                <i className="fa-solid fa-plus"></i>
+                <i className="fa-solid fa-plus" onClick={showCreateList}></i>
               </div>
               <div className="list">
                 <ListItemsBox value="" />
@@ -35,6 +38,8 @@ const SideBar = () => {
         </div>
         {showCreateListModal && (
           <CreateList
+            show={showCreateListModal}
+            onHide={() => setShowCreateListModal(false)}
             icon="&"
             list="할일목록"
             count="20"

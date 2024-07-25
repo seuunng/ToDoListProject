@@ -2,8 +2,9 @@ import React, { useImperativeHandle, forwardRef, useState, useEffect } from 'rea
 import '../../styles/basicStyle.css';
 import { Modal, Button } from 'react-bootstrap';
 import { format, isValid } from 'date-fns';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+// import DatePicker from 'react-datepicker';
+// import 'react-datepicker/dist/react-datepicker.css';
+import DatePickerModule from '../../modules/datePickerModule';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { FaCalendarCheck } from "react-icons/fa";
@@ -32,26 +33,36 @@ const ReadTaskModal = forwardRef(({ /*read_date,*/ read_tasktitle, read_descript
   useImperativeHandle(ref, () => ({
     openModal: handleShow,
   }));
+  const handleDateChange = (date) => {
+    console.log('Selected date:', date);
+  };
 
+  const handleRepeatClick = () => {
+    console.log('Repeat settings clicked');
+  };
+
+  const handleAlarmClick = () => {
+    console.log('Alarm settings clicked');
+  };
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header>
         <div className="d-flex align-items-center">
-          <Checkbox/>
-          <PiLineVerticalThin style={{marginLeft: "5px", marginRight: "5px"}} />
+          <Checkbox />
+          <PiLineVerticalThin style={{ marginLeft: "5px", marginRight: "5px" }} />
           <FaCalendarCheck />
-          <DatePicker 
-            selected={startDate} 
-            onChange={(date) => setStartDate(date)} 
-            locale={ko}
-            dateFormat="yyyy-MM-dd" />
+          <DatePickerModule
+            onDateChange={handleDateChange}
+            onRepeatClick={handleRepeatClick}
+            onAlarmClick={handleAlarmClick}
+          />
         </div>
       </Modal.Header>
       <Modal.Body>
         <div className="d-flex align-items-center line">
           <span className="task-title">
-          <h4>{read_tasktitle}title</h4>
-        </span>
+            <h4>{read_tasktitle}title</h4>
+          </span>
           {/* <span className="flag-icon">
             <i className="fa-regular fa-flag"></i>
           </span> */}
