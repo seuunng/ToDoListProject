@@ -1,0 +1,18 @@
+.task-table {
+    width: 50vw;
+    max-width: 600px; 
+    min-width: 400px; 
+    border-collapse: collapse; 
+  }
+  .task-table td {
+    padding: 10px;
+  }
+  
+  .task-table .task-cell {
+    width: 100%; /* 셀 너비 설정 */
+  }
+  @media (max-width: 1205px) {
+    .ReadTaskPage {
+      display: none;
+    }
+  }

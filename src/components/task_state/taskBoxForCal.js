@@ -48,7 +48,7 @@ const TaskBoxForCal = ({ tasks, updateTask}) => {
       </div>
       <ReadTaskModal
         ref={readTaskModalRef}
-        tasks={tasks} //리스트 제목으로 변경하기
+        tasks={tasks} 
         updateTask={updateTask}
       />
     </>

@@ -38,7 +38,7 @@ const SimpleInputTask = ({ addTask }) => {
     <div className="input-container">
       <input 
         type="text" 
-        className="custom-input" 
+        className="custom-input-simpleInputTask" 
         placeholder={` {리스트제목}에 할일을 추가하세요!`}
         value={newTask}
         onChange={handleInputChange}

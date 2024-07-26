@@ -1,19 +1,7 @@
 .readTaskPage {
-    margin-top: 20px;
+    margin-left: 50px;
 }
 .list-title{
 }
-.task-table {
-  width: 50vw;
-  max-width: 600px; /* 최대 너비 설정 */
-  min-width: 400px; /* 최소 너비 설정 */
-  border-collapse: collapse; /* 테이블 셀 간격 제거 */
-}
 
-.task-table td {
-  padding: 10px;
-}
 
-.task-table .task-cell {
-  width: 100%; /* 셀 너비 설정 */
-}
