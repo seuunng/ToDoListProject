@@ -4,6 +4,7 @@ import TaskBox from '../task_state/taskBox';
 import { format } from 'date-fns';
 
 const TaskCont = ({ tasks }) => {
+  
   const formatDate = (date) => {
     const parsedDate = new Date(date);
       if (isNaN(parsedDate)) {
@@ -11,14 +12,15 @@ const TaskCont = ({ tasks }) => {
       }
       return format(parsedDate, 'MM.dd');; // 예쁜 날짜 형식
   };
+
   return (
     <div className="TaskCont">
       <table className="task-table">
         <tbody>
           {tasks.map((task) => (
-            <tr key={task.id}>
+            <tr key={task.no}>
               <td className="task-cell">
-                <TaskBox task={task.text} date={formatDate(task.date)} />
+                <TaskBox task={task.title} date={formatDate(task.startDate)} />
               </td>
             </tr>
           ))}
