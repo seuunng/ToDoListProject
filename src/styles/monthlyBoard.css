@@ -14,10 +14,14 @@
     width: 90vw;
     height: 90vh;
     border-collapse: collapse;
+    table-layout: fixed; /* 테이블 레이아웃을 고정으로 설정 */
 }
 .calendar-table td{
     padding: 0px;
     vertical-align: top; /* 내용이 위쪽에 정렬되도록 설정 */
+    max-width: 250px;/* 최대 너비 설정 */
+    overflow: hidden; /* 내용이 넘칠 경우 숨김 처리 */
+    
 }
 .day-cell {
     display: flex;

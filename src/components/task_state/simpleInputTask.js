@@ -3,7 +3,7 @@ import '../../styles/basicStyle.css';
 import '../../styles/simpleInputTask.css';
 import { FaPlus } from "react-icons/fa";
 
-const SimpleInputTask = ({ listTitle, onTaskCreated }) => {
+const SimpleInputTask = ({ addTask }) => {
   const [newTask, setNewTask] = useState('');
 
   const handleInputChange = (e) => {
@@ -18,8 +18,17 @@ const SimpleInputTask = ({ listTitle, onTaskCreated }) => {
 
   const createTask = () => {
     if (newTask.trim()) {
-      const task = { id: Date.now(), text: newTask, date: new Date().toISOString().split('T')[0] };
-      onTaskCreated(task);
+      const task = {
+        title: newTask,
+        content: '',
+        isNotified: false,
+        isRepeated: false,
+        startDate: new Date().toISOString(),
+        endDate: '',
+        priority: 'MEDIUM',
+        taskStatus: 'PENDING'
+      };
+      addTask(task);
       setNewTask('');
     }
   };
@@ -30,7 +39,7 @@ const SimpleInputTask = ({ listTitle, onTaskCreated }) => {
       <input 
         type="text" 
         className="custom-input" 
-        placeholder={` ${listTitle}에 할일을 추가하세요!`}
+        placeholder={` {리스트제목}에 할일을 추가하세요!`}
         value={newTask}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}

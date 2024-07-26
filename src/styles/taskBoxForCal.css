@@ -14,3 +14,9 @@
     margin-left:0px;
     margin-right:0px;
   }
+  .task-title {
+    white-space: nowrap; /* 텍스트를 한 줄로 표시 */
+    overflow: hidden; /* 넘치는 텍스트를 숨김 */
+    text-overflow: ellipsis; /* 넘치는 텍스트에 '...' 추가 */
+    display: block; /* 블록 요소로 설정 */
+  }

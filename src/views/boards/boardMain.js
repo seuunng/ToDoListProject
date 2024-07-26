@@ -25,17 +25,25 @@ const BoardMain = () => {
         fetchTableData();
     }, []);
 
-    const addTask = (newTask) => {
-        setTasks([...tasks, newTask]);
-        console.log("Task added:", newTask);
+    const addTask = async (newTask) => {
+        try {
+        const response = await instance.post('/tasks/task', newTask);
+        const addedTask = response.data;
+        setTasks([...tasks, addedTask]);
+        console.log("Task added:", addedTask);
+        } catch (error) {
+            console.error('Error adding task:', error);
+        }
     };
 
     return (
         <div>
             {boardType === 'basic' ? (
-                <BasicBoard tasks={tasks} addTask={addTask} />
+                <BasicBoard 
+                    tasks={tasks} addTask={addTask} />
             ) : (
-                <MonthlyBoard tasks={tasks} addTask={addTask} />
+                <MonthlyBoard 
+                    tasks={tasks} addTask={addTask} />
             )}
         </div>
     );

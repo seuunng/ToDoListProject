@@ -61,18 +61,18 @@ const ReadTaskModal = forwardRef(({ /*read_date,*/ read_tasktitle, read_descript
       <Modal.Body>
         <div className="d-flex align-items-center line">
           <span className="task-title">
-            <h4>{read_tasktitle}title</h4>
+            <h4>{read_tasktitle}</h4>
           </span>
           {/* <span className="flag-icon">
             <i className="fa-regular fa-flag"></i>
           </span> */}
         </div>
-        <div className="description">{read_description}내용</div>
+        <div className="description">{read_description}</div>
       </Modal.Body>
       <Modal.Footer>
         <div className="d-flex align-items-center line row"
           style={{ width: "100vw" }}>
-          <div className="list-title col lefted">{read_listTitle}할 일 목록</div>
+          <div className="list-title col lefted">{read_listTitle}</div>
           <div className="setting-icon col righted">
             <i className="fa-solid fa-ellipsis"></i>
           </div>

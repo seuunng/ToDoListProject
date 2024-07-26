@@ -5,14 +5,12 @@ import ReadTaskModal from '../task_state/readTaskModal';
 import { LuRepeat } from "react-icons/lu";
 import { FaRegBell } from "react-icons/fa";
 
-const TaskBoxForCal = ({ task, read_date, read_task, read_description, read_listtitle, style }) => {
+const TaskBoxForCal = ({ tasks, }) => {
   const readTaskModalRef = useRef(null);
   const taskBoxRef = useRef(null);
 
   useEffect(() => {
     const readMemo = (e) => {
-      // console.log("TaskBoxForCal clicked", e); // 이벤트 객체 로그 추가
-      // e.stopPropagation();
       if (readTaskModalRef.current) {
         readTaskModalRef.current.openModal();
       }
@@ -34,17 +32,25 @@ const TaskBoxForCal = ({ task, read_date, read_task, read_description, read_list
     <>
       <div ref={taskBoxRef} 
         className="TaskBoxForCal">
-        <div className="color-box row" style={style}>
-          <span className="repeat col-2"><LuRepeat /></span>
-          <span className="taskc col-7">{task}</span>
-          <span className="alram col-3 "><FaRegBell /></span>
+        <div className="color-box row">
+           {tasks.isRepeated && (
+            <span className="repeat col-2">
+              <LuRepeat />
+            </span>
+          )}
+          <span className="task-title col-8">{tasks.title}</span>
+          {tasks.isNotified && (
+            <span className="alram col-2">
+              <FaRegBell />
+            </span>
+          )}
         </div>
       </div>
       <ReadTaskModal
         ref={readTaskModalRef}
-        read_tasktitle={read_task}
-        read_description={read_description}
-        read_listtitle={read_listtitle}
+        read_tasktitle={tasks.title}
+        read_description={tasks.content}
+        read_listtitle={tasks.title} //리스트 제목으로 변경하기
       />
     </>
   );

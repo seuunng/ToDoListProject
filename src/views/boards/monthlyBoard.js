@@ -12,12 +12,14 @@ import { Button, Col } from 'react-bootstrap';
 // registerLocale('ko', ko);
 // setDefaultLocale('ko');
 
-const MonthlyBoard = () => {
+const MonthlyBoard = ({tasks, addTask}) => {
   const [startDate, setStartDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const createTaskModalRef = useRef(null);
   const todayRef = useRef(null); // 오늘 날짜 셀을 참조할 ref
-
+  const weeks = [1, 2, 3, 4, 5];
+  const days = [1, 2, 3, 4, 5, 6, 7];
+  
   const getDate = (week, day) => {
     // Week and day are 1-based
     const firstDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1); 
@@ -33,8 +35,6 @@ const MonthlyBoard = () => {
     }
   };
 
-  const weeks = [1, 2, 3, 4, 5];
-  const days = [1, 2, 3, 4, 5, 6, 7];
 
   const handleTaskCellClick = (event, date) => {
     const taskBoxForCalElement = event.target.closest('.TaskBoxForCal');
@@ -56,6 +56,7 @@ const MonthlyBoard = () => {
       date.getFullYear() === today.getFullYear()
     );
   };
+
   const scrollToToday = () => {
     setSelectedDate(new Date());
   };
@@ -65,6 +66,17 @@ const MonthlyBoard = () => {
       todayRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }, [selectedDate]);
+
+  const filterTasksForDate = (date) => {
+    return tasks.filter(task => {
+      const taskDate = new Date(task.startDate);
+      return (
+        taskDate.getDate() === date.getDate() &&
+        taskDate.getMonth() === date.getMonth() &&
+        taskDate.getFullYear() === date.getFullYear()
+      );
+    });
+  };
 
   return (
     <div className="monthly-board-container">
@@ -101,17 +113,19 @@ const MonthlyBoard = () => {
                 {days.map((day) => {
                   const date = getDate(week, day);
                   const todayClass = isToday(date) ? 'today-cell' : 'date-cell';
+                  const filteredTasks = filterTasksForDate(date);
                   return (
                     <td key={day} ref={isToday(date) ? todayRef : null}>
                       <div className="day-cell">
                         <div className={todayClass}>{date.getDate()}</div>
                         <div className="task-cell" onClick={(e) => handleTaskCellClick(e, date)}>
+                        {filteredTasks.map(task => (
                           <TaskBoxForCal
                             showdate={date.getDate().toString()}
-                            task={`Task ${day}`}
-                            description={`Description for task ${day}`}
-                            listtitle={`List title for task ${day}`}
+                            key={task.no}
+                            tasks={task}
                           />
+                        ))}
                       </div>
                     </div>
                   </td>
@@ -122,7 +136,8 @@ const MonthlyBoard = () => {
           </tbody>
         </table>
       </div>
-      <CreateTask ref={createTaskModalRef} date={startDate}  />
+      <CreateTask 
+        ref={createTaskModalRef} date={startDate} addTask={addTask} />
     </div>
   );
 };
