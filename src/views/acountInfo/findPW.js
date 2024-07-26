@@ -1,6 +1,6 @@
 import React from 'react';
 import '../../styles/basicStyle.css';
-// import '../../styles/updatePW.css';
+import '../../styles/logout.css';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 

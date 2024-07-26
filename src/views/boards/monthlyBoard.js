@@ -80,6 +80,8 @@ const MonthlyBoard = ({tasks, addTask, updateTask}) => {
             onChange={handleDateChange}
             dateFormat="MMMM, yyyy"
             showMonthYearPicker
+            popperPlacement="bottom-start"
+            popperArrow="bottom-start"
           />
         </Col>
         <Col className='righted'>

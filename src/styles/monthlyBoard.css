@@ -11,7 +11,7 @@
     height: 100vh; /* Viewport Height */
   }
 .calendar-table{
-    width: 90vw;
+    width: 93vw;
     height: 90vh;
     border-collapse: collapse;
     table-layout: fixed; /* 테이블 레이아웃을 고정으로 설정 */
@@ -69,15 +69,19 @@
     display: none;
   }
 }
-/* .month-year-title .react-datepicker__input-container input {
+.month-year-title .react-datepicker__input-container input {
   font-size: 36px;
   margin-bottom: 8px;
 }
 .react-datepicker__input-container input {
     border: none;
+    outline: none; /* 포커스 시 외곽선 제거 */
     margin-left: 8px;
     
-  } */
+  }
+  .react-datepicker__input-container input:focus {
+    outline: none; /* 포커스 시 외곽선 제거 */
+  }
 .list-title.col.lefted {
     margin-top: 0;
     margin-bottom: 0;
@@ -89,4 +93,8 @@
 .today-cell {
   background-color: #000; /* 날짜 셀의 배경 색을 검정색으로 설정 */
   color: #fff;
+}
+.react-datepicker__triangle {
+  left: 47% !important; /* 필요에 따라 값을 조정하세요 */
+  transform: translateX(-50%); /* 중앙 정렬 */
 }

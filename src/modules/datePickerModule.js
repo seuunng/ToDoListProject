@@ -137,7 +137,6 @@ const DatePickerModule = ({ onDateChange, onRepeatClick, onAlarmClick }) => {
                             paddingBottom: "4px",
                             borderRadius: "7px",
                             paddingLeft: "-8px",
-
                         }}>
                         <Col>
                             <Button onClick={() => handleButtonClick('date')} variant="light"
@@ -197,7 +196,7 @@ const DatePickerModule = ({ onDateChange, onRepeatClick, onAlarmClick }) => {
                 endDate={endDate}
                 selectsRange={selectedButton === 'period'}
 
-                showPopperArrow={true}
+                showPopperArrow={false}
                 calendarContainer={MyContainer}
                 popperPlacement="bottom-start"
                 style={{ margin: "10px", padding: "10px" }}

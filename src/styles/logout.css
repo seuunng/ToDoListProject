@@ -10,6 +10,8 @@
     text-align: center;
     flex-direction: column;
     gap: 10px;
+    margin-left: -60px;
+    margin-top: -60px;
 
 }
 
