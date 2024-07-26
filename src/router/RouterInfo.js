@@ -7,6 +7,7 @@ import FindPW from '../views/acountInfo/findPW.js';
 import Logout from '../views/acountInfo/logout.js';
 import SignUp from '../views/acountInfo/signUp.js';
 import UpdateSimplePW from '../views/acountInfo/updateSimplePW.js';
+import MainBoard from '../views/boards/boardMain.js';
 import BasicBoard from '../views/boards/basicBoard.js';
 import DailyBoard from '../views/boards/dailyBoard.js';
 import KanbanBoard from '../views/boards/kanbanBoard.js';
@@ -64,6 +65,10 @@ export const RouterInfo = createBrowserRouter([
       {
         path: "logout",
         element: <Logout />,
+      },
+      {
+        path: "mainBoard/:boardType",
+        element: <MainBoard />,
       },
     ]
   }

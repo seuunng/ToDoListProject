@@ -29,10 +29,10 @@ const MenuBar = () => {
           <div className="item" onClick={() => setShowAccountInfo(true)}>
             <FontAwesomeIcon icon={faCat} />
           </div>
-          <Link to="/basicBoard" className="item">
+          <Link to="/mainBoard/basic" className="item">
             <FontAwesomeIcon icon={faSquareCheck} />
           </Link>
-          <Link to="/monthlyBoard" className="item">
+          <Link to="/mainBoard/monthly" className="item">
             <FontAwesomeIcon icon={faCalendarDays} />
           </Link>
           <div className="item" onClick={() => setShowSettingModal(true)}>

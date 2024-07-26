@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../../styles/basicStyle.css';
 import '../../styles/simpleInputTask.css';
+import { FaPlus } from "react-icons/fa";
 
 const SimpleInputTask = ({ listTitle, onTaskCreated }) => {
   const [newTask, setNewTask] = useState('');
@@ -29,7 +30,7 @@ const SimpleInputTask = ({ listTitle, onTaskCreated }) => {
       <input 
         type="text" 
         className="custom-input" 
-        placeholder={`${listTitle}에 할일을 추가하세요!`}
+        placeholder={` ${listTitle}에 할일을 추가하세요!`}
         value={newTask}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
