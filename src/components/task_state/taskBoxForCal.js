@@ -5,7 +5,7 @@ import ReadTaskModal from '../task_state/readTaskModal';
 import { LuRepeat } from "react-icons/lu";
 import { FaRegBell } from "react-icons/fa";
 
-const TaskBoxForCal = ({ tasks, }) => {
+const TaskBoxForCal = ({ tasks, updateTask}) => {
   const readTaskModalRef = useRef(null);
   const taskBoxRef = useRef(null);
 
@@ -48,9 +48,8 @@ const TaskBoxForCal = ({ tasks, }) => {
       </div>
       <ReadTaskModal
         ref={readTaskModalRef}
-        read_tasktitle={tasks.title}
-        read_description={tasks.content}
-        read_listtitle={tasks.title} //리스트 제목으로 변경하기
+        tasks={tasks} //리스트 제목으로 변경하기
+        updateTask={updateTask}
       />
     </>
   );

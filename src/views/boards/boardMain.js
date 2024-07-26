@@ -17,7 +17,6 @@ const BoardMain = () => {
                 const data = response_taskData.data
                 console.log(data);
                 setTasks(data);
-
             } catch (error) {
                 console.error('Error get taskData:', error);
             }
@@ -30,9 +29,20 @@ const BoardMain = () => {
         const response = await instance.post('/tasks/task', newTask);
         const addedTask = response.data;
         setTasks([...tasks, addedTask]);
-        console.log("Task added:", addedTask);
         } catch (error) {
             console.error('Error adding task:', error);
+        }
+    };
+    const updateTask = async (updatedTask) => {
+        try {
+        const response = await instance.put(`/tasks/task/${updatedTask.no}`, updatedTask);
+        console.log(updatedTask.no);
+        const updatedTasks = tasks.map(task =>
+            task.no === updatedTask.no ? response.data : task
+          );
+          setTasks(updatedTasks);
+        } catch (error) {
+            console.error('Error updating task:', error);
         }
     };
 
@@ -40,10 +50,10 @@ const BoardMain = () => {
         <div>
             {boardType === 'basic' ? (
                 <BasicBoard 
-                    tasks={tasks} addTask={addTask} />
+                    tasks={tasks} addTask={addTask} updateTask={updateTask} />
             ) : (
                 <MonthlyBoard 
-                    tasks={tasks} addTask={addTask} />
+                    tasks={tasks} addTask={addTask} updateTask={updateTask}/>
             )}
         </div>
     );

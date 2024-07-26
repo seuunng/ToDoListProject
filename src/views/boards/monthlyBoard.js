@@ -6,13 +6,8 @@ import CreateTask from '../../components/task_state/createTaskModal';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Col } from 'react-bootstrap';
-// import { registerLocale, setDefaultLocale } from "react-datepicker";
-// import ko from 'date-fns/locale/ko'; // 한국어 로케일 사용 (원하는 로케일을 사용할 수 있습니다)
 
-// registerLocale('ko', ko);
-// setDefaultLocale('ko');
-
-const MonthlyBoard = ({tasks, addTask}) => {
+const MonthlyBoard = ({tasks, addTask, updateTask}) => {
   const [startDate, setStartDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const createTaskModalRef = useRef(null);
@@ -21,7 +16,6 @@ const MonthlyBoard = ({tasks, addTask}) => {
   const days = [1, 2, 3, 4, 5, 6, 7];
   
   const getDate = (week, day) => {
-    // Week and day are 1-based
     const firstDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1); 
     const dayOffset = (week - 1) * 7 + (day - firstDayOfMonth.getDay());
     const date = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1 + dayOffset);
@@ -35,13 +29,11 @@ const MonthlyBoard = ({tasks, addTask}) => {
     }
   };
 
-
   const handleTaskCellClick = (event, date) => {
-    const taskBoxForCalElement = event.target.closest('.TaskBoxForCal');
     if (event.target !== event.currentTarget) {
       return; 
     }
-    createMemo(date, event);
+    createMemo(date);
   };
 
   const handleDateChange = (date) => {
@@ -124,6 +116,7 @@ const MonthlyBoard = ({tasks, addTask}) => {
                             showdate={date.getDate().toString()}
                             key={task.no}
                             tasks={task}
+                            updateTask={updateTask}
                           />
                         ))}
                       </div>

@@ -12,20 +12,26 @@ import ko from 'date-fns/locale/ko';
 import Checkbox from '../../modules/checkBoxModule';
 import { PiLineVerticalThin } from "react-icons/pi";
 
-const ReadTaskModal = forwardRef(({ /*read_date,*/ read_tasktitle, read_description, read_listTitle }, ref) => {
+const ReadTaskModal = forwardRef(({ tasks , updateTask}, ref) => {
   const [show, setShow] = useState(false);
-  const [formattedDate, setFormattedDate] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
+  const [taskTitle, setTaskTitle] = useState(tasks.title);
+  const [taskDescription, setTaskDescription] = useState(tasks.content);
+  const [startDate, setStartDate] = useState(new Date(tasks.startDate));
 
-  // useEffect(() => {
-  //   if (isValid(new Date(read_date))) {
-  //     setFormattedDate(format(new Date(read_date), 'yyyy-MM-dd'));
-  //   } else {
-  //     setFormattedDate('Invalid Date');
-  //   }
-  // }, [read_date]);
+  useEffect(() => {
+    setTaskTitle(tasks.title);
+    setTaskDescription(tasks.content);
+  }, [tasks.title, tasks.content]);
 
   const handleClose = () => {
+    const updatedTask = {
+      ...tasks,
+      title: taskTitle,
+      content: taskDescription,
+      startDate,
+      // Add other task fields as necessary
+    };
+    updateTask(updatedTask);
     setShow(false);
   }
   const handleShow = () => setShow(true);
@@ -33,8 +39,9 @@ const ReadTaskModal = forwardRef(({ /*read_date,*/ read_tasktitle, read_descript
   useImperativeHandle(ref, () => ({
     openModal: handleShow,
   }));
+
   const handleDateChange = (date) => {
-    console.log('Selected date:', date);
+    setStartDate(date);
   };
 
   const handleRepeatClick = () => {
@@ -61,18 +68,33 @@ const ReadTaskModal = forwardRef(({ /*read_date,*/ read_tasktitle, read_descript
       <Modal.Body>
         <div className="d-flex align-items-center line">
           <span className="task-title">
-            <h4>{read_tasktitle}</h4>
+            <input
+              type="text"
+              value={taskTitle}
+              onChange={(e) => setTaskTitle(e.target.value)}
+              className="form-control"
+              placeholder="Task Title"
+              style={{border: "none"}}
+            />
           </span>
           {/* <span className="flag-icon">
             <i className="fa-regular fa-flag"></i>
           </span> */}
         </div>
-        <div className="description">{read_description}</div>
+        <div className="description">
+          <textarea
+            value={taskDescription}
+            onChange={(e) => setTaskDescription(e.target.value)}
+            className="form-control"
+            placeholder="Task Description"
+            style={{border: "none"}}
+          ></textarea>
+        </div>
       </Modal.Body>
       <Modal.Footer>
         <div className="d-flex align-items-center line row"
           style={{ width: "100vw" }}>
-          <div className="list-title col lefted">{read_listTitle}</div>
+          <div className="list-title col lefted">{tasks.title}</div>
           <div className="setting-icon col righted">
             <i className="fa-solid fa-ellipsis"></i>
           </div>
