@@ -7,7 +7,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Col } from 'react-bootstrap';
 
-const MonthlyBoard = ({tasks, addTask, updateTask}) => {
+const MonthlyBoard = ({tasks, addTask, updateTask, deleteTask}) => {
   const [startDate, setStartDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const createTaskModalRef = useRef(null);
@@ -120,6 +120,7 @@ const MonthlyBoard = ({tasks, addTask, updateTask}) => {
                             key={task.no}
                             tasks={task}
                             updateTask={updateTask}
+                            deleteTask={deleteTask}
                           />
                         ))}
                       </div>

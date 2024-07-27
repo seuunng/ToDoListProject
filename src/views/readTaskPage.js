@@ -9,7 +9,7 @@ import DatePickerModule from '../modules/datePickerModule';
 import SetTask from '../components/task_state/setTask';
 
 
-const ReadTaskPage = ({ tasks, updateTask }) => {
+const ReadTaskPage = ({ tasks, updateTask, deleteTask }) => {
   const [startDate, setStartDate] = useState(new Date(tasks.startDate));
   const [taskTitle, setTaskTitle] = useState(tasks.title);
   const [taskContent, setTaskContent] = useState(tasks.content);
@@ -96,7 +96,9 @@ const ReadTaskPage = ({ tasks, updateTask }) => {
         <div className="d-flex align-items-center line row">
           <div className="list-title col lefted">{tasks.title}</div>
           <div className="setting-icon col righted">
-            <SetTask />
+            <SetTask
+              task={tasks}
+              deleteTask={deleteTask} />
           </div>
         </div>
       </div>

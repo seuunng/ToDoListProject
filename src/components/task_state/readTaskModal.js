@@ -13,7 +13,7 @@ import Checkbox from '../../modules/checkBoxModule';
 import { PiLineVerticalThin } from "react-icons/pi";
 import SetTask from './setTask';
 
-const ReadTaskModal = forwardRef(({ tasks, updateTask }, ref) => {
+const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask }, ref) => {
   const [show, setShow] = useState(false);
   const [taskTitle, setTaskTitle] = useState(tasks.title);
   const [taskDescription, setTaskDescription] = useState(tasks.content);
@@ -109,7 +109,9 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask }, ref) => {
           style={{ width: "100vw" }}>
           <div className="list-title col lefted">{tasks.title}</div>
           <div className="setting-icon col righted">
-          <SetTask />
+          <SetTask 
+            task={tasks}
+            deleteTask={deleteTask} />
           </div>
         </div>
         {/* <button type="button" className="btn btn-secondary" onClick={handleClose}>Close</button>

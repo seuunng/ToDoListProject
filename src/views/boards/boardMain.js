@@ -15,7 +15,7 @@ const BoardMain = () => {
             try {
                 const response_taskData = await instance.get('/tasks/task');
                 const data = response_taskData.data
-                console.log(data);
+                // console.log(data);
                 setTasks(data);
             } catch (error) {
                 console.error('Error get taskData:', error);
@@ -46,7 +46,7 @@ const BoardMain = () => {
         }
     };
 
-    const deletedTask = async (deletedTask) => {
+    const deleteTask = async (deletedTask) => {
         try {
             await instance.delete(`/tasks/task/${deletedTask.no}`);
             console.log(deletedTask.no);
@@ -63,13 +63,13 @@ const BoardMain = () => {
                     tasks={tasks} 
                     addTask={addTask} 
                     updateTask={updateTask}
-                    deletedTask={deletedTask} />
+                    deleteTask={deleteTask} />
             ) : (
                 <MonthlyBoard
                     tasks={tasks} 
                     addTask={addTask} 
                     updateTask={updateTask}
-                    deletedTask={deletedTask} />
+                    deleteTask={deleteTask} />
             )}
         </div>
     );

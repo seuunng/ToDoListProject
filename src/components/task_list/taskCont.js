@@ -5,7 +5,7 @@ import TaskBox from '../task_state/taskBox';
 import ReadTaskPage from '../../views/readTaskPage';
 import { Row, Col } from 'react-bootstrap';
 
-const TaskCont = ({ tasks, updateTask }) => {
+const TaskCont = ({ tasks, updateTask, deleteTask }) => {
   const [selectedTask, setSelectedTask] = useState(null);
 
   const handleTaskClick = (task) => {
@@ -31,6 +31,7 @@ const TaskCont = ({ tasks, updateTask }) => {
             <ReadTaskPage
             tasks={selectedTask}
             updateTask={updateTask}
+            deleteTask={deleteTask}
             />
           )}
         </Col>

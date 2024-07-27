@@ -62,20 +62,41 @@ const SetTaskToggle = React.forwardRef(({ children, onClick }, ref) => (
     },
   );
 
-  const SetTask = () => {
+  const SetTask = ({task, deleteTask}) => {
+    const [isPinned, setIsPinned] = useState(false);
+    const [isWontDo, setIsWontDo] = useState(false);
+  
+    const togglePin = () => setIsPinned(!isPinned);
+    const toggleWontDo = () => setIsWontDo(!isWontDo);
+
     return (
       <Dropdown>
         <Dropdown.Toggle as={SetTaskToggle} id="dropdown-custom-components">
           <BsThreeDots />
         </Dropdown.Toggle>
         <Dropdown.Menu as={CustomMenu}>
-          <Dropdown.Item eventKey="1"><LuPin /> Pin</Dropdown.Item>
-          <Dropdown.Item eventKey="1"><LuPinOff /> Unpin</Dropdown.Item>
-          <Dropdown.Item eventKey="2"><MdCancelPresentation /> Won't Do</Dropdown.Item>
-          <Dropdown.Item eventKey="2"><AiOutlineRollback /> Reopen</Dropdown.Item>
+          {isPinned ? (
+          <Dropdown.Item eventKey="1" onClick={togglePin}>
+            <LuPinOff /> Unpin
+          </Dropdown.Item>
+        ) : (
+          <Dropdown.Item eventKey="1" onClick={togglePin}>
+            <LuPin /> Pin
+          </Dropdown.Item>
+        )}
+        {isWontDo ? (
+          <Dropdown.Item eventKey="2" onClick={toggleWontDo}>
+            <AiOutlineRollback /> Reopen
+          </Dropdown.Item>
+        ) : (
+          <Dropdown.Item eventKey="2" onClick={toggleWontDo}>
+            <MdCancelPresentation /> Won't Do
+          </Dropdown.Item>
+        )}
           <Dropdown.Item eventKey="3"><FaRegStickyNote /> Open as sticky note</Dropdown.Item>
           <Dropdown.Item eventKey="4"><MdLocalPrintshop /> Print</Dropdown.Item>
-          <Dropdown.Item eventKey="5"><RiDeleteBin6Line /> Delete</Dropdown.Item>
+          <Dropdown.Item eventKey="5"
+           onClick={() => deleteTask(task)}><RiDeleteBin6Line /> Delete</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
     );

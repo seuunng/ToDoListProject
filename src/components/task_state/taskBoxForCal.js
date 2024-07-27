@@ -5,7 +5,7 @@ import ReadTaskModal from '../task_state/readTaskModal';
 import { LuRepeat } from "react-icons/lu";
 import { FaRegBell } from "react-icons/fa";
 
-const TaskBoxForCal = ({ tasks, updateTask}) => {
+const TaskBoxForCal = ({ tasks, updateTask, deleteTask}) => {
   const readTaskModalRef = useRef(null);
   const taskBoxRef = useRef(null);
 
@@ -50,6 +50,7 @@ const TaskBoxForCal = ({ tasks, updateTask}) => {
         ref={readTaskModalRef}
         tasks={tasks} 
         updateTask={updateTask}
+        deleteTask={deleteTask}
       />
     </>
   );

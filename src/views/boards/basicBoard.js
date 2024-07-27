@@ -3,7 +3,7 @@ import '../../styles/basicStyle.css';
 import SimpleInputTask from '../../components/task_state/simpleInputTask'
 import TaskCont from '../../components/task_list/taskCont';
 
-const BasicBoard = ({ tasks, addTask, updateTask }) => {
+const BasicBoard = ({ tasks, addTask, updateTask, deleteTask }) => {
 
 
   return (
@@ -13,7 +13,7 @@ const BasicBoard = ({ tasks, addTask, updateTask }) => {
           <SimpleInputTask addTask={addTask} />
         </div>
         <div>
-          <TaskCont tasks={tasks} updateTask ={updateTask }/>
+          <TaskCont tasks={tasks} updateTask ={updateTask } deleteTask={deleteTask} />
         </div>
       </div>
       
