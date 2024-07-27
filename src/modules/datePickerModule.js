@@ -9,7 +9,7 @@ import { Button, Col } from 'react-bootstrap';
 import DropdownBtn from './dropdownModule';
 import { IoMdTime } from "react-icons/io";
 
-const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick }) => {
+const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick, dateFormat }) => {
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDateRange, endDate] = dateRange;
     const [selectedDate, setSelectedDate] = useState(startDate);
@@ -53,7 +53,7 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
     const CustomInput = forwardRef(({ value, onClick, className }, ref) => (
         <button className={className} onClick={onClick} ref={ref}
             style={{
-                width: "400px",
+                // width: "400px",
                 fontSize: "16px",
                 textAlign: "left",
                 marginLeft: "10px",
@@ -207,7 +207,7 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
                 style={{ margin: "10px", padding: "10px" }}
                 customInput={<CustomInput className="custom-input" />}
                 timeInputLabel={<CustomTimeLabel />}
-                dateFormat={timeValue ? "yyyy/MM/dd h:mm aa" : "yyyy/MM/dd"}
+                dateFormat={dateFormat ? dateFormat : (timeValue ? "yyyy/MM/dd h:mm aa" : "yyyy/MM/dd")}
                 showTimeInput
                 customTimeInput={<CustomTimeInput value={timeValue} onChange={setTimeValue} />}
             >
@@ -237,17 +237,18 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
                         </Col>
                     </div>
                     <div className="d-flex align-items-center line row">
-                        <Col xs={8} className='righted'>
+                        <Col
+                            style={{ marginTop: "5px", marginRight: "0",  }}>
                             <Button variant="outline-dark"
-                                style={{ marginTop: "5px", marginRight: "0" }}
+                             style={{ width: "100%"  }}
                             >
                                 취소
                             </Button>
                         </Col>
-                        <Col xs={4} className='lefted'
-                            style={{ marginTop: "5px", marginleft: "0" }}
-                        >
-                            <Button>
+                        <Col
+                            style={{ marginTop: "5px", marginleft: "0" }}>
+                            <Button
+                             style={{ width: "100%"  }}>
                                 저장
                             </Button>
                         </Col>
@@ -256,13 +257,10 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
             </DatePicker>
             {/* ) : (
                 <DatePicker
-                    
-
                     showPopperArrow={true}
                     calendarContainer={MyContainer}
                     popperPlacement="bottom-start"
                     style={{ margin: "10px", padding: "10px" }}
-                   
                 >
                     <div>
                         <div className="d-flex align-items-center line row">

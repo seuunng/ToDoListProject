@@ -19,11 +19,7 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask }, ref) => {
   const [taskDescription, setTaskDescription] = useState(tasks.content);
   const [startDate, setStartDate] = useState(new Date(tasks.startDate));
 
-  useEffect(() => {
-    setStartDate(new Date(tasks.startDate));
-    setTaskTitle(tasks.title);
-    setTaskDescription(tasks.content);
-  }, [tasks]);
+  
 
   const handleClose = () => {
     const updatedTask = {
