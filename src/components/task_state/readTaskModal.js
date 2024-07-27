@@ -9,9 +9,9 @@ import DatePickerModule from '../../modules/datePickerModule';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { FaCalendarCheck } from "react-icons/fa";
-import ko from 'date-fns/locale/ko';
 import Checkbox from '../../modules/checkBoxModule';
 import { PiLineVerticalThin } from "react-icons/pi";
+import SetTask from './setTask';
 
 const ReadTaskModal = forwardRef(({ tasks, updateTask }, ref) => {
   const [show, setShow] = useState(false);
@@ -109,7 +109,7 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask }, ref) => {
           style={{ width: "100vw" }}>
           <div className="list-title col lefted">{tasks.title}</div>
           <div className="setting-icon col righted">
-            <i className="fa-solid fa-ellipsis"></i>
+          <SetTask />
           </div>
         </div>
         {/* <button type="button" className="btn btn-secondary" onClick={handleClose}>Close</button>

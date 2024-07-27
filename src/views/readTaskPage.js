@@ -6,6 +6,8 @@ import CheckBox from '../modules/checkBoxModule'
 import { PiLineVerticalThin } from "react-icons/pi";
 import { FaCalendarCheck } from "react-icons/fa";
 import DatePickerModule from '../modules/datePickerModule';
+import SetTask from '../components/task_state/setTask';
+
 
 const ReadTaskPage = ({ tasks, updateTask }) => {
   const [startDate, setStartDate] = useState(new Date(tasks.startDate));
@@ -48,7 +50,7 @@ const ReadTaskPage = ({ tasks, updateTask }) => {
   };
   // const handleKeyDown = (e) => {
   //   if (e.key === 'Enter') {
-      
+
   //   const updatedTask = {
   //     ...tasks,
   //     title: taskTitle,
@@ -61,40 +63,43 @@ const ReadTaskPage = ({ tasks, updateTask }) => {
   return (
     <div className="readTaskPage">
       <div className="d-flex align-items-center">
-          <CheckBox />
-          <PiLineVerticalThin style={{ marginLeft: "5px", marginRight: "5px" }} />
-          <FaCalendarCheck />
-          <DatePickerModule
-            startDate={startDate}
-            onDateChange={handleDateChange}
-            onRepeatClick={handleRepeatClick}
-            onAlarmClick={handleAlarmClick}
-          />
-        </div>
+        <CheckBox />
+        <PiLineVerticalThin style={{ marginLeft: "5px", marginRight: "5px" }} />
+        <FaCalendarCheck />
+        <DatePickerModule
+          startDate={startDate}
+          onDateChange={handleDateChange}
+          onRepeatClick={handleRepeatClick}
+          onAlarmClick={handleAlarmClick}
+        />
+      </div>
       {/* <i className="fa-regular fa-flag"></i> */}
       <span className="task-title">
-            <input
-              type="text"
-              value={taskTitle}
-              onChange={handleTitleChange}
-              // onChange={(e) => setTaskTitle(e.target.value)}
-              className="form-control"
-              placeholder="Task Title"
-              style={{border: "none"}}
-              // onKeyDown={handleKeyDown}
-            />
-          </span>
-          <div className="description">
-          <textarea
-            value={taskContent}
-            onChange={handleContentChange}
-            // onChange={(e) => setTaskContent(e.target.value)}
-            className="form-control-readTask"
-            placeholder="설명"
-            style={{border: "none"}}
-            // onKeyDown={handleKeyDown}
-          ></textarea>
+        <input
+          type="text"
+          value={taskTitle}
+          onChange={handleTitleChange}
+          className="form-control"
+          placeholder="Task Title"
+          style={{ border: "none" }}
+        />
+      </span>
+      <div className="description">
+        <textarea
+          value={taskContent}
+          onChange={handleContentChange}
+          className="form-control-readTask"
+          placeholder="설명"
+          style={{ border: "none" }}
+        ></textarea>
+
+        <div className="d-flex align-items-center line row">
+          <div className="list-title col lefted">{tasks.title}</div>
+          <div className="setting-icon col righted">
+            <SetTask />
+          </div>
         </div>
+      </div>
     </div>
   );
 };
