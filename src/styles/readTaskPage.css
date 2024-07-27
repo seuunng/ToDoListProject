@@ -4,4 +4,9 @@
 .list-title{
 }
 
-
+.form-control-readTask {
+    border: none;
+    width: 100%; 
+    height: 100%;
+    overflow-y: auto; 
+}

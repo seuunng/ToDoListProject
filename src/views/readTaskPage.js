@@ -13,13 +13,32 @@ const ReadTaskPage = ({ tasks, updateTask }) => {
   const [taskContent, setTaskContent] = useState(tasks.content);
 
   useEffect(() => {
+    setStartDate(new Date(tasks.startDate));
     setTaskTitle(tasks.title);
     setTaskContent(tasks.content);
-  }, [tasks.title, tasks.content]);
+  }, [tasks]);
+
+  const handleClose = () => {
+    // setShow(false);
+  }
 
   const handleDateChange = (date) => {
     setStartDate(date);
+    updateTask({ ...tasks, startDate: date });
   };
+
+  const handleTitleChange = (e) => {
+    const newTitle = e.target.value;
+    setTaskTitle(newTitle);
+    updateTask({ ...tasks, title: newTitle });
+  };
+
+  const handleContentChange = (e) => {
+    const newContent = e.target.value;
+    setTaskContent(newContent);
+    updateTask({ ...tasks, content: newContent });
+  };
+
   const handleRepeatClick = () => {
     console.log('Repeat settings clicked');
   };
@@ -27,6 +46,18 @@ const ReadTaskPage = ({ tasks, updateTask }) => {
   const handleAlarmClick = () => {
     console.log('Alarm settings clicked');
   };
+  // const handleKeyDown = (e) => {
+  //   if (e.key === 'Enter') {
+      
+  //   const updatedTask = {
+  //     ...tasks,
+  //     title: taskTitle,
+  //     content: taskContent,
+  //     startDate,
+  //   };
+  //   updateTask(updatedTask);
+  //   }
+  // };
   return (
     <div className="readTaskPage">
       <div className="d-flex align-items-center">
@@ -34,6 +65,7 @@ const ReadTaskPage = ({ tasks, updateTask }) => {
           <PiLineVerticalThin style={{ marginLeft: "5px", marginRight: "5px" }} />
           <FaCalendarCheck />
           <DatePickerModule
+            startDate={startDate}
             onDateChange={handleDateChange}
             onRepeatClick={handleRepeatClick}
             onAlarmClick={handleAlarmClick}
@@ -44,19 +76,23 @@ const ReadTaskPage = ({ tasks, updateTask }) => {
             <input
               type="text"
               value={taskTitle}
-              onChange={(e) => setTaskTitle(e.target.value)}
+              onChange={handleTitleChange}
+              // onChange={(e) => setTaskTitle(e.target.value)}
               className="form-control"
               placeholder="Task Title"
               style={{border: "none"}}
+              // onKeyDown={handleKeyDown}
             />
           </span>
           <div className="description">
           <textarea
             value={taskContent}
-            onChange={(e) => setTaskContent(e.target.value)}
-            className="form-control"
+            onChange={handleContentChange}
+            // onChange={(e) => setTaskContent(e.target.value)}
+            className="form-control-readTask"
             placeholder="설명"
             style={{border: "none"}}
+            // onKeyDown={handleKeyDown}
           ></textarea>
         </div>
     </div>

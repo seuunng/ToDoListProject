@@ -90,9 +90,10 @@ const MonthlyBoard = ({tasks, addTask, updateTask}) => {
       </div>
       <div className="calendar">
         <table className="calendar-table">
-          <thead className="days_of_the_week">
+          <thead className="days_of_the_week"
+            >
             <tr>
-              <td>월</td>
+              <td style={{backGroundColor: "grey"}}>월</td>
               <td>화</td>
               <td>수</td>
               <td>목</td>

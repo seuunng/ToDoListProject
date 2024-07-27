@@ -1,5 +1,6 @@
 import React, { useImperativeHandle, forwardRef, useState, useEffect } from 'react';
 import '../../styles/basicStyle.css';
+import '../../styles/readTaskModal.css';
 import { Modal, Button } from 'react-bootstrap';
 import { format, isValid } from 'date-fns';
 // import DatePicker from 'react-datepicker';
@@ -12,16 +13,17 @@ import ko from 'date-fns/locale/ko';
 import Checkbox from '../../modules/checkBoxModule';
 import { PiLineVerticalThin } from "react-icons/pi";
 
-const ReadTaskModal = forwardRef(({ tasks , updateTask}, ref) => {
+const ReadTaskModal = forwardRef(({ tasks, updateTask }, ref) => {
   const [show, setShow] = useState(false);
   const [taskTitle, setTaskTitle] = useState(tasks.title);
   const [taskDescription, setTaskDescription] = useState(tasks.content);
   const [startDate, setStartDate] = useState(new Date(tasks.startDate));
 
   useEffect(() => {
+    setStartDate(new Date(tasks.startDate));
     setTaskTitle(tasks.title);
     setTaskDescription(tasks.content);
-  }, [tasks.title, tasks.content]);
+  }, [tasks]);
 
   const handleClose = () => {
     const updatedTask = {
@@ -42,6 +44,7 @@ const ReadTaskModal = forwardRef(({ tasks , updateTask}, ref) => {
 
   const handleDateChange = (date) => {
     setStartDate(date);
+    updateTask({ ...tasks, startDate: date });
   };
 
   const handleRepeatClick = () => {
@@ -51,6 +54,13 @@ const ReadTaskModal = forwardRef(({ tasks , updateTask}, ref) => {
   const handleAlarmClick = () => {
     console.log('Alarm settings clicked');
   };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleClose();
+    }
+  };
+
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header>
@@ -59,6 +69,7 @@ const ReadTaskModal = forwardRef(({ tasks , updateTask}, ref) => {
           <PiLineVerticalThin style={{ marginLeft: "5px", marginRight: "5px" }} />
           <FaCalendarCheck />
           <DatePickerModule
+            startDate={startDate}
             onDateChange={handleDateChange}
             onRepeatClick={handleRepeatClick}
             onAlarmClick={handleAlarmClick}
@@ -74,7 +85,8 @@ const ReadTaskModal = forwardRef(({ tasks , updateTask}, ref) => {
               onChange={(e) => setTaskTitle(e.target.value)}
               className="form-control"
               placeholder="Task Title"
-              style={{border: "none"}}
+              style={{ border: "none" }}
+              onKeyDown={handleKeyDown}
             />
           </span>
           {/* <span className="flag-icon">
@@ -85,9 +97,10 @@ const ReadTaskModal = forwardRef(({ tasks , updateTask}, ref) => {
           <textarea
             value={taskDescription}
             onChange={(e) => setTaskDescription(e.target.value)}
-            className="form-control"
+            className="form-control-readTask"
             placeholder="Task Description"
-            style={{border: "none"}}
+            style={{ border: "none" }}
+            onKeyDown={handleKeyDown}
           ></textarea>
         </div>
       </Modal.Body>

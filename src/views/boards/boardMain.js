@@ -26,34 +26,50 @@ const BoardMain = () => {
 
     const addTask = async (newTask) => {
         try {
-        const response = await instance.post('/tasks/task', newTask);
-        const addedTask = response.data;
-        setTasks([...tasks, addedTask]);
+            const response = await instance.post('/tasks/task', newTask);
+            const addedTask = response.data;
+            setTasks([...tasks, addedTask]);
         } catch (error) {
             console.error('Error adding task:', error);
         }
     };
+
     const updateTask = async (updatedTask) => {
         try {
-        const response = await instance.put(`/tasks/task/${updatedTask.no}`, updatedTask);
-        console.log(updatedTask.no);
-        const updatedTasks = tasks.map(task =>
-            task.no === updatedTask.no ? response.data : task
-          );
-          setTasks(updatedTasks);
+            const response = await instance.put(`/tasks/task/${updatedTask.no}`, updatedTask);
+            const updatedTasks = tasks.map(task =>
+                task.no === updatedTask.no ? response.data : task
+            );
+            setTasks(updatedTasks);
         } catch (error) {
             console.error('Error updating task:', error);
+        }
+    };
+
+    const deletedTask = async (deletedTask) => {
+        try {
+            await instance.delete(`/tasks/task/${deletedTask.no}`);
+            console.log(deletedTask.no);
+            setTasks(tasks.filter(task => task.no !== deletedTask.no));
+        } catch (error) {
+            console.error('Error deleting task:', error);
         }
     };
 
     return (
         <div>
             {boardType === 'basic' ? (
-                <BasicBoard 
-                    tasks={tasks} addTask={addTask} updateTask={updateTask} />
+                <BasicBoard
+                    tasks={tasks} 
+                    addTask={addTask} 
+                    updateTask={updateTask}
+                    deletedTask={deletedTask} />
             ) : (
-                <MonthlyBoard 
-                    tasks={tasks} addTask={addTask} updateTask={updateTask}/>
+                <MonthlyBoard
+                    tasks={tasks} 
+                    addTask={addTask} 
+                    updateTask={updateTask}
+                    deletedTask={deletedTask} />
             )}
         </div>
     );

@@ -9,10 +9,10 @@ import { Button, Col } from 'react-bootstrap';
 import DropdownBtn from './dropdownModule';
 import { IoMdTime } from "react-icons/io";
 
-const DatePickerModule = ({ onDateChange, onRepeatClick, onAlarmClick }) => {
+const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick }) => {
     const [dateRange, setDateRange] = useState([null, null]);
-    const [startDate, endDate] = dateRange;
-    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [startDateRange, endDate] = dateRange;
+    const [selectedDate, setSelectedDate] = useState(startDate);
     const [timeValue, setTimeValue] = useState(''); // 시간 값을 상태로 관리
     const dropdownOptionsAlarmTime = ["알림없음", "정각", "10분전", "30분전", "하루전"];
     const dropdownOptionsRepeat = ["반복없음", "매일", "매주", "격주", "매달", "매년"];
@@ -20,11 +20,17 @@ const DatePickerModule = ({ onDateChange, onRepeatClick, onAlarmClick }) => {
         alarmTime: "선택", //설정의 기본값으로 넣기
         repeat: "선택",
     });
+
     const [selectedButton, setSelectedButton] = useState('date');
-    // const [showTimeInput, setShowTimeInput] = useState(true);
+
     useEffect(() => {
         // console.log("timeValue updated:", timeValue);
     }, [timeValue]);
+
+    useEffect(() => {
+        setSelectedDate(startDate);
+    }, [startDate]);
+
     const handleDateChange = (date) => {
         setSelectedDate(date);
         if (onDateChange) {
@@ -41,26 +47,25 @@ const DatePickerModule = ({ onDateChange, onRepeatClick, onAlarmClick }) => {
         }
         setSelectedButton(buttonType);
     };
-    // const handleTimeToggle = () => {
-    //     setShowTimeInput(!showTimeInput);
-    // };
+   
 
-    const CustomInput = forwardRef(
-        ({ value, onClick, className }, ref) => (
-            <button className={className} onClick={onClick} ref={ref}
-                style={{
-                    width: "400px",
-                    fontSize: "16px",
-                    textAlign: "left",
-                    marginLeft: "10px",
-                    paddingLeft: "10px",
-                    backgroundColor: "white",
-                    height: "40px"
-                }}
-            >
-                {value}
-            </button>
-        ),
+
+    const CustomInput = forwardRef(({ value, onClick, className }, ref) => (
+        <button className={className} onClick={onClick} ref={ref}
+            style={{
+                width: "400px",
+                fontSize: "16px",
+                textAlign: "left",
+                marginLeft: "10px",
+                paddingLeft: "10px",
+                backgroundColor: "white",
+                height: "40px",
+                border: "none"
+            }}
+        >
+            {value}
+        </button>
+    ),
     );
     const CustomTimeInput = ({ date, value, onChange }) => (
         <div className='row'>
@@ -68,13 +73,13 @@ const DatePickerModule = ({ onDateChange, onRepeatClick, onAlarmClick }) => {
                 <input
                     type="time"
                     value={timeValue}
-                    onChange={e => 
-                        { const newValue = e.target.value;
-                            onChange(newValue);
-                            setTimeValue(newValue);
-                        //     console.log("CustomTimeInput changed to:", e.target.value);
+                    onChange={e => {
+                        const newValue = e.target.value;
+                        onChange(newValue);
+                        setTimeValue(newValue);
+                        // console.log("CustomTimeInput changed to:", e.target.value);
                         // console.log("CustomTimeInput timeValue",timeValue)
-                        }
+                    }
                     }
                     // onClick={handleTimeToggle}
                     style={{
@@ -181,7 +186,7 @@ const DatePickerModule = ({ onDateChange, onRepeatClick, onAlarmClick }) => {
         <div className="custom-date-picker">
 
             <DatePicker
-                selected={selectedButton === 'period' ? startDate : selectedDate}
+                selected={selectedButton === 'period' ? startDateRange : selectedDate}
                 onChange={(date) => {
                     if (selectedButton === 'period') {
                         setDateRange(date);
@@ -192,7 +197,7 @@ const DatePickerModule = ({ onDateChange, onRepeatClick, onAlarmClick }) => {
                         handleDateChange(date);
                     }
                 }}
-                startDate={startDate}
+                startDate={startDateRange}
                 endDate={endDate}
                 selectsRange={selectedButton === 'period'}
 
@@ -234,14 +239,14 @@ const DatePickerModule = ({ onDateChange, onRepeatClick, onAlarmClick }) => {
                     <div className="d-flex align-items-center line row">
                         <Col xs={8} className='righted'>
                             <Button variant="outline-dark"
-                            style={{marginTop: "5px", marginRight: "0"}}
+                                style={{ marginTop: "5px", marginRight: "0" }}
                             >
                                 취소
                             </Button>
                         </Col>
                         <Col xs={4} className='lefted'
-                            style={{marginTop: "5px", marginleft: "0"}}
-                            >
+                            style={{ marginTop: "5px", marginleft: "0" }}
+                        >
                             <Button>
                                 저장
                             </Button>
