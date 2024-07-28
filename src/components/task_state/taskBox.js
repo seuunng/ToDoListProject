@@ -8,33 +8,51 @@ import { format } from 'date-fns';
 import SetTask from './setTask';
 import DatePickerModule from '../../modules/datePickerModule';
 
-const TaskBox = ({ tasks, deleteTask, updateTask }) => {
+const TaskBox = ({ tasks, deleteTask, updateTask}) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [startDate, setStartDate] = useState(new Date(tasks.startDate));
- 
+  const [endDate, setEndDate] = useState(tasks.endDate ? new Date(tasks.endDate) : null);
+  const [selectedButton, setSelectedButton] = useState(tasks.selectedButton || 'DATE');
+
   useEffect(() => {
     setStartDate(new Date(tasks.startDate));
-  }, [tasks]);
+    setEndDate(tasks.endDate ? new Date(tasks.endDate) : null);
+    setSelectedButton(tasks.dateStatus || 'DATE');
+      // if (!tasks.selectedButton) {
+      //   setSelectedButton('DATE');
+      // } else {
+      //   setSelectedButton(tasks.selectedButton);
+      // }
+  }, []);
  
-  const handleDateChange = (date) => {
-    setStartDate(date);
-    updateTask({ ...tasks, startDate: date });
+  const handleDateChange = (startDate, endDate) => {
+    setStartDate(startDate);
+    setEndDate(endDate);
+    // setDateStatus(selectedButton);
+    updateTask({ ...tasks, startDate, endDate });
   };
 
   const handleRepeatClick = () => {
     console.log('Repeat settings clicked');
   };
-
+  const handleSelectedButtonChange = async (button) => {
+    setSelectedButton(button);
+    const updatedTasks = { ...tasks, dateStatus:  button.toUpperCase() };
+    console.log('Updated Task:', updatedTasks); // 확인용 콘솔 로그 추가
+    updateTask(updatedTasks);
+  };
   const handleAlarmClick = () => {
     console.log('Alarm settings clicked');
   };
 
   const handleClose = () => setShowDatePicker(false);
-
+  // const getDateFormat = () => {
+  //   return selectedButton === 'date' ? 'MM/dd' : 'MM/dd-MM/dd';
+  // };
   return (
     <div>
-      <Row>
-        <Col md={10}><CheckBox /> {tasks.title}
+      <Row  xs="auto">
+        <Col sm={8}><CheckBox /> {tasks.title}
           {tasks.isRepeated && (
             <span className="repeat col-2">
               <LuRepeat />
@@ -46,17 +64,20 @@ const TaskBox = ({ tasks, deleteTask, updateTask }) => {
             </span>
           )}
         </Col>
-        <Col md={1} className='righted' style={{ padding: "0" }} >
+        <Col md={3} className='righted' style={{ padding: "0" }} >
           <DatePickerModule
             show={showDatePicker}
             // handleClose={handleClose}
             startDate={startDate}
+            endDate={endDate}
             onDateChange={handleDateChange}
             onRepeatClick={handleRepeatClick}
             onAlarmClick={handleAlarmClick}
-            dateFormat={"MM/dd"}
+            dateFormat={'MM/dd'}
+            selectedButton={selectedButton} 
+            setSelectedButton={handleSelectedButtonChange}
           /></Col>
-        <Col md={1} style={{ padding: "0" }} className='righted'>
+        <Col md={1} style={{ padding: "0" }} className='centered'>
           <SetTask
             task={tasks}
             deleteTask={deleteTask} />

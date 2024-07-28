@@ -9,8 +9,13 @@
   }
 .layout-main-content{
   position: fixed;
+  width: 100%;
     top: 0px;
     left: 90px;
-    height: 100vh; 
-    overflow-y: auto; 
+     /* 수평 스크롤 제거 */
+}
+.list-title {
+  margin-left: 15px; /* 날짜 아이콘과 날짜 사이에 공백 추가 */
+  margin-bottom: 15px;
+  width: 90%;
 }

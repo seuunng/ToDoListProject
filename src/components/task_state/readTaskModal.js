@@ -18,8 +18,16 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask }, ref) => {
   const [taskTitle, setTaskTitle] = useState(tasks.title);
   const [taskDescription, setTaskDescription] = useState(tasks.content);
   const [startDate, setStartDate] = useState(new Date(tasks.startDate));
+  const [endDate, setEndDate] = useState(tasks.endDate ? new Date(tasks.endDate) : null);
+  const [selectedButton, setSelectedButton] = useState(tasks.dateStatus || 'DATE');
 
-  
+  useEffect(() => {
+    setTaskTitle(tasks.title);
+    setTaskDescription(tasks.content);
+    setStartDate(new Date(tasks.startDate));
+    setEndDate(tasks.endDate ? new Date(tasks.endDate) : null);
+    setSelectedButton(tasks.dateStatus || 'DATE');
+  }, [tasks]);
 
   const handleClose = () => {
     const updatedTask = {
@@ -27,6 +35,8 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask }, ref) => {
       title: taskTitle,
       content: taskDescription,
       startDate,
+      endDate,
+      dateStatus: selectedButton
       // Add other task fields as necessary
     };
     updateTask(updatedTask);
@@ -42,7 +52,10 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask }, ref) => {
     setStartDate(date);
     updateTask({ ...tasks, startDate: date });
   };
-
+  const handleSelectedButtonChange = (button) => {
+    setSelectedButton(button);
+    updateTask({ ...tasks, dateStatus: button.toUpperCase() });
+  }
   const handleRepeatClick = () => {
     console.log('Repeat settings clicked');
   };
@@ -66,9 +79,12 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask }, ref) => {
           <FaCalendarCheck />
           <DatePickerModule
             startDate={startDate}
+            endDate={endDate}
             onDateChange={handleDateChange}
             onRepeatClick={handleRepeatClick}
             onAlarmClick={handleAlarmClick}
+            selectedButton={selectedButton}
+            setSelectedButton={handleSelectedButtonChange}
           />
         </div>
       </Modal.Header>
@@ -105,9 +121,9 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask }, ref) => {
           style={{ width: "100vw" }}>
           <div className="list-title col lefted">{tasks.title}</div>
           <div className="setting-icon col righted">
-          <SetTask 
-            task={tasks}
-            deleteTask={deleteTask} />
+            <SetTask
+              task={tasks}
+              deleteTask={deleteTask} />
           </div>
         </div>
         {/* <button type="button" className="btn btn-secondary" onClick={handleClose}>Close</button>

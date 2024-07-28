@@ -1,5 +1,3 @@
-.BasicBoard {
-    height: 100vh; 
-    overflow-y: auto; 
-    
+.BasicBoardRow {
+    width: 90%;
 }

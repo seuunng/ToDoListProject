@@ -5,10 +5,10 @@ import TaskBox from '../task_state/taskBox';
 import ReadTaskPage from '../../views/readTaskPage';
 import { Row, Col } from 'react-bootstrap';
 
-const TaskCont = ({ tasks, updateTask, deleteTask, onTaskClick }) => {
+const TaskCont = ({ tasks, updateTask, deleteTask, onTaskClick,  }) => {
 
   return (
-    <div className="TaskCont">
+    <div className="TaskContTable">
       <table className="task-table">
         <tbody>
           {tasks.map((task) => (

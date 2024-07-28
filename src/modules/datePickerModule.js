@@ -9,47 +9,46 @@ import { Button, Col } from 'react-bootstrap';
 import DropdownBtn from './dropdownModule';
 import { IoMdTime } from "react-icons/io";
 
-const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick, dateFormat }) => {
-    const [dateRange, setDateRange] = useState([null, null]);
-    const [startDateRange, endDate] = dateRange;
-    const [selectedDate, setSelectedDate] = useState(startDate);
+const DatePickerModule = ({ startDate, endDate, onDateChange, onRepeatClick, onAlarmClick, dateFormat,  selectedButton, setSelectedButton }) => {
+    const [dateRange, setDateRange] = useState([startDate, endDate]);
+    // const [selectedButton, setSelectedButton] = useState('date');
+    // const [startDateRange, endDate] = dateRange;
+    // const [selectedDate, setSelectedDate] = useState(startDate);
     const [timeValue, setTimeValue] = useState(''); // 시간 값을 상태로 관리
     const dropdownOptionsAlarmTime = ["알림없음", "정각", "10분전", "30분전", "하루전"];
     const dropdownOptionsRepeat = ["반복없음", "매일", "매주", "격주", "매달", "매년"];
     const [selectedOptions, setSelectedOptions] = useState({
-        alarmTime: "선택", //설정의 기본값으로 넣기
+        alarmTime: "선택",
         repeat: "선택",
     });
 
-    const [selectedButton, setSelectedButton] = useState('date');
 
     useEffect(() => {
         // console.log("timeValue updated:", timeValue);
     }, [timeValue]);
 
     useEffect(() => {
-        setSelectedDate(startDate);
-    }, [startDate]);
+        setDateRange([startDate, endDate]);
+    }, [startDate, endDate]);
 
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
-        if (onDateChange) {
-            onDateChange(date);
+    const handleDateChange = (update) => {
+        setDateRange(update);
+        if (selectedButton === 'PERIOD') {
+            onDateChange(update[0], update[1]);
+        } else {
+            onDateChange(update, null);
         }
     };
-
     const handleOptionSelected = (type, option) => {
         setSelectedOptions({ ...selectedOptions, [type]: option });
     };
     const handleButtonClick = (buttonType) => {
-        if (buttonType === 'date') {
-            setDateRange([null, null]); // 날짜 버튼을 클릭할 때 선택한 기간을 초기화
+        if (buttonType === 'DATE') {
+            setDateRange([null, null]); 
         }
         setSelectedButton(buttonType);
     };
    
-
-
     const CustomInput = forwardRef(({ value, onClick, className }, ref) => (
         <button className={className} onClick={onClick} ref={ref}
             style={{
@@ -97,11 +96,7 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
             <Col>
                 <Button
                     onClick={() => {
-                        // onChange('');
                         setTimeValue('');
-                        // console.log("x button clicked, timeValue reset");
-                        // console.log("x timeValue",timeValue)
-                        // setShowTimeInput(false);
                     }}
                     style={{
                         width: "20px",
@@ -121,8 +116,7 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
     );
 
     const CustomTimeLabel = () => (
-        <span style={{ fontSize: "16px", marginLeft: "-6px" }}
-        >
+        <span style={{ fontSize: "16px", marginLeft: "-6px" }}>
             시간 설정
         </span>
     );
@@ -144,13 +138,13 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
                             paddingLeft: "-8px",
                         }}>
                         <Col>
-                            <Button onClick={() => handleButtonClick('date')} variant="light"
+                            <Button onClick={() => handleButtonClick('DATE')} variant="light"
                                 style={{
                                     width: "110%",
                                     marginTop: "5px",
                                     marginLeft: "0px",
-                                    backgroundColor: selectedButton === 'date' ? 'light' : '#f0f0f0',
-                                    color: selectedButton === 'date' ? 'black' : 'lightgrey',
+                                    backgroundColor: selectedButton === 'DATE' ? 'light' : '#f0f0f0',
+                                    color: selectedButton === 'DATE' ? 'black' : 'lightgrey',
                                     border: "none"
                                 }}
                                 className="date-button"
@@ -159,7 +153,7 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
                             </Button>
                         </Col>
                         <Col >
-                            <Button onClick={() => handleButtonClick('period')} variant="light"
+                            <Button onClick={() => handleButtonClick('PERIOD')} variant="light"
                                 style={{
                                     width: "110%",
                                     marginTop: "5px",
@@ -167,8 +161,8 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
                                     paddingLeft: "0px",
                                     marginLeft: "-5px",
                                     marginRight: "10px",
-                                    backgroundColor: selectedButton === 'period' ? 'light' : '#f0f0f0',
-                                    color: selectedButton === 'period' ? 'black' : 'lightgrey',
+                                    backgroundColor: selectedButton === 'PERIOD' ? 'light' : '#f0f0f0',
+                                    color: selectedButton === 'PERIOD' ? 'black' : 'lightgrey',
                                     border: "none"
                                 }}
                                 className="date-button"
@@ -186,20 +180,11 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
         <div className="custom-date-picker">
 
             <DatePicker
-                selected={selectedButton === 'period' ? startDateRange : selectedDate}
-                onChange={(date) => {
-                    if (selectedButton === 'period') {
-                        setDateRange(date);
-                        if (onDateChange) {
-                            onDateChange(date);
-                        }
-                    } else {
-                        handleDateChange(date);
-                    }
-                }}
-                startDate={startDateRange}
-                endDate={endDate}
-                selectsRange={selectedButton === 'period'}
+                 selected={dateRange[0]}
+                onChange={handleDateChange}
+                startDate={dateRange[0]}
+                endDate={dateRange[1]}
+                selectsRange={selectedButton === 'PERIOD'}
 
                 showPopperArrow={false}
                 calendarContainer={MyContainer}

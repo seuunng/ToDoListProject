@@ -5,7 +5,7 @@ import ReadTaskModal from '../task_state/readTaskModal';
 import { LuRepeat } from "react-icons/lu";
 import { FaRegBell } from "react-icons/fa";
 
-const TaskBoxForCal = ({ tasks, updateTask, deleteTask}) => {
+const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className, showTitle=true}) => {
   const readTaskModalRef = useRef(null);
   const taskBoxRef = useRef(null);
 
@@ -29,7 +29,7 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask}) => {
   }, []);
 
   return (
-    <>
+    <div className={`task-box ${className}`}>
       <div ref={taskBoxRef} 
         className="TaskBoxForCal">
         <div className="color-box row">
@@ -38,7 +38,9 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask}) => {
               <LuRepeat />
             </span>
           )}
-          <span className="task-title col-8">{tasks.title}</span>
+          {showTitle && (
+            <span className="task-title col-8">{tasks.title}</span>
+          )}
           {tasks.isNotified && (
             <span className="alram col-2">
               <FaRegBell />
@@ -52,7 +54,7 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask}) => {
         updateTask={updateTask}
         deleteTask={deleteTask}
       />
-    </>
+    </div>
   );
 };
 

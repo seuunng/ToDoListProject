@@ -10,23 +10,29 @@ import SetTask from '../components/task_state/setTask';
 
 
 const ReadTaskPage = ({ tasks, updateTask, deleteTask }) => {
-  const [startDate, setStartDate] = useState(new Date(tasks.startDate));
   const [taskTitle, setTaskTitle] = useState(tasks.title);
   const [taskContent, setTaskContent] = useState(tasks.content);
+  const [startDate, setStartDate] = useState(new Date(tasks.startDate));
+  const [endDate, setEndDate] = useState(tasks.endDate ? new Date(tasks.endDate) : null);
+  const [selectedButton, setSelectedButton] = useState(tasks.dateStatus || 'DATE');
+  
 
   useEffect(() => {
     setStartDate(new Date(tasks.startDate));
+    setEndDate(tasks.endDate ? new Date(tasks.endDate) : null);
     setTaskTitle(tasks.title);
     setTaskContent(tasks.content);
+    setSelectedButton(tasks.dateStatus || 'DATE');
   }, [tasks]);
 
   const handleClose = () => {
     // setShow(false);
   }
 
-  const handleDateChange = (date) => {
-    setStartDate(date);
-    updateTask({ ...tasks, startDate: date });
+  const handleDateChange = (startDate, endDate) => {
+    setStartDate(startDate);
+    setEndDate(endDate);
+    updateTask({ ...tasks, startDate, endDate });
   };
 
   const handleTitleChange = (e) => {
@@ -40,7 +46,10 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask }) => {
     setTaskContent(newContent);
     updateTask({ ...tasks, content: newContent });
   };
-
+  const handleSelectedButtonChange = (button) => {
+    setSelectedButton(button);
+    updateTask({ ...tasks, dateStatus: button.toUpperCase() });
+  };
   const handleRepeatClick = () => {
     console.log('Repeat settings clicked');
   };
@@ -68,9 +77,13 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask }) => {
         <FaCalendarCheck />
         <DatePickerModule
           startDate={startDate}
+          endDate={endDate}
           onDateChange={handleDateChange}
           onRepeatClick={handleRepeatClick}
           onAlarmClick={handleAlarmClick}
+          selectedButton={selectedButton}
+          setSelectedButton={handleSelectedButtonChange}
+
         />
       </div>
       {/* <i className="fa-regular fa-flag"></i> */}

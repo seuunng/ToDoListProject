@@ -15,7 +15,7 @@ const BoardMain = () => {
             try {
                 const response_taskData = await instance.get('/tasks/task');
                 const data = response_taskData.data
-                // console.log(data);
+                console.log(data);
                 setTasks(data);
             } catch (error) {
                 console.error('Error get taskData:', error);
@@ -63,13 +63,15 @@ const BoardMain = () => {
                     tasks={tasks} 
                     addTask={addTask} 
                     updateTask={updateTask}
-                    deleteTask={deleteTask} />
+                    deleteTask={deleteTask}
+                     />
             ) : (
                 <MonthlyBoard
                     tasks={tasks} 
                     addTask={addTask} 
                     updateTask={updateTask}
-                    deleteTask={deleteTask} />
+                    deleteTask={deleteTask}
+                     />
             )}
         </div>
     );
