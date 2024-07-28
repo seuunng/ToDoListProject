@@ -7,9 +7,12 @@ import { PiLineVerticalThin } from "react-icons/pi";
 import { FaCalendarCheck } from "react-icons/fa";
 import DatePickerModule from '../modules/datePickerModule';
 import SetTask from '../components/task_state/setTask';
+import SelectedList from '../components/task_list/selectedList.js';
 
 
-const ReadTaskPage = ({ tasks, updateTask, deleteTask }) => {
+const ReadTaskPage = ({ tasks, updateTask, deleteTask,
+  lists, addList, updateList, deleteList
+ }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [taskTitle, setTaskTitle] = useState(tasks.title);
   const [taskContent, setTaskContent] = useState(tasks.content);
@@ -18,6 +21,7 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask }) => {
   const [selectedButton, setSelectedButton] = useState(tasks.dateStatus || 'DATE');
   const [isRepeat, setIsRepeat] = useState(tasks.isRepeated || 'NOREPEAT');
   const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALRAM');
+  const [selectedList, setSelectedList] = useState(null);
   
 
   useEffect(() => {
@@ -28,7 +32,8 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask }) => {
     setSelectedButton(tasks.dateStatus || 'DATE');
     setIsRepeat(tasks.isRepeated || 'NOREPEAT');
     setIsNotified(tasks.isNotified || 'NOALRAM');
-  }, [tasks]);
+    setSelectedList(lists.find(list => list.id === tasks.listId) || null);
+  }, [tasks, lists]);
 
   const handleTitleChange = (e) => {
     const newTitle = e.target.value;
@@ -131,7 +136,15 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask }) => {
         ></textarea>
 
         <div className="d-flex align-items-center line row">
-          <div className="list-title col lefted">{tasks.title}</div>
+          <div className="list-title col lefted">
+            <SelectedList 
+            lists={lists} 
+            selectedList={selectedList} 
+            setSelectedList={setSelectedList}
+            tasks={tasks}
+            updateTask={updateTask}
+             />
+            </div>
           <div className="setting-icon col righted">
             <SetTask
               task={tasks}

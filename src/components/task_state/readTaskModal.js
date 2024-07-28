@@ -13,7 +13,9 @@ import Checkbox from '../../modules/checkBoxModule';
 import { PiLineVerticalThin } from "react-icons/pi";
 import SetTask from './setTask';
 
-const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask }, ref) => {
+const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
+  lists, addList, updateList, deleteList
+ }, ref) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [show, setShow] = useState(false);
   const [taskTitle, setTaskTitle] = useState(tasks.title);

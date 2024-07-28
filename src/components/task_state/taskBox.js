@@ -8,7 +8,7 @@ import { format } from 'date-fns';
 import DatePickerModule from '../../modules/datePickerModule';
 import SetTask from './setTask';
 
-const TaskBox = ({ tasks, deleteTask, updateTask }) => {
+const TaskBox = ({ tasks, deleteTask, updateTask, lists, addList, updateList, deleteList}) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [startDate, setStartDate] = useState(new Date(tasks.startDate));
   const [endDate, setEndDate] = useState(tasks.endDate ? new Date(tasks.endDate) : null);
@@ -100,6 +100,10 @@ const TaskBox = ({ tasks, deleteTask, updateTask }) => {
             initialRepeat={isRepeat}
             initialAlram={isNotified}
             dateFormat={'MM/dd'}
+            lists={lists} 
+            addList={addList} 
+            updateList={updateList}
+            deleteList={deleteList}
           /></Col>
         <Col md={1} style={{ padding: "0" }} className='centered'>
           <SetTask

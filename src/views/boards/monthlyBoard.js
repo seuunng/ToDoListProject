@@ -7,7 +7,9 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Col } from 'react-bootstrap';
 
-const MonthlyBoard = ({ tasks, addTask, updateTask, deleteTask }) => {
+const MonthlyBoard = ({ tasks, addTask, updateTask, deleteTask,
+  lists, addList, updateList, deleteList
+}) => {
   const [startDate, setStartDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const createTaskModalRef = useRef(null);
@@ -63,15 +65,15 @@ const MonthlyBoard = ({ tasks, addTask, updateTask, deleteTask }) => {
     return tasks.filter(task => {
       const taskStartDate = new Date(task.startDate);
       return task.endDate == null
-      ? (
-        taskStartDate.getDate() === date.getDate() &&
-        taskStartDate.getMonth() === date.getMonth() &&
-        taskStartDate.getFullYear() === date.getFullYear()
-      )
-      : (
-        date >= taskStartDate &&
-        date <= new Date(task.endDate)
-      );
+        ? (
+          taskStartDate.getDate() === date.getDate() &&
+          taskStartDate.getMonth() === date.getMonth() &&
+          taskStartDate.getFullYear() === date.getFullYear()
+        )
+        : (
+          date >= taskStartDate &&
+          date <= new Date(task.endDate)
+        );
     });
   };
   const filterTasksForDate = (date) => {
@@ -83,7 +85,7 @@ const MonthlyBoard = ({ tasks, addTask, updateTask, deleteTask }) => {
         taskDate.getMonth() === date.getMonth() &&
         taskDate.getFullYear() === date.getFullYear()
       );
-    // }
+      // }
     });
   };
   // const getFilteredTasks = (date) => {
@@ -144,9 +146,9 @@ const MonthlyBoard = ({ tasks, addTask, updateTask, deleteTask }) => {
                   const dayTasksForPeriod = filterTasksForPeriod(date);
                   // const dayTasksForDate = filterTasksForDate(date);
                   const dayTasks = [
-                    ...dayTasksForPeriod, 
+                    ...dayTasksForPeriod,
                     // ...dayTasksForDate
-                    ];
+                  ];
                   return (
                     <td key={day} ref={isToday(date) ? todayRef : null} className="calendar-cell">
                       <div className="day-cell">
@@ -160,6 +162,10 @@ const MonthlyBoard = ({ tasks, addTask, updateTask, deleteTask }) => {
                               updateTask={updateTask}
                               deleteTask={deleteTask}
                               className={isTaskEndDate(task, date) ? 'task-end-date' : ''}
+                              lists={lists}
+                              addList={addList}
+                              updateList={updateList}
+                              deleteList={deleteList}
                             // showTitle={!isTaskEndDate(task, date)}
                             />
                           ))}

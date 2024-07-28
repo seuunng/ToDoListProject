@@ -7,7 +7,9 @@ import { Row, Col } from 'react-bootstrap';
 import ReadTaskPage from '../readTaskPage';
 
 
-const BasicBoard = ({ tasks, addTask, updateTask, deleteTask,}) => {
+const BasicBoard = ({ tasks, addTask, updateTask, deleteTask,
+  lists, addList, updateList, deleteList
+}) => {
   const [selectedTask, setSelectedTask] = useState(null);
 
   const handleTaskClick = (task) => {
@@ -27,6 +29,10 @@ const BasicBoard = ({ tasks, addTask, updateTask, deleteTask,}) => {
             updateTask={updateTask}
             deleteTask={deleteTask}
             onTaskClick={handleTaskClick}
+            lists={lists} 
+            addList={addList} 
+            updateList={updateList}
+            deleteList={deleteList}
              />
         </Col>
         <Col className="ReadTaskPage">
@@ -35,6 +41,10 @@ const BasicBoard = ({ tasks, addTask, updateTask, deleteTask,}) => {
               tasks={selectedTask}
               updateTask={updateTask}
               deleteTask={deleteTask}
+              lists={lists} 
+              addList={addList} 
+              updateList={updateList}
+              deleteList={deleteList}
             />
           )}
         </Col>
