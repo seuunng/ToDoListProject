@@ -9,27 +9,40 @@ import { Button, Col } from 'react-bootstrap';
 import DropdownBtn from './dropdownModule';
 import { IoMdTime } from "react-icons/io";
 
-const DatePickerModule = ({ startDate, endDate, onDateChange, onRepeatClick, onAlarmClick, dateFormat,  selectedButton, setSelectedButton }) => {
+const DatePickerModule = ({ startDate, endDate, onDateChange, onRepeatClick, initialRepeat, onAlarmClick, initialAlram, dateFormat,  selectedButton, setSelectedButton, show }) => {
     const [dateRange, setDateRange] = useState([startDate, endDate]);
-    // const [selectedButton, setSelectedButton] = useState('date');
-    // const [startDateRange, endDate] = dateRange;
-    // const [selectedDate, setSelectedDate] = useState(startDate);
-    const [timeValue, setTimeValue] = useState(''); // 시간 값을 상태로 관리
+    const [timeValue, setTimeValue] = useState(''); 
     const dropdownOptionsAlarmTime = ["알림없음", "정각", "5분전", "30분전", "하루전"];
-    const dropdownOptionsRepeat = ["반복없음", "매일", "매주", "격주", "매달", "매년"];
+    const dropdownOptionsRepeat = ["반복없음", "매일", "매주", "매달", "매년"];
+
+    const repeatMappingToKorean = {
+        "NOREPEAT": "반복없음",
+        "DAILY": "매일",
+        "WEEKLY": "매주",
+        "MONTHLY": "매달",
+        "YEARLY": "매년"
+    };
+
+    const alarmMappingToKorean = {
+        "NOALRAM": "알림없음",
+        "ONTIME": "정각",
+        "FIVEMINS": "5분전",
+        "THIRTYMINS": "30분전",
+        "DAYEARLY": "하루전"
+    };
+
     const [selectedOptions, setSelectedOptions] = useState({
-        alarmTime: "선택",
-        repeat: "선택",
+        alarmTime: alarmMappingToKorean[initialAlram] || "알림없음",
+        repeat: repeatMappingToKorean[initialRepeat] || "반복없음",
     });
-
-
-    useEffect(() => {
-        // console.log("timeValue updated:", timeValue);
-    }, [timeValue]);
 
     useEffect(() => {
         setDateRange([startDate, endDate]);
-    }, [startDate, endDate]);
+        setSelectedOptions({
+            repeat: repeatMappingToKorean[initialRepeat] || "반복없음",
+            alarmTime: alarmMappingToKorean[initialAlram] || "알림없음"  
+        });
+    }, [startDate, endDate, initialAlram, initialRepeat]);
 
     const handleDateChange = (update) => {
         setDateRange(update);
@@ -41,6 +54,12 @@ const DatePickerModule = ({ startDate, endDate, onDateChange, onRepeatClick, onA
     };
     const handleOptionSelected = (type, option) => {
         setSelectedOptions({ ...selectedOptions, [type]: option });
+        if (type === 'repeat') {
+            onRepeatClick(option);
+        }
+        if (type === 'alarmTime') {
+            onAlarmClick(option);
+        }
     };
     const handleButtonClick = (buttonType) => {
         if (buttonType === 'DATE') {
@@ -48,15 +67,17 @@ const DatePickerModule = ({ startDate, endDate, onDateChange, onRepeatClick, onA
         }
         setSelectedButton(buttonType);
     };
-   
+    const handleClose = () =>  {
+        show(false);
+      };
     const CustomInput = forwardRef(({ value, onClick, className }, ref) => (
         <button className={className} onClick={onClick} ref={ref}
             style={{
-                // width: "400px",
                 fontSize: "16px",
                 textAlign: "left",
                 marginLeft: "10px",
-                paddingLeft: "10px",
+                paddingLeft: "0px",
+                paddingRight: "0px",
                 backgroundColor: "white",
                 height: "40px",
                 border: "none"
@@ -76,11 +97,8 @@ const DatePickerModule = ({ startDate, endDate, onDateChange, onRepeatClick, onA
                         const newValue = e.target.value;
                         onChange(newValue);
                         setTimeValue(newValue);
-                        // console.log("CustomTimeInput changed to:", e.target.value);
-                        // console.log("CustomTimeInput timeValue",timeValue)
                     }
                     }
-                    // onClick={handleTimeToggle}
                     style={{
                         width: "120px",
                         padding: "5px",
@@ -180,7 +198,7 @@ const DatePickerModule = ({ startDate, endDate, onDateChange, onRepeatClick, onA
         <div className="custom-date-picker">
 
             <DatePicker
-                 selected={dateRange[0]}
+                selected={dateRange[0]}
                 onChange={handleDateChange}
                 startDate={dateRange[0]}
                 endDate={dateRange[1]}
@@ -226,55 +244,21 @@ const DatePickerModule = ({ startDate, endDate, onDateChange, onRepeatClick, onA
                             style={{ marginTop: "5px", marginRight: "0",  }}>
                             <Button variant="outline-dark"
                              style={{ width: "100%"  }}
-                            >
+                             onClick={handleClose}>
                                 취소
                             </Button>
                         </Col>
                         <Col
                             style={{ marginTop: "5px", marginleft: "0" }}>
                             <Button
-                             style={{ width: "100%"  }}>
+                             style={{ width: "100%"  }}
+                             onClick={handleClose}>
                                 저장
                             </Button>
                         </Col>
                     </div>
                 </div>
             </DatePicker>
-            {/* ) : (
-                <DatePicker
-                    showPopperArrow={true}
-                    calendarContainer={MyContainer}
-                    popperPlacement="bottom-start"
-                    style={{ margin: "10px", padding: "10px" }}
-                >
-                    <div>
-                        <div className="d-flex align-items-center line row">
-                            <Col>
-                                <h6>반복 설정</h6>
-                            </Col>
-                            <Col className='righted'>
-                                <DropdownBtn
-                                    options={dropdownOptionsRepeat}
-                                    selectedOption={selectedOptions.repeat}
-                                    onOptionSelected={(option) => handleOptionSelected('repeat', option)}
-                                />
-                            </Col>
-                        </div>
-                        <div className="d-flex align-items-center line row">
-                            <Col>
-                                <h6>알림 설정</h6>
-                            </Col>
-                            <Col className='righted'>
-                                <DropdownBtn
-                                    options={dropdownOptionsAlarmTime}
-                                    selectedOption={selectedOptions.alarmTime}
-                                    onOptionSelected={(option) => handleOptionSelected('alarmTime', option)}
-                                />
-                            </Col>
-                        </div>
-                    </div>
-                </DatePicker>
-            )} */}
         </div>
     );
 }

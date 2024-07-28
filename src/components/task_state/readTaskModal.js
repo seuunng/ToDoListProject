@@ -14,12 +14,15 @@ import { PiLineVerticalThin } from "react-icons/pi";
 import SetTask from './setTask';
 
 const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask }, ref) => {
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [show, setShow] = useState(false);
   const [taskTitle, setTaskTitle] = useState(tasks.title);
   const [taskDescription, setTaskDescription] = useState(tasks.content);
   const [startDate, setStartDate] = useState(new Date(tasks.startDate));
   const [endDate, setEndDate] = useState(tasks.endDate ? new Date(tasks.endDate) : null);
   const [selectedButton, setSelectedButton] = useState(tasks.dateStatus || 'DATE');
+  const [isRepeat, setIsRepeat] = useState(tasks.isRepeated || 'NOREPEAT');
+  const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALRAM');
 
   useEffect(() => {
     setTaskTitle(tasks.title);
@@ -27,6 +30,8 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask }, ref) => {
     setStartDate(new Date(tasks.startDate));
     setEndDate(tasks.endDate ? new Date(tasks.endDate) : null);
     setSelectedButton(tasks.dateStatus || 'DATE');
+    setIsRepeat(tasks.isRepeated || 'NOREPEAT');
+    setIsNotified(tasks.isNotified || 'NOALRAM');
   }, [tasks]);
 
   const handleClose = () => {
@@ -56,12 +61,32 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask }, ref) => {
     setSelectedButton(button);
     updateTask({ ...tasks, dateStatus: button.toUpperCase() });
   }
-  const handleRepeatClick = () => {
-    console.log('Repeat settings clicked');
+  const handleRepeatClick = (option) => {
+    const repeatMapping = {
+      "반복없음": "NOREPEAT",
+      "매일": "DAILY",
+      "매주": "WEEKLY",
+      "매달": "MONTHLY",
+      "매년": "YEARLY"
+    };
+    const isRepeated = repeatMapping[option] || "NOREPEAT";
+    setIsRepeat(isRepeated);
+    const updatedTasks = { ...tasks, isRepeated:  isRepeated };
+    updateTask(updatedTasks);
   };
 
-  const handleAlarmClick = () => {
-    console.log('Alarm settings clicked');
+  const handleAlarmClick = (option) => {
+    const alarmMapping = {
+      "알림없음": "NOALRAM",
+      "정각": "ONTIME",
+      "5분전": "FIVEMINS",
+      "30분전": "THIRTYMINS",
+      "하루전": "DAYEARLY"
+    };
+    const isNotified = alarmMapping[option] || "NOALRAM";
+    setIsNotified(isNotified);
+    const updatedTasks = { ...tasks, isNotified: isNotified };
+    updateTask(updatedTasks);
   };
 
   const handleKeyDown = (e) => {
@@ -78,6 +103,7 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask }, ref) => {
           <PiLineVerticalThin style={{ marginLeft: "5px", marginRight: "5px" }} />
           <FaCalendarCheck />
           <DatePickerModule
+            show={setShowDatePicker}
             startDate={startDate}
             endDate={endDate}
             onDateChange={handleDateChange}
@@ -85,6 +111,8 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask }, ref) => {
             onAlarmClick={handleAlarmClick}
             selectedButton={selectedButton}
             setSelectedButton={handleSelectedButtonChange}
+            initialRepeat={isRepeat}
+            initialAlram={isNotified}
           />
         </div>
       </Modal.Header>

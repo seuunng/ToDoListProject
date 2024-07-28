@@ -21,8 +21,8 @@ const SimpleInputTask = ({ addTask }) => {
       const task = {
         title: newTask,
         content: '',
-        isNotified: false,
-        isRepeated: false,
+        isNotified: 'NOALRAM',
+        isRepeated: 'NOREPEAT',
         startDate: new Date().toISOString(),
         endDate: '',
         priority: 'MEDIUM',

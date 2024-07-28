@@ -10,30 +10,25 @@ import SetTask from '../components/task_state/setTask';
 
 
 const ReadTaskPage = ({ tasks, updateTask, deleteTask }) => {
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [taskTitle, setTaskTitle] = useState(tasks.title);
   const [taskContent, setTaskContent] = useState(tasks.content);
   const [startDate, setStartDate] = useState(new Date(tasks.startDate));
   const [endDate, setEndDate] = useState(tasks.endDate ? new Date(tasks.endDate) : null);
   const [selectedButton, setSelectedButton] = useState(tasks.dateStatus || 'DATE');
+  const [isRepeat, setIsRepeat] = useState(tasks.isRepeated || 'NOREPEAT');
+  const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALRAM');
   
 
   useEffect(() => {
-    setStartDate(new Date(tasks.startDate));
-    setEndDate(tasks.endDate ? new Date(tasks.endDate) : null);
     setTaskTitle(tasks.title);
     setTaskContent(tasks.content);
+    setStartDate(new Date(tasks.startDate));
+    setEndDate(tasks.endDate ? new Date(tasks.endDate) : null);
     setSelectedButton(tasks.dateStatus || 'DATE');
+    setIsRepeat(tasks.isRepeated || 'NOREPEAT');
+    setIsNotified(tasks.isNotified || 'NOALRAM');
   }, [tasks]);
-
-  const handleClose = () => {
-    // setShow(false);
-  }
-
-  const handleDateChange = (startDate, endDate) => {
-    setStartDate(startDate);
-    setEndDate(endDate);
-    updateTask({ ...tasks, startDate, endDate });
-  };
 
   const handleTitleChange = (e) => {
     const newTitle = e.target.value;
@@ -46,16 +41,43 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask }) => {
     setTaskContent(newContent);
     updateTask({ ...tasks, content: newContent });
   };
+
+  const handleDateChange = (startDate, endDate) => {
+    setStartDate(startDate);
+    setEndDate(endDate);
+    updateTask({ ...tasks, startDate, endDate });
+  };
+
   const handleSelectedButtonChange = (button) => {
     setSelectedButton(button);
     updateTask({ ...tasks, dateStatus: button.toUpperCase() });
   };
-  const handleRepeatClick = () => {
-    console.log('Repeat settings clicked');
+  const handleRepeatClick = (option) => {
+    const repeatMapping = {
+      "반복없음": "NOREPEAT",
+      "매일": "DAILY",
+      "매주": "WEEKLY",
+      "매달": "MONTHLY",
+      "매년": "YEARLY"
+    };
+    const isRepeated = repeatMapping[option] || "NOREPEAT";
+    setIsRepeat(isRepeated);
+    const updatedTasks = { ...tasks, isRepeated:  isRepeated };
+    updateTask(updatedTasks);
   };
 
-  const handleAlarmClick = () => {
-    console.log('Alarm settings clicked');
+  const handleAlarmClick = (option) => {
+    const alarmMapping = {
+      "알림없음": "NOALRAM",
+      "정각": "ONTIME",
+      "5분전": "FIVEMINS",
+      "30분전": "THIRTYMINS",
+      "하루전": "DAYEARLY"
+    };
+    const isNotified = alarmMapping[option] || "NOALRAM";
+    setIsNotified(isNotified);
+    const updatedTasks = { ...tasks, isNotified: isNotified };
+    updateTask(updatedTasks);
   };
   // const handleKeyDown = (e) => {
   //   if (e.key === 'Enter') {
@@ -74,8 +96,9 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask }) => {
       <div className="d-flex align-items-center">
         <CheckBox />
         <PiLineVerticalThin style={{ marginLeft: "5px", marginRight: "5px" }} />
-        <FaCalendarCheck />
+        <FaCalendarCheck onClick={() => setShowDatePicker(true)} />
         <DatePickerModule
+          show={setShowDatePicker}
           startDate={startDate}
           endDate={endDate}
           onDateChange={handleDateChange}
@@ -83,7 +106,8 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask }) => {
           onAlarmClick={handleAlarmClick}
           selectedButton={selectedButton}
           setSelectedButton={handleSelectedButtonChange}
-
+          initialRepeat={isRepeat}
+          initialAlram={isNotified}
         />
       </div>
       {/* <i className="fa-regular fa-flag"></i> */}

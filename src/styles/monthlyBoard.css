@@ -79,13 +79,13 @@
 
 /* 화면 너비가 576px 이하일 때 아이콘을 숨깁니다 */
 @media (max-width: 1200px) {
-  .alram {
+  .taskBoxForCal-alram {
     display: none;
   }
 }
 
 @media (max-width: 1000px) {
-  .repeat {
+  .taskBoxForCal-repeat {
     display: none;
   }
 }

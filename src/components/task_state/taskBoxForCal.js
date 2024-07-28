@@ -33,16 +33,16 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className, showTitle=tru
       <div ref={taskBoxRef} 
         className="TaskBoxForCal">
         <div className="color-box row">
-           {tasks.isRepeated && (
-            <span className="repeat col-2">
+           {tasks.isRepeated!== 'NOREPEAT' && (
+            <span className="taskBoxForCal-repeat col-2">
               <LuRepeat />
             </span>
           )}
           {showTitle && (
             <span className="task-title col-8">{tasks.title}</span>
           )}
-          {tasks.isNotified && (
-            <span className="alram col-2">
+          {tasks.isNotified !== 'NOALRAM'&& (
+            <span className="taskBoxForCal-alram col-2">
               <FaRegBell />
             </span>
           )}

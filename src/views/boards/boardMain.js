@@ -15,7 +15,7 @@ const BoardMain = () => {
             try {
                 const response_taskData = await instance.get('/tasks/task');
                 const data = response_taskData.data
-                console.log(data);
+                // console.log(data);
                 setTasks(data);
             } catch (error) {
                 console.error('Error get taskData:', error);
@@ -49,7 +49,7 @@ const BoardMain = () => {
     const deleteTask = async (deletedTask) => {
         try {
             await instance.delete(`/tasks/task/${deletedTask.no}`);
-            console.log(deletedTask.no);
+            // console.log(deletedTask.no);
             setTasks(tasks.filter(task => task.no !== deletedTask.no));
         } catch (error) {
             console.error('Error deleting task:', error);
