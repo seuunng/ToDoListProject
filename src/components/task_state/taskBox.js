@@ -13,16 +13,13 @@ const TaskBox = ({ tasks, deleteTask, updateTask}) => {
   const [startDate, setStartDate] = useState(new Date(tasks.startDate));
   const [endDate, setEndDate] = useState(tasks.endDate ? new Date(tasks.endDate) : null);
   const [selectedButton, setSelectedButton] = useState(tasks.selectedButton || 'DATE');
+  const [isRepeat, setIsRepeat] = useState();
 
   useEffect(() => {
     setStartDate(new Date(tasks.startDate));
     setEndDate(tasks.endDate ? new Date(tasks.endDate) : null);
     setSelectedButton(tasks.dateStatus || 'DATE');
-      // if (!tasks.selectedButton) {
-      //   setSelectedButton('DATE');
-      // } else {
-      //   setSelectedButton(tasks.selectedButton);
-      // }
+    setIsRepeat(tasks.isRepeat);
   }, []);
  
   const handleDateChange = (startDate, endDate) => {
@@ -32,15 +29,18 @@ const TaskBox = ({ tasks, deleteTask, updateTask}) => {
     updateTask({ ...tasks, startDate, endDate });
   };
 
-  const handleRepeatClick = () => {
-    console.log('Repeat settings clicked');
-  };
   const handleSelectedButtonChange = async (button) => {
     setSelectedButton(button);
     const updatedTasks = { ...tasks, dateStatus:  button.toUpperCase() };
-    console.log('Updated Task:', updatedTasks); // 확인용 콘솔 로그 추가
     updateTask(updatedTasks);
   };
+
+  const handleRepeatClick = (isRepeated) => {
+    setIsRepeat(tasks.isRepeated)
+    const updatedTasks = { ...tasks, isRepeated:  isRepeated };
+    updateTask(updatedTasks);
+  };
+
   const handleAlarmClick = () => {
     console.log('Alarm settings clicked');
   };

@@ -15,7 +15,7 @@ const DatePickerModule = ({ startDate, endDate, onDateChange, onRepeatClick, onA
     // const [startDateRange, endDate] = dateRange;
     // const [selectedDate, setSelectedDate] = useState(startDate);
     const [timeValue, setTimeValue] = useState(''); // 시간 값을 상태로 관리
-    const dropdownOptionsAlarmTime = ["알림없음", "정각", "10분전", "30분전", "하루전"];
+    const dropdownOptionsAlarmTime = ["알림없음", "정각", "5분전", "30분전", "하루전"];
     const dropdownOptionsRepeat = ["반복없음", "매일", "매주", "격주", "매달", "매년"];
     const [selectedOptions, setSelectedOptions] = useState({
         alarmTime: "선택",
