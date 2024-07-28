@@ -7,22 +7,24 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Col } from 'react-bootstrap';
 
-const MonthlyBoard = ({tasks, addTask, updateTask, deleteTask}) => {
+const MonthlyBoard = ({ tasks, addTask, updateTask, deleteTask,
+  lists, addList, updateList, deleteList
+}) => {
   const [startDate, setStartDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const createTaskModalRef = useRef(null);
-  const todayRef = useRef(null); // 오늘 날짜 셀을 참조할 ref
+  const todayRef = useRef(null);
   const weeks = [1, 2, 3, 4, 5];
   const days = [1, 2, 3, 4, 5, 6, 7];
-  
+
   const getDate = (week, day) => {
-    const firstDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1); 
+    const firstDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
     const dayOffset = (week - 1) * 7 + (day - firstDayOfMonth.getDay());
     const date = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1 + dayOffset);
     return date;
   };
 
-  const createMemo = (date, e) => {
+  const createMemo = (date) => {
     setStartDate(date);
     if (createTaskModalRef.current) {
       createTaskModalRef.current.showModal();
@@ -31,7 +33,7 @@ const MonthlyBoard = ({tasks, addTask, updateTask, deleteTask}) => {
 
   const handleTaskCellClick = (event, date) => {
     if (event.target !== event.currentTarget) {
-      return; 
+      return;
     }
     createMemo(date);
   };
@@ -59,15 +61,48 @@ const MonthlyBoard = ({tasks, addTask, updateTask, deleteTask}) => {
     }
   }, [selectedDate]);
 
+  const filterTasksForPeriod = (date) => {
+    return tasks.filter(task => {
+      const taskStartDate = new Date(task.startDate);
+      return task.endDate == null
+        ? (
+          taskStartDate.getDate() === date.getDate() &&
+          taskStartDate.getMonth() === date.getMonth() &&
+          taskStartDate.getFullYear() === date.getFullYear()
+        )
+        : (
+          date >= taskStartDate &&
+          date <= new Date(task.endDate)
+        );
+    });
+  };
   const filterTasksForDate = (date) => {
     return tasks.filter(task => {
       const taskDate = new Date(task.startDate);
+      // if (tasks.dateStatus === 'DATE') {
       return (
         taskDate.getDate() === date.getDate() &&
         taskDate.getMonth() === date.getMonth() &&
         taskDate.getFullYear() === date.getFullYear()
       );
+      // }
     });
+  };
+  // const getFilteredTasks = (date) => {
+  //   if (selectedButton === 'date') {
+  //     return filterTasksForDate(date);
+  //   } else {
+  //     return filterTasksForPeriod(date);
+  //   }
+  // };
+
+  const isTaskEndDate = (task, date) => {
+    const taskEndDate = new Date(task.endDate);
+    return (
+      date.getDate() === taskEndDate.getDate() &&
+      date.getMonth() === taskEndDate.getMonth() &&
+      date.getFullYear() === taskEndDate.getFullYear()
+    );
   };
 
   return (
@@ -91,9 +126,9 @@ const MonthlyBoard = ({tasks, addTask, updateTask, deleteTask}) => {
       <div className="calendar">
         <table className="calendar-table">
           <thead className="days_of_the_week"
-            >
+          >
             <tr>
-              <td style={{backGroundColor: "grey"}}>월</td>
+              <td style={{ backGroundColor: "grey" }}>월</td>
               <td>화</td>
               <td>수</td>
               <td>목</td>
@@ -108,32 +143,56 @@ const MonthlyBoard = ({tasks, addTask, updateTask, deleteTask}) => {
                 {days.map((day) => {
                   const date = getDate(week, day);
                   const todayClass = isToday(date) ? 'today-cell' : 'date-cell';
-                  const filteredTasks = filterTasksForDate(date);
+                  const dayTasksForPeriod = filterTasksForPeriod(date);
+                  // const dayTasksForDate = filterTasksForDate(date);
+                  const dayTasks = [
+                    ...dayTasksForPeriod,
+                    // ...dayTasksForDate
+                  ];
                   return (
-                    <td key={day} ref={isToday(date) ? todayRef : null}>
+                    <td key={day} ref={isToday(date) ? todayRef : null} className="calendar-cell">
                       <div className="day-cell">
                         <div className={todayClass}>{date.getDate()}</div>
                         <div className="task-cell" onClick={(e) => handleTaskCellClick(e, date)}>
-                        {filteredTasks.map(task => (
-                          <TaskBoxForCal
-                            showdate={date.getDate().toString()}
-                            key={task.no}
-                            tasks={task}
-                            updateTask={updateTask}
-                            deleteTask={deleteTask}
-                          />
-                        ))}
+                          {dayTasks.map(task => (
+                            <TaskBoxForCal
+                              key={task.no}
+                              showdate={date.getDate().toString()}
+                              tasks={task}
+                              updateTask={updateTask}
+                              deleteTask={deleteTask}
+                              className={isTaskEndDate(task, date) ? 'task-end-date' : ''}
+                              lists={lists}
+                              addList={addList}
+                              updateList={updateList}
+                              deleteList={deleteList}
+                            // showTitle={!isTaskEndDate(task, date)}
+                            />
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  </td>
+                    </td>
                   );
                 })}
               </tr>
             ))}
           </tbody>
         </table>
+        {/* <div className="filtered-tasks">
+        <h5>Tasks for {selectedDate.toDateString()}</h5>
+        {filteredTasks.map(task => (
+          <TaskBoxForCal
+            key={task.no}
+            tasks={task}
+            updateTask={updateTask}
+            deleteTask={deleteTask}
+            className="filtered-task"
+            showTitle={true}
+          />
+        ))}
+      </div> */}
       </div>
-      <CreateTask 
+      <CreateTask
         ref={createTaskModalRef} date={startDate} addTask={addTask} />
     </div>
   );

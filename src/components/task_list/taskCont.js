@@ -5,37 +5,31 @@ import TaskBox from '../task_state/taskBox';
 import ReadTaskPage from '../../views/readTaskPage';
 import { Row, Col } from 'react-bootstrap';
 
-const TaskCont = ({ tasks, updateTask, deleteTask }) => {
-  const [selectedTask, setSelectedTask] = useState(null);
-
-  const handleTaskClick = (task) => {
-    setSelectedTask(task);
-  };
+const TaskCont = ({ tasks, updateTask, deleteTask, onTaskClick, 
+  lists, addList, updateList, deleteList
+ }) => {
 
   return (
-    <div className="TaskCont">
-      <Row>
-          <table className="task-table col-6">
-            <tbody>
-              {tasks.map((task) => (
-                <tr key={task.no}>
-                  <td className="task-cell" onClick={() => handleTaskClick(task)}>
-                    <TaskBox tasks={task} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        <Col className="ReadTaskPage">
-          {selectedTask && (
-            <ReadTaskPage
-            tasks={selectedTask}
-            updateTask={updateTask}
-            deleteTask={deleteTask}
-            />
-          )}
-        </Col>
-      </Row>
+    <div className="TaskContTable">
+      <table className="task-table">
+        <tbody>
+          {tasks.map((task) => (
+            <tr key={task.no}>
+              <td className="task-cell" onClick={() => onTaskClick(task)}>
+                <TaskBox
+                  tasks={task}
+                  updateTask={updateTask}
+                  deleteTask={deleteTask}
+                  lists={lists} 
+                  addList={addList} 
+                  updateList={updateList}
+                  deleteList={deleteList}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

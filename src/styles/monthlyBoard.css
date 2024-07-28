@@ -1,100 +1,134 @@
-.monthly-board-container {
-  }
-.month{
-  margin: 10px;
+.monthly-board-container {}
+
+.month {
+  /* margin: 10px; */
 }
+
 .calendar {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /*수직 중앙 정렬*/
-    /* justify-content: center; 수평 중앙 정렬 */
-    height: 100vh; /* Viewport Height */
-  }
-.calendar-table{
-    width: 93vw;
-    height: 90vh;
-    border-collapse: collapse;
-    table-layout: fixed; /* 테이블 레이아웃을 고정으로 설정 */
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  /*수직 중앙 정렬*/
+  /* justify-content: center; 수평 중앙 정렬 */
+  height: 100vh;
+  /* Viewport Height */
 }
-.calendar-table td{
-    padding: 0px;
-    vertical-align: top; /* 내용이 위쪽에 정렬되도록 설정 */
-    max-width: 250px;/* 최대 너비 설정 */
-    overflow: hidden; /* 내용이 넘칠 경우 숨김 처리 */
-    
+
+.calendar-table {
+  width: 90vw;
+  height: 90vh;
+  border-collapse: collapse;
+  table-layout: fixed;
+  /* 테이블 레이아웃을 고정으로 설정 */
 }
+
+.calendar-table td {
+  padding: 0px;
+  vertical-align: top;
+  /* 내용이 위쪽에 정렬되도록 설정 */
+  max-width: 250px;
+  /* 최대 너비 설정 */
+  overflow: hidden;
+  /* 내용이 넘칠 경우 숨김 처리 */
+
+}
+
 .day-cell {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    box-sizing: border-box;
-    padding:5px;
-    height: 120px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  height: 120px;
 }
+
 .date-cell {
-    text-align: left;
-    }
-  
-.task-cell {
-    flex-grow: 1;
-    width: 100%;
-  }
-.calendar-table .task-cell {
-    width: 100%; /* 셀 너비 설정 */
-    
-  }
-.days_of_the_week{
-    text-align: center;
+  text-align: left;
 }
+
+.task-cell {
+  flex-grow: 1;
+  width: 100%;
+}
+
+.calendar-table .task-cell {
+  width: 100%;
+  /* 셀 너비 설정 */
+
+}
+
+.days_of_the_week {
+  text-align: center;
+}
+
 /* sideBar 토글 스위치랑 위치 일치시키기 */
 .list-title {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-left: 0;
-    margin-right: 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 0;
+  margin-right: 0;
 }
+
 /* 기본 스타일 정의 */
 .alram {
-  display: block; /* 기본적으로 아이콘을 보이게 설정 */
+  display: block;
+  /* 기본적으로 아이콘을 보이게 설정 */
 }
 
 /* 화면 너비가 576px 이하일 때 아이콘을 숨깁니다 */
 @media (max-width: 1200px) {
-  .alram {
+  .taskBoxForCal-alram {
     display: none;
   }
 }
+
 @media (max-width: 1000px) {
-  .repeat {
+  .taskBoxForCal-repeat {
     display: none;
   }
 }
+
 .month-year-title .react-datepicker__input-container input {
   font-size: 36px;
   margin-bottom: 8px;
 }
-.react-datepicker__input-container input {
-    border: none;
-    outline: none; /* 포커스 시 외곽선 제거 */
-    margin-left: 8px;
-    
-  }
-  .react-datepicker__input-container input:focus {
-    outline: none; /* 포커스 시 외곽선 제거 */
-  }
-.list-title.col.lefted {
-    margin-top: 0;
-    margin-bottom: 0;
+.month-year-title{
+  width: 90%;
 }
-.setting-icon.col.righted{
+.react-datepicker__input-container input {
+  border: none;
+  outline: none;
+  /* 포커스 시 외곽선 제거 */
+  margin-left: 8px;
+
+}
+
+.react-datepicker__input-container input:focus {
+  outline: none;
+  /* 포커스 시 외곽선 제거 */
+}
+
+.list-title.col.lefted {
   margin-top: 0;
   margin-bottom: 0;
 }
+
+.setting-icon.col.righted {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .today-cell {
-  background-color: #000; /* 날짜 셀의 배경 색을 검정색으로 설정 */
+  background-color: #000;
+  /* 날짜 셀의 배경 색을 검정색으로 설정 */
   color: #fff;
 }
+
 .react-datepicker__triangle {
-  left: 47% !important; /* 필요에 따라 값을 조정하세요 */
-  transform: translateX(-50%); /* 중앙 정렬 */
+  left: 47% !important;
+  /* 필요에 따라 값을 조정하세요 */
+  transform: translateX(-50%);
+  /* 중앙 정렬 */
 }

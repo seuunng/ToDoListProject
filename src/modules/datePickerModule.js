@@ -9,55 +9,75 @@ import { Button, Col } from 'react-bootstrap';
 import DropdownBtn from './dropdownModule';
 import { IoMdTime } from "react-icons/io";
 
-const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick }) => {
-    const [dateRange, setDateRange] = useState([null, null]);
-    const [startDateRange, endDate] = dateRange;
-    const [selectedDate, setSelectedDate] = useState(startDate);
-    const [timeValue, setTimeValue] = useState(''); // 시간 값을 상태로 관리
-    const dropdownOptionsAlarmTime = ["알림없음", "정각", "10분전", "30분전", "하루전"];
-    const dropdownOptionsRepeat = ["반복없음", "매일", "매주", "격주", "매달", "매년"];
+const DatePickerModule = ({ startDate, endDate, onDateChange, onRepeatClick, initialRepeat, onAlarmClick, initialAlram, dateFormat,  selectedButton, setSelectedButton, show }) => {
+    const [dateRange, setDateRange] = useState([startDate, endDate]);
+    const [timeValue, setTimeValue] = useState(''); 
+    const dropdownOptionsAlarmTime = ["알림없음", "정각", "5분전", "30분전", "하루전"];
+    const dropdownOptionsRepeat = ["반복없음", "매일", "매주", "매달", "매년"];
+
+    const repeatMappingToKorean = {
+        "NOREPEAT": "반복없음",
+        "DAILY": "매일",
+        "WEEKLY": "매주",
+        "MONTHLY": "매달",
+        "YEARLY": "매년"
+    };
+
+    const alarmMappingToKorean = {
+        "NOALRAM": "알림없음",
+        "ONTIME": "정각",
+        "FIVEMINS": "5분전",
+        "THIRTYMINS": "30분전",
+        "DAYEARLY": "하루전"
+    };
+
     const [selectedOptions, setSelectedOptions] = useState({
-        alarmTime: "선택", //설정의 기본값으로 넣기
-        repeat: "선택",
+        alarmTime: alarmMappingToKorean[initialAlram] || "알림없음",
+        repeat: repeatMappingToKorean[initialRepeat] || "반복없음",
     });
 
-    const [selectedButton, setSelectedButton] = useState('date');
-
     useEffect(() => {
-        // console.log("timeValue updated:", timeValue);
-    }, [timeValue]);
+        setDateRange([startDate, endDate]);
+        setSelectedOptions({
+            repeat: repeatMappingToKorean[initialRepeat] || "반복없음",
+            alarmTime: alarmMappingToKorean[initialAlram] || "알림없음"  
+        });
+    }, [startDate, endDate, initialAlram, initialRepeat]);
 
-    useEffect(() => {
-        setSelectedDate(startDate);
-    }, [startDate]);
-
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
-        if (onDateChange) {
-            onDateChange(date);
+    const handleDateChange = (update) => {
+        setDateRange(update);
+        if (selectedButton === 'PERIOD') {
+            onDateChange(update[0], update[1]);
+        } else {
+            onDateChange(update, null);
         }
     };
-
     const handleOptionSelected = (type, option) => {
         setSelectedOptions({ ...selectedOptions, [type]: option });
+        if (type === 'repeat') {
+            onRepeatClick(option);
+        }
+        if (type === 'alarmTime') {
+            onAlarmClick(option);
+        }
     };
     const handleButtonClick = (buttonType) => {
-        if (buttonType === 'date') {
-            setDateRange([null, null]); // 날짜 버튼을 클릭할 때 선택한 기간을 초기화
+        if (buttonType === 'DATE') {
+            setDateRange([null, null]); 
         }
         setSelectedButton(buttonType);
     };
-   
-
-
+    const handleClose = () =>  {
+        show(false);
+      };
     const CustomInput = forwardRef(({ value, onClick, className }, ref) => (
         <button className={className} onClick={onClick} ref={ref}
             style={{
-                width: "400px",
                 fontSize: "16px",
                 textAlign: "left",
                 marginLeft: "10px",
-                paddingLeft: "10px",
+                paddingLeft: "0px",
+                paddingRight: "0px",
                 backgroundColor: "white",
                 height: "40px",
                 border: "none"
@@ -77,11 +97,8 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
                         const newValue = e.target.value;
                         onChange(newValue);
                         setTimeValue(newValue);
-                        // console.log("CustomTimeInput changed to:", e.target.value);
-                        // console.log("CustomTimeInput timeValue",timeValue)
                     }
                     }
-                    // onClick={handleTimeToggle}
                     style={{
                         width: "120px",
                         padding: "5px",
@@ -97,11 +114,7 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
             <Col>
                 <Button
                     onClick={() => {
-                        // onChange('');
                         setTimeValue('');
-                        // console.log("x button clicked, timeValue reset");
-                        // console.log("x timeValue",timeValue)
-                        // setShowTimeInput(false);
                     }}
                     style={{
                         width: "20px",
@@ -121,8 +134,7 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
     );
 
     const CustomTimeLabel = () => (
-        <span style={{ fontSize: "16px", marginLeft: "-6px" }}
-        >
+        <span style={{ fontSize: "16px", marginLeft: "-6px" }}>
             시간 설정
         </span>
     );
@@ -144,13 +156,13 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
                             paddingLeft: "-8px",
                         }}>
                         <Col>
-                            <Button onClick={() => handleButtonClick('date')} variant="light"
+                            <Button onClick={() => handleButtonClick('DATE')} variant="light"
                                 style={{
                                     width: "110%",
                                     marginTop: "5px",
                                     marginLeft: "0px",
-                                    backgroundColor: selectedButton === 'date' ? 'light' : '#f0f0f0',
-                                    color: selectedButton === 'date' ? 'black' : 'lightgrey',
+                                    backgroundColor: selectedButton === 'DATE' ? 'light' : '#f0f0f0',
+                                    color: selectedButton === 'DATE' ? 'black' : 'lightgrey',
                                     border: "none"
                                 }}
                                 className="date-button"
@@ -159,7 +171,7 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
                             </Button>
                         </Col>
                         <Col >
-                            <Button onClick={() => handleButtonClick('period')} variant="light"
+                            <Button onClick={() => handleButtonClick('PERIOD')} variant="light"
                                 style={{
                                     width: "110%",
                                     marginTop: "5px",
@@ -167,8 +179,8 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
                                     paddingLeft: "0px",
                                     marginLeft: "-5px",
                                     marginRight: "10px",
-                                    backgroundColor: selectedButton === 'period' ? 'light' : '#f0f0f0',
-                                    color: selectedButton === 'period' ? 'black' : 'lightgrey',
+                                    backgroundColor: selectedButton === 'PERIOD' ? 'light' : '#f0f0f0',
+                                    color: selectedButton === 'PERIOD' ? 'black' : 'lightgrey',
                                     border: "none"
                                 }}
                                 className="date-button"
@@ -186,20 +198,11 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
         <div className="custom-date-picker">
 
             <DatePicker
-                selected={selectedButton === 'period' ? startDateRange : selectedDate}
-                onChange={(date) => {
-                    if (selectedButton === 'period') {
-                        setDateRange(date);
-                        if (onDateChange) {
-                            onDateChange(date);
-                        }
-                    } else {
-                        handleDateChange(date);
-                    }
-                }}
-                startDate={startDateRange}
-                endDate={endDate}
-                selectsRange={selectedButton === 'period'}
+                selected={dateRange[0]}
+                onChange={handleDateChange}
+                startDate={dateRange[0]}
+                endDate={dateRange[1]}
+                selectsRange={selectedButton === 'PERIOD'}
 
                 showPopperArrow={false}
                 calendarContainer={MyContainer}
@@ -207,7 +210,7 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
                 style={{ margin: "10px", padding: "10px" }}
                 customInput={<CustomInput className="custom-input" />}
                 timeInputLabel={<CustomTimeLabel />}
-                dateFormat={timeValue ? "yyyy/MM/dd h:mm aa" : "yyyy/MM/dd"}
+                dateFormat={dateFormat ? dateFormat : (timeValue ? "yyyy/MM/dd h:mm aa" : "yyyy/MM/dd")}
                 showTimeInput
                 customTimeInput={<CustomTimeInput value={timeValue} onChange={setTimeValue} />}
             >
@@ -237,61 +240,25 @@ const DatePickerModule = ({ startDate, onDateChange, onRepeatClick, onAlarmClick
                         </Col>
                     </div>
                     <div className="d-flex align-items-center line row">
-                        <Col xs={8} className='righted'>
+                        <Col
+                            style={{ marginTop: "5px", marginRight: "0",  }}>
                             <Button variant="outline-dark"
-                                style={{ marginTop: "5px", marginRight: "0" }}
-                            >
+                             style={{ width: "100%"  }}
+                             onClick={handleClose}>
                                 취소
                             </Button>
                         </Col>
-                        <Col xs={4} className='lefted'
-                            style={{ marginTop: "5px", marginleft: "0" }}
-                        >
-                            <Button>
+                        <Col
+                            style={{ marginTop: "5px", marginleft: "0" }}>
+                            <Button
+                             style={{ width: "100%"  }}
+                             onClick={handleClose}>
                                 저장
                             </Button>
                         </Col>
                     </div>
                 </div>
             </DatePicker>
-            {/* ) : (
-                <DatePicker
-                    
-
-                    showPopperArrow={true}
-                    calendarContainer={MyContainer}
-                    popperPlacement="bottom-start"
-                    style={{ margin: "10px", padding: "10px" }}
-                   
-                >
-                    <div>
-                        <div className="d-flex align-items-center line row">
-                            <Col>
-                                <h6>반복 설정</h6>
-                            </Col>
-                            <Col className='righted'>
-                                <DropdownBtn
-                                    options={dropdownOptionsRepeat}
-                                    selectedOption={selectedOptions.repeat}
-                                    onOptionSelected={(option) => handleOptionSelected('repeat', option)}
-                                />
-                            </Col>
-                        </div>
-                        <div className="d-flex align-items-center line row">
-                            <Col>
-                                <h6>알림 설정</h6>
-                            </Col>
-                            <Col className='righted'>
-                                <DropdownBtn
-                                    options={dropdownOptionsAlarmTime}
-                                    selectedOption={selectedOptions.alarmTime}
-                                    onOptionSelected={(option) => handleOptionSelected('alarmTime', option)}
-                                />
-                            </Col>
-                        </div>
-                    </div>
-                </DatePicker>
-            )} */}
         </div>
     );
 }

@@ -7,27 +7,33 @@ import { PiLineVerticalThin } from "react-icons/pi";
 import { FaCalendarCheck } from "react-icons/fa";
 import DatePickerModule from '../modules/datePickerModule';
 import SetTask from '../components/task_state/setTask';
+import SelectedList from '../components/task_list/selectedList.js';
 
 
-const ReadTaskPage = ({ tasks, updateTask, deleteTask }) => {
-  const [startDate, setStartDate] = useState(new Date(tasks.startDate));
+const ReadTaskPage = ({ tasks, updateTask, deleteTask,
+  lists, addList, updateList, deleteList
+ }) => {
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [taskTitle, setTaskTitle] = useState(tasks.title);
   const [taskContent, setTaskContent] = useState(tasks.content);
+  const [startDate, setStartDate] = useState(new Date(tasks.startDate));
+  const [endDate, setEndDate] = useState(tasks.endDate ? new Date(tasks.endDate) : null);
+  const [selectedButton, setSelectedButton] = useState(tasks.dateStatus || 'DATE');
+  const [isRepeat, setIsRepeat] = useState(tasks.isRepeated || 'NOREPEAT');
+  const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALRAM');
+  const [selectedList, setSelectedList] = useState(null);
+  
 
   useEffect(() => {
-    setStartDate(new Date(tasks.startDate));
     setTaskTitle(tasks.title);
     setTaskContent(tasks.content);
-  }, [tasks]);
-
-  const handleClose = () => {
-    // setShow(false);
-  }
-
-  const handleDateChange = (date) => {
-    setStartDate(date);
-    updateTask({ ...tasks, startDate: date });
-  };
+    setStartDate(new Date(tasks.startDate));
+    setEndDate(tasks.endDate ? new Date(tasks.endDate) : null);
+    setSelectedButton(tasks.dateStatus || 'DATE');
+    setIsRepeat(tasks.isRepeated || 'NOREPEAT');
+    setIsNotified(tasks.isNotified || 'NOALRAM');
+    setSelectedList(lists.find(list => list.id === tasks.listId) || null);
+  }, [tasks, lists]);
 
   const handleTitleChange = (e) => {
     const newTitle = e.target.value;
@@ -41,12 +47,42 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask }) => {
     updateTask({ ...tasks, content: newContent });
   };
 
-  const handleRepeatClick = () => {
-    console.log('Repeat settings clicked');
+  const handleDateChange = (startDate, endDate) => {
+    setStartDate(startDate);
+    setEndDate(endDate);
+    updateTask({ ...tasks, startDate, endDate });
   };
 
-  const handleAlarmClick = () => {
-    console.log('Alarm settings clicked');
+  const handleSelectedButtonChange = (button) => {
+    setSelectedButton(button);
+    updateTask({ ...tasks, dateStatus: button.toUpperCase() });
+  };
+  const handleRepeatClick = (option) => {
+    const repeatMapping = {
+      "반복없음": "NOREPEAT",
+      "매일": "DAILY",
+      "매주": "WEEKLY",
+      "매달": "MONTHLY",
+      "매년": "YEARLY"
+    };
+    const isRepeated = repeatMapping[option] || "NOREPEAT";
+    setIsRepeat(isRepeated);
+    const updatedTasks = { ...tasks, isRepeated:  isRepeated };
+    updateTask(updatedTasks);
+  };
+
+  const handleAlarmClick = (option) => {
+    const alarmMapping = {
+      "알림없음": "NOALRAM",
+      "정각": "ONTIME",
+      "5분전": "FIVEMINS",
+      "30분전": "THIRTYMINS",
+      "하루전": "DAYEARLY"
+    };
+    const isNotified = alarmMapping[option] || "NOALRAM";
+    setIsNotified(isNotified);
+    const updatedTasks = { ...tasks, isNotified: isNotified };
+    updateTask(updatedTasks);
   };
   // const handleKeyDown = (e) => {
   //   if (e.key === 'Enter') {
@@ -65,12 +101,18 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask }) => {
       <div className="d-flex align-items-center">
         <CheckBox />
         <PiLineVerticalThin style={{ marginLeft: "5px", marginRight: "5px" }} />
-        <FaCalendarCheck />
+        <FaCalendarCheck onClick={() => setShowDatePicker(true)} />
         <DatePickerModule
+          show={setShowDatePicker}
           startDate={startDate}
+          endDate={endDate}
           onDateChange={handleDateChange}
           onRepeatClick={handleRepeatClick}
           onAlarmClick={handleAlarmClick}
+          selectedButton={selectedButton}
+          setSelectedButton={handleSelectedButtonChange}
+          initialRepeat={isRepeat}
+          initialAlram={isNotified}
         />
       </div>
       {/* <i className="fa-regular fa-flag"></i> */}
@@ -94,7 +136,15 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask }) => {
         ></textarea>
 
         <div className="d-flex align-items-center line row">
-          <div className="list-title col lefted">{tasks.title}</div>
+          <div className="list-title col lefted">
+            <SelectedList 
+            lists={lists} 
+            selectedList={selectedList} 
+            setSelectedList={setSelectedList}
+            tasks={tasks}
+            updateTask={updateTask}
+             />
+            </div>
           <div className="setting-icon col righted">
             <SetTask
               task={tasks}

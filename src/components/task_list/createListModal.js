@@ -6,11 +6,12 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import { TfiMenu } from "react-icons/tfi";
 import { MdSignalCellularNull } from 'react-icons/md';
 
-const CreateList = ({ show, onHide, icon, list, count, color }) => {
+const CreateList = ({ show, onHide, lists, count, addList }) => {
   const modalRef = useRef(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [selectedEmoji, setSelectedEmoji] = useState(null);
-  const [selectedColor, setSelectedColor] = useState(null);
+  const [newList, setNewList] = useState('');
+  const [selectedEmoji, setSelectedEmoji] = useState('');
+  const [selectedColor,setSelectedColor] = useState('');
 
   const handleEmojiClick = (emojiObject, event) => {
     setSelectedEmoji(emojiObject.emoji);
@@ -21,6 +22,20 @@ const CreateList = ({ show, onHide, icon, list, count, color }) => {
   };
   const handleColorClick = (color) => {
     setSelectedColor(color);
+  };
+  const createList = () => {
+    if (newList.trim()) {
+      const list = {
+        title: newList,
+        icon: selectedEmoji,
+        color: selectedColor,
+      };
+      addList(list);
+      setNewList('');
+      setSelectedEmoji('');
+      setSelectedColor('');
+      onHide();
+    }
   };
   const colorOptions = ['lightPink', 'lightGreen', 'lightBlue'];
   
@@ -39,6 +54,8 @@ const CreateList = ({ show, onHide, icon, list, count, color }) => {
               aria-label="Example text with button addon"
               aria-describedby="basic-addon1"
               placeholder="Name"
+              value={newList}
+              onChange={(e) => setNewList(e.target.value)} 
             />
           </InputGroup>
           {showEmojiPicker && (
@@ -94,7 +111,7 @@ const CreateList = ({ show, onHide, icon, list, count, color }) => {
         <Button variant="outline-secondary" onClick={onHide}>
           취소
         </Button>
-        <Button onClick={() => { }}>
+        <Button onClick={createList}>
           저장
         </Button>
       </Modal.Footer>

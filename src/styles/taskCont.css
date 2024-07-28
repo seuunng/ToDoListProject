@@ -1,18 +1,41 @@
 .task-table {
-    width: 50vw;
-    max-width: 600px; 
-    min-width: 400px; 
+    width: 100%;
+    /* max-width: 1200px;  */
+    /* min-width: 400px;  */
     border-collapse: collapse; 
   }
   .task-table td {
-    padding: 10px;
+    padding-left: 10px;
   }
   
   .task-table .task-cell {
     width: 100%; /* 셀 너비 설정 */
   }
-  @media (max-width: 1205px) {
+  @media (max-width: 1000px) {
     .ReadTaskPage {
       display: none;
     }
+  }
+  .TaskContTable{
+    height: 90vh; 
+      overflow-y: auto; /* 수직 스크롤 활성화 */
+      overflow-x: hidden;
+  }
+  /* Custom Scrollbar Styles */
+  .TaskContTable::-webkit-scrollbar {
+  width: 5px; /* 스크롤바 너비 */
+  /* margin-top: 5px; */
+  }
+  
+  .TaskContTable::-webkit-scrollbar-track {
+  background: #f1f1f1; /* 스크롤바 트랙 배경 */
+  }
+  
+  .TaskContTable::-webkit-scrollbar-thumb {
+  background: #999; /* 스크롤바 색상 */
+  border-radius: 6px; /* 스크롤바 모서리 둥글게 */
+  }
+  
+  .TaskContTable::-webkit-scrollbar-thumb:hover {
+  background: #888; /* 호버 시 스크롤바 색상 */
   }

@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 const BoardMain = () => {
     const { boardType } = useParams();
     const [tasks, setTasks] = useState([]);
+    const [lists, setLists] = useState([]);
 
     useEffect(() => {
         const fetchTableData = async () => {
@@ -17,6 +18,11 @@ const BoardMain = () => {
                 const data = response_taskData.data
                 // console.log(data);
                 setTasks(data);
+                
+                const response_listData = await instance.get('/lists/list');
+                const data_list = response_listData.data
+                // console.log(data_list);
+                setLists(data_list);
             } catch (error) {
                 console.error('Error get taskData:', error);
             }
@@ -49,10 +55,41 @@ const BoardMain = () => {
     const deleteTask = async (deletedTask) => {
         try {
             await instance.delete(`/tasks/task/${deletedTask.no}`);
-            console.log(deletedTask.no);
+            // console.log(deletedTask.no);
             setTasks(tasks.filter(task => task.no !== deletedTask.no));
         } catch (error) {
             console.error('Error deleting task:', error);
+        }
+    };
+    const addList = async (newList) => {
+        try {
+            const response = await instance.post('/lists/list', newList);
+            const addedlist = response.data;
+            setLists([...lists, addedlist]);
+        } catch (error) {
+            console.error('Error adding list:', error);
+        }
+    };
+
+    const updateList = async (updatedList) => {
+        try {
+            const response = await instance.put(`/lists/list/${updatedList.no}`, updatedList);
+            const updatedlists = lists.map(list =>
+                list.no === updatedList.no ? response.data : list
+            );
+            setLists(updatedlists);
+        } catch (error) {
+            console.error('Error updating list:', error);
+        }
+    };
+
+    const deleteList = async (deletedList) => {
+        try {
+            await instance.delete(`/lists/list/${deletedList.no}`);
+            // console.log(deletedlist.no);
+            setLists(lists.filter(list => list.no !== deletedList.no));
+        } catch (error) {
+            console.error('Error deleting list:', error);
         }
     };
 
@@ -63,13 +100,23 @@ const BoardMain = () => {
                     tasks={tasks} 
                     addTask={addTask} 
                     updateTask={updateTask}
-                    deleteTask={deleteTask} />
+                    deleteTask={deleteTask}
+                    lists={lists} 
+                    addList={addList} 
+                    updateList={updateList}
+                    deleteList={deleteList}
+                     />
             ) : (
                 <MonthlyBoard
                     tasks={tasks} 
                     addTask={addTask} 
                     updateTask={updateTask}
-                    deleteTask={deleteTask} />
+                    deleteTask={deleteTask}
+                    lists={lists} 
+                    addList={addList} 
+                    updateList={updateList}
+                    deleteList={deleteList}
+                     />
             )}
         </div>
     );

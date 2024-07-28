@@ -13,16 +13,27 @@ import Checkbox from '../../modules/checkBoxModule';
 import { PiLineVerticalThin } from "react-icons/pi";
 import SetTask from './setTask';
 
-const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask }, ref) => {
+const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
+  lists, addList, updateList, deleteList
+ }, ref) => {
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [show, setShow] = useState(false);
   const [taskTitle, setTaskTitle] = useState(tasks.title);
   const [taskDescription, setTaskDescription] = useState(tasks.content);
   const [startDate, setStartDate] = useState(new Date(tasks.startDate));
+  const [endDate, setEndDate] = useState(tasks.endDate ? new Date(tasks.endDate) : null);
+  const [selectedButton, setSelectedButton] = useState(tasks.dateStatus || 'DATE');
+  const [isRepeat, setIsRepeat] = useState(tasks.isRepeated || 'NOREPEAT');
+  const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALRAM');
 
   useEffect(() => {
-    setStartDate(new Date(tasks.startDate));
     setTaskTitle(tasks.title);
     setTaskDescription(tasks.content);
+    setStartDate(new Date(tasks.startDate));
+    setEndDate(tasks.endDate ? new Date(tasks.endDate) : null);
+    setSelectedButton(tasks.dateStatus || 'DATE');
+    setIsRepeat(tasks.isRepeated || 'NOREPEAT');
+    setIsNotified(tasks.isNotified || 'NOALRAM');
   }, [tasks]);
 
   const handleClose = () => {
@@ -31,6 +42,8 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask }, ref) => {
       title: taskTitle,
       content: taskDescription,
       startDate,
+      endDate,
+      dateStatus: selectedButton
       // Add other task fields as necessary
     };
     updateTask(updatedTask);
@@ -46,13 +59,36 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask }, ref) => {
     setStartDate(date);
     updateTask({ ...tasks, startDate: date });
   };
-
-  const handleRepeatClick = () => {
-    console.log('Repeat settings clicked');
+  const handleSelectedButtonChange = (button) => {
+    setSelectedButton(button);
+    updateTask({ ...tasks, dateStatus: button.toUpperCase() });
+  }
+  const handleRepeatClick = (option) => {
+    const repeatMapping = {
+      "반복없음": "NOREPEAT",
+      "매일": "DAILY",
+      "매주": "WEEKLY",
+      "매달": "MONTHLY",
+      "매년": "YEARLY"
+    };
+    const isRepeated = repeatMapping[option] || "NOREPEAT";
+    setIsRepeat(isRepeated);
+    const updatedTasks = { ...tasks, isRepeated:  isRepeated };
+    updateTask(updatedTasks);
   };
 
-  const handleAlarmClick = () => {
-    console.log('Alarm settings clicked');
+  const handleAlarmClick = (option) => {
+    const alarmMapping = {
+      "알림없음": "NOALRAM",
+      "정각": "ONTIME",
+      "5분전": "FIVEMINS",
+      "30분전": "THIRTYMINS",
+      "하루전": "DAYEARLY"
+    };
+    const isNotified = alarmMapping[option] || "NOALRAM";
+    setIsNotified(isNotified);
+    const updatedTasks = { ...tasks, isNotified: isNotified };
+    updateTask(updatedTasks);
   };
 
   const handleKeyDown = (e) => {
@@ -69,10 +105,16 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask }, ref) => {
           <PiLineVerticalThin style={{ marginLeft: "5px", marginRight: "5px" }} />
           <FaCalendarCheck />
           <DatePickerModule
+            show={setShowDatePicker}
             startDate={startDate}
+            endDate={endDate}
             onDateChange={handleDateChange}
             onRepeatClick={handleRepeatClick}
             onAlarmClick={handleAlarmClick}
+            selectedButton={selectedButton}
+            setSelectedButton={handleSelectedButtonChange}
+            initialRepeat={isRepeat}
+            initialAlram={isNotified}
           />
         </div>
       </Modal.Header>
@@ -109,9 +151,9 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask }, ref) => {
           style={{ width: "100vw" }}>
           <div className="list-title col lefted">{tasks.title}</div>
           <div className="setting-icon col righted">
-          <SetTask 
-            task={tasks}
-            deleteTask={deleteTask} />
+            <SetTask
+              task={tasks}
+              deleteTask={deleteTask} />
           </div>
         </div>
         {/* <button type="button" className="btn btn-secondary" onClick={handleClose}>Close</button>

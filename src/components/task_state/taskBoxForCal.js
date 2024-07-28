@@ -5,7 +5,8 @@ import ReadTaskModal from '../task_state/readTaskModal';
 import { LuRepeat } from "react-icons/lu";
 import { FaRegBell } from "react-icons/fa";
 
-const TaskBoxForCal = ({ tasks, updateTask, deleteTask}) => {
+const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className, 
+  lists, addList, updateList, deleteList, showTitle=true}) => {
   const readTaskModalRef = useRef(null);
   const taskBoxRef = useRef(null);
 
@@ -29,18 +30,20 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask}) => {
   }, []);
 
   return (
-    <>
+    <div className={`task-box ${className}`}>
       <div ref={taskBoxRef} 
         className="TaskBoxForCal">
         <div className="color-box row">
-           {tasks.isRepeated && (
-            <span className="repeat col-2">
+           {tasks.isRepeated!== 'NOREPEAT' && (
+            <span className="taskBoxForCal-repeat col-2">
               <LuRepeat />
             </span>
           )}
-          <span className="task-title col-8">{tasks.title}</span>
-          {tasks.isNotified && (
-            <span className="alram col-2">
+          {showTitle && (
+            <span className="task-title col-8">{tasks.title}</span>
+          )}
+          {tasks.isNotified !== 'NOALRAM'&& (
+            <span className="taskBoxForCal-alram col-2">
               <FaRegBell />
             </span>
           )}
@@ -51,8 +54,12 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask}) => {
         tasks={tasks} 
         updateTask={updateTask}
         deleteTask={deleteTask}
+        lists={lists} 
+        addList={addList} 
+        updateList={updateList}
+        deleteList={deleteList}
       />
-    </>
+    </div>
   );
 };
 

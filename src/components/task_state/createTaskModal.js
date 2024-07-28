@@ -20,7 +20,6 @@ const CreateTaskModal = forwardRef((props, ref) => {
     content: '',
     startDate: date,
   });
-  
   useEffect(() => {
     if (show) {
       setNewTask(prevState => ({
@@ -29,13 +28,12 @@ const CreateTaskModal = forwardRef((props, ref) => {
       }));
     }
   }, [show, date]);
-  
   const handleClose = () =>  {
     if (newTask.title.trim()) {
       const task = {
         ...newTask,
-        isNotified: false,
-        isRepeated: false,
+        isNotified: 'NOALRAM',
+        isRepeated: 'NOREPEAT',
         endDate: '',
         priority: 'MEDIUM',
         taskStatus: 'PENDING'
@@ -49,7 +47,6 @@ const CreateTaskModal = forwardRef((props, ref) => {
     });
     setShow(false);
   };
-
   const handleShow = () => {
     setNewTask(prevState => ({
       ...prevState,
@@ -57,18 +54,15 @@ const CreateTaskModal = forwardRef((props, ref) => {
     }));
     setShow(true);
   };
-
   useImperativeHandle(ref, () => ({
     showModal: handleShow,
   }));
-
-
   const createTask = () => {
     if (newTask.title.trim()) {
       const task = {
         ...newTask,
-        isNotified: false,
-        isRepeated: false,
+        isNotified: 'NOALRAM',
+        isRepeated: 'NOREPEAT',
         endDate: '',
         priority: 'MEDIUM',
         taskStatus: 'PENDING'
@@ -82,8 +76,6 @@ const CreateTaskModal = forwardRef((props, ref) => {
       handleClose();
     }
   };
-
-  // const formattedDate = format(new Date(props.date), 'yyyy-MM-dd');
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       createTask();
@@ -108,7 +100,6 @@ const CreateTaskModal = forwardRef((props, ref) => {
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header>
         <div className="d-flex align-items-center">
-          
           <FaCalendarCheck />
           <DatePicker 
             selected={newTask.startDate} 
@@ -148,13 +139,11 @@ const CreateTaskModal = forwardRef((props, ref) => {
       <Modal.Footer>
         <div className="d-flex align-items-center line row"
           style={{width: "100vw"}}>
-          <div className="list-title col lefted">할 일 목록(동적 데이터로 추가)</div>
+          <div className="list-title col lefted">할 일 목록</div>
           <div className="setting-icon col righted">
             <i className="fa-solid fa-ellipsis"></i>
           </div>
         </div>
-        {/* <button type="button" className="btn btn-secondary" onClick={handleClose}>닫기</button>
-        <button type="button" className="btn btn-primary"onClick={createTask}>저장</button> */}
       </Modal.Footer>
     </Modal>
   );
