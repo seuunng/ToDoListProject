@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect} from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import EmojiPicker from 'emoji-picker-react';
 import Form from 'react-bootstrap/Form';
@@ -6,12 +6,20 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import { TfiMenu } from "react-icons/tfi";
 import { MdSignalCellularNull } from 'react-icons/md';
 
-const CreateList = ({ show, onHide, lists, count, addList }) => {
+const CreateList = ({ show, onHide, lists, count, addList, updateList, isEditMode }) => {
   const modalRef = useRef(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [newList, setNewList] = useState('');
-  const [selectedEmoji, setSelectedEmoji] = useState('');
-  const [selectedColor,setSelectedColor] = useState('');
+  const [selectedEmoji, setSelectedEmoji] = useState(lists?.icon || '');
+  const [selectedColor, setSelectedColor] = useState(lists?.color || '');
+
+  useEffect(() => {
+    if (isEditMode && lists) {
+      setNewList(lists.title);
+      setSelectedEmoji(lists.icon);
+      setSelectedColor(lists.color);
+    }
+  }, [isEditMode, lists]);
 
   const handleEmojiClick = (emojiObject, event) => {
     setSelectedEmoji(emojiObject.emoji);
@@ -23,14 +31,21 @@ const CreateList = ({ show, onHide, lists, count, addList }) => {
   const handleColorClick = (color) => {
     setSelectedColor(color);
   };
-  const createList = () => {
+  const handleSave = () => {
     if (newList.trim()) {
-      const list = {
+      const updatedList = {
+        ...lists,
         title: newList,
         icon: selectedEmoji,
         color: selectedColor,
       };
-      addList(list);
+
+      if (isEditMode) {
+        updateList(updatedList);
+      } else {
+        addList(updatedList);
+      }
+
       setNewList('');
       setSelectedEmoji('');
       setSelectedColor('');
@@ -42,7 +57,7 @@ const CreateList = ({ show, onHide, lists, count, addList }) => {
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header>
-        <Modal.Title>Add List</Modal.Title>
+      <Modal.Title>{isEditMode ? 'Edit List' : 'Add List'}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="modal-body">
@@ -111,7 +126,7 @@ const CreateList = ({ show, onHide, lists, count, addList }) => {
         <Button variant="outline-secondary" onClick={onHide}>
           취소
         </Button>
-        <Button onClick={createList}>
+        <Button onClick={handleSave}>
           저장
         </Button>
       </Modal.Footer>

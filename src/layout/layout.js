@@ -10,6 +10,7 @@ const Layout = () => {
     const [sidebarVisible, setSidebarVisible] = useState(false);
     const [tasks, setTasks] = useState([]);
     const [lists, setLists] = useState([]);
+
     useEffect(() => {
         const fetchTableData = async () => {
             try {

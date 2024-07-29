@@ -53,7 +53,10 @@ const SideBar = ({ toggleSidebar,
             <div className="list">
               <ListItemsBox  
               lists={lists}
-              toggleSidebar={toggleSidebar} />
+              toggleSidebar={toggleSidebar}
+              deleteList ={deleteList }
+              updateList={updateList}
+              />
             </div>
           </div>
         </div>

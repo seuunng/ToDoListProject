@@ -44,13 +44,6 @@ const SetTaskToggle = React.forwardRef(({ children, onClick }, ref) => (
           className={className}
           aria-labelledby={labeledBy}
         >
-          {/* <Form.Control
-            autoFocus
-            className="mx-3 my-2 w-auto"
-            placeholder="Type to filter..."
-            onChange={(e) => setValue(e.target.value)}
-            value={value}
-          /> */}
           <ul className="list-unstyled">
             {React.Children.toArray(children).filter(
               (child) =>
