@@ -51,8 +51,10 @@ const Logout = () => {
                             </Button>
                         </div>
                         <div className='centered login-btn'>
-                            <Button variant="outline-secondary" style={{ width: "250px" }}>
-                                <FcGoogle /> 구글 로그인
+                        <Button variant="outline-secondary" style={{ width: "250px" }}>
+                                <a href="http://localhost:9099/oauth2/authorization/google" style={{ textDecoration: 'none', color: 'inherit' }}>
+                                    <FcGoogle /> 구글 로그인
+                                </a>
                             </Button>
                         </div>
                         <div className='centered login-btn'>
@@ -81,7 +83,7 @@ const Logout = () => {
                         </div>
                         <div className='centered login-btn'>
                             <Button style={{ width: "250px" }}>
-                                로그인
+                            <a href="@{/login}">로그인</a>
                             </Button>
                         </div>
                         <div className='centered login-btn'>

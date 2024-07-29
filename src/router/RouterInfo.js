@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 import Layout from '../layout/layout.js'
 
@@ -22,6 +22,10 @@ export const RouterInfo = createBrowserRouter([
     path: "/",
     element: <Layout />,
     children: [
+      {
+        path: "/",
+        element: <Navigate to="/monthlyBoard" />,
+      },
       {
         path: "findPW",
         element: <FindPW />,
@@ -69,7 +73,11 @@ export const RouterInfo = createBrowserRouter([
       {
         path: "logout",
         element: <Logout />,
-      }
+      },
+      {
+        path: "oauth2/authorization/google",
+        element: <Navigate to="http://localhost:9099/oauth2/authorization/google" />
+      },
     ]
   }
 ])
