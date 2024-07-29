@@ -6,7 +6,9 @@ import ListItemsBox from './task_state/listItemsBox';
 import CreateList from './task_list/createListModal';
 import { useOutletContext } from 'react-router-dom';
 
-const SideBar = ({ tasks, addTask, updateTask, deleteTask, lists, addList, updateList, deleteList }) => {
+const SideBar = ({ toggleSidebar, 
+  tasks, addTask, updateTask, deleteTask, 
+  lists, addList, updateList, deleteList }) => {
   const [showCreateListModal, setShowCreateListModal] = useState(false);
   const [tasksByLists, setTasksByLists] = useState([]);
   const [selectedList, setSelectedList] = useState(null);
@@ -29,6 +31,7 @@ const SideBar = ({ tasks, addTask, updateTask, deleteTask, lists, addList, updat
   const showCreateList = () => {
     setShowCreateListModal(true);
   };
+
   return (
     <div>
       <div className="sideBar">
@@ -38,7 +41,7 @@ const SideBar = ({ tasks, addTask, updateTask, deleteTask, lists, addList, updat
               <h6 className="item">Smart Lists</h6>
             </div>
             <div className="list">
-              {/* <ListItemsBox value="" /> */}
+              {/* <ListItemsBox value="" toggleSidebar={toggleSidebar}/> */}
             </div>
           </div>
           <hr />
@@ -49,7 +52,8 @@ const SideBar = ({ tasks, addTask, updateTask, deleteTask, lists, addList, updat
             </div>
             <div className="list">
               <ListItemsBox  
-              lists={lists}/>
+              lists={lists}
+              toggleSidebar={toggleSidebar} />
             </div>
           </div>
         </div>

@@ -6,7 +6,7 @@ import { LuRepeat } from "react-icons/lu";
 import { FaRegBell } from "react-icons/fa";
 
 const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className, 
-  lists, addList, updateList, deleteList, showTitle=true}) => {
+  lists, addList, updateList, deleteList, showTitle=true, style }) => {
   const readTaskModalRef = useRef(null);
   const taskBoxRef = useRef(null);
 
@@ -30,7 +30,7 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
   }, []);
 
   return (
-    <div className={`task-box ${className}`}>
+    <div className={`task-box ${className}`}  style={style}>
       <div ref={taskBoxRef} 
         className="TaskBoxForCal">
         <div className="color-box row">

@@ -4,7 +4,7 @@ import { IoReorderThree } from "react-icons/io5";
 import { Row, Col } from 'react-bootstrap';
 import { Link, useNavigate  } from 'react-router-dom';
 
-const ListItemsBox = ({ lists}) => {
+const ListItemsBox = ({ lists, toggleSidebar }) => {
   if (!Array.isArray(lists)) {
     return null;
   }
@@ -13,8 +13,10 @@ const ListItemsBox = ({ lists}) => {
       {lists.map((list, index) => (
         <div key={index} className="list-item">
           <span className="list-content">
-            <Link to={`/basicBoard/${list.no}`} className="item"
-            style={{textDecoration: "none"}}>
+            <Link to={`/basicBoard/${list.no}`} 
+            className="item"
+            style={{textDecoration: "none"}}
+            onClick={toggleSidebar} >
               <Row>
                 <Col sm={2}>
                   {list.icon ? list.icon : <IoReorderThree />}

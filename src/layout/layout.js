@@ -101,7 +101,7 @@ const Layout = () => {
     return (
         <div onClick={hideSidebar}>
             <MenuBar />
-            <div className="icon" onClick={(e) => {e.stopPropagation(); toggleSidebar();}} 
+            <div className="icon" onClick={(e) => { e.stopPropagation(); toggleSidebar(); }}
                 style={{ zIndex: 1001, }}>
                 <i
                     className="fa-solid fa-bars"
@@ -121,7 +121,8 @@ const Layout = () => {
                         backgroundColor: 'white',
                     }}
                 >
-                    <SideBar 
+                    <SideBar
+                        toggleSidebar={toggleSidebar}
                         tasks={tasks}
                         addTask={addTask}
                         updateTask={updateTask}
@@ -148,15 +149,16 @@ const Layout = () => {
                         }}
                     >
                         <SideBar
-                         tasks={tasks}
-                         addTask={addTask}
-                         updateTask={updateTask}
-                         deleteTask={deleteTask}
-                         lists={lists}
-                         addList={addList}
-                         updateList={updateList}
-                         deleteList={deleteList}
-                          />
+                            toggleSidebar={toggleSidebar}
+                            tasks={tasks}
+                            addTask={addTask}
+                            updateTask={updateTask}
+                            deleteTask={deleteTask}
+                            lists={lists}
+                            addList={addList}
+                            updateList={updateList}
+                            deleteList={deleteList}
+                        />
                     </div>
                 )}
                 <main className="layout-main-content">
@@ -169,7 +171,7 @@ const Layout = () => {
                         addList,
                         updateList,
                         deleteList
-                    }}/>
+                    }} />
                 </main>
             </div>
         </div>

@@ -11,7 +11,6 @@ const TaskCont = ({ tasks, updateTask, deleteTask, onTaskClick,
   if (!Array.isArray(tasks)) {
     return null;
   }
-  console.log("TaskCont", tasks)
   return (
     <div className="TaskContTable">
       <table className="task-table">
