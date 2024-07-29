@@ -46,10 +46,6 @@ const Lists = React.forwardRef(
       >
         <ul className="list-unstyled">
         {React.Children.toArray(children)}
-          {/* {React.Children.toArray(children).filter(
-            (child) =>
-              !value || child.props.children.toLowerCase().startsWith(value),
-          )} */}
         </ul>
       </div>
     );
@@ -59,7 +55,7 @@ const Lists = React.forwardRef(
 const SelectedList = ({ lists, selectedList, setSelectedList, tasks, updateTask  }) => {
   const handleSelect = (list) => {
     setSelectedList(list);
-    updateTask({ ...tasks, listTitle: list.title });
+    updateTask({ ...tasks, list: { no: list.no } });
   };
   return (
     <Dropdown>
@@ -75,7 +71,7 @@ const SelectedList = ({ lists, selectedList, setSelectedList, tasks, updateTask 
       </Dropdown.Toggle>
       <Dropdown.Menu as={Lists}>
         {lists.map((list, index) => (
-          <Dropdown.Item key={index} onClick={() => setSelectedList(list)}>
+          <Dropdown.Item key={index} onClick={() => handleSelect(list)}>
             {list.icon ? list.icon : <IoReorderThree />} {list.title}
           </Dropdown.Item>
         ))}

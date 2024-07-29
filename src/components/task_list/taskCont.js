@@ -8,7 +8,10 @@ import { Row, Col } from 'react-bootstrap';
 const TaskCont = ({ tasks, updateTask, deleteTask, onTaskClick, 
   lists, addList, updateList, deleteList
  }) => {
-
+  if (!Array.isArray(tasks)) {
+    return null;
+  }
+  console.log("TaskCont", tasks)
   return (
     <div className="TaskContTable">
       <table className="task-table">

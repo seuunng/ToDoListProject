@@ -5,12 +5,38 @@ import SimpleInputTask from '../../components/task_state/simpleInputTask'
 import TaskCont from '../../components/task_list/taskCont';
 import { Row, Col } from 'react-bootstrap';
 import ReadTaskPage from '../readTaskPage';
+import instance from '../../api/axios';
+import { useParams, useOutletContext } from 'react-router-dom';
 
-
-const BasicBoard = ({ tasks, addTask, updateTask, deleteTask,
-  lists, addList, updateList, deleteList
-}) => {
+const BasicBoard = () => {
+  const { tasks, addTask, updateTask, deleteTask, lists, addList, updateList, deleteList } = useOutletContext();
+  const [tasksByLists, setTasksByLists] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
+  const { listId } = useParams();
+  const [listTitle, setListTitle] = useState('');
+
+  useEffect(() => {
+    const fetchListAndTasks = async () => {
+      try {
+        const response_tasks = await instance.get(`/tasks/byList?listId=${listId}`);
+        setTasksByLists(response_tasks.data);
+        console.log("fetchListAndTasks", listId);
+      } catch (error) {
+        console.error('Error tasks by list:', error);
+      }
+    };
+
+    if (listId) {
+      fetchListAndTasks();
+    }
+
+    if (Array.isArray(lists)) {
+      const list = lists.find(list => list.no === parseInt(listId));
+      if (list) {
+        setListTitle(list.title);
+      }
+    }
+  }, [listId, lists]);
 
   const handleTaskClick = (task) => {
     setSelectedTask(task);
@@ -18,14 +44,14 @@ const BasicBoard = ({ tasks, addTask, updateTask, deleteTask,
 
   return (
     <div className="BasicBoard">
-      <h4 className="list-title">List Title</h4>
+      <h4 className="list-title">{listTitle}</h4>
       <Row className="BasicBoardRow">
         <Col >
           <div className="task-table">
             <SimpleInputTask addTask={addTask} />
           </div>
           <TaskCont
-            tasks={tasks}
+            tasks={tasksByLists}
             updateTask={updateTask}
             deleteTask={deleteTask}
             onTaskClick={handleTaskClick}

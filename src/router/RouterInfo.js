@@ -7,7 +7,7 @@ import FindPW from '../views/acountInfo/findPW.js';
 import Logout from '../views/acountInfo/logout.js';
 import SignUp from '../views/acountInfo/signUp.js';
 import UpdateSimplePW from '../views/acountInfo/updateSimplePW.js';
-import MainBoard from '../views/boards/boardMain.js';
+import MainBoard from '../views/boards/mainBoard.js';
 import BasicBoard from '../views/boards/basicBoard.js';
 import DailyBoard from '../views/boards/dailyBoard.js';
 import KanbanBoard from '../views/boards/kanbanBoard.js';
@@ -31,8 +31,16 @@ export const RouterInfo = createBrowserRouter([
         element: <SignUp />,
       },
       {
-        path: "basicBoard",
+        path: "mainBoard/:boardType",
+        element: <MainBoard />,
+      },
+      {
+        path: "basicBoard/:listId",
         element: <BasicBoard />,
+      },
+      {
+        path: "monthlyBoard",
+        element: <MainBoard />,
       },
       {
         path: "dailyBoard",
@@ -45,10 +53,6 @@ export const RouterInfo = createBrowserRouter([
       {
         path: "updateSimplePW",
         element: <UpdateSimplePW />,
-      },
-      {
-        path: "monthlyBoard",
-        element: <MonthlyBoard />,
       },
       {
         path: "timeLineBoard",
@@ -65,11 +69,7 @@ export const RouterInfo = createBrowserRouter([
       {
         path: "logout",
         element: <Logout />,
-      },
-      {
-        path: "mainBoard/:boardType",
-        element: <MainBoard />,
-      },
+      }
     ]
   }
 ])
