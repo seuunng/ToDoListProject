@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-const DeleteModalModule = ({ show, onHide, handleDeleteClick }) => {
+const AlertModalModule = ({ show, onHide, handleALertClick, title, alert, hideBtn, saveBtn }) => {
 
   return (
     <Modal show={show} onHide={onHide}>
@@ -13,10 +13,10 @@ const DeleteModalModule = ({ show, onHide, handleDeleteClick }) => {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary-outline" onClick={onHide}>{hideBtn}</Button>
-        <Button variant="secondary" onClick={handleDeleteClick}>{saveBtn}</Button>
+        <Button variant="secondary" onClick={handleALertClick}>{saveBtn}</Button>
       </Modal.Footer>
     </Modal>
   );
 };
 
-export default DeleteModalModule;
+export default AlertModalModule;

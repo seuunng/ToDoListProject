@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import '../styles/basicStyle.css';
 import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
+import { Modal, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import axios from '../api/axios';
 
-const AcountInfoModal = ({ id, nickname, created_at, onHide  }) => {
+const AcountInfoModal = ({ id, nickname, created_at, onHide , user, setUser, show }) => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -29,7 +30,29 @@ const AcountInfoModal = ({ id, nickname, created_at, onHide  }) => {
     navigate('/findPW');
   };
 
+  const handleLogout = async () => {
+    try {
+      await axios.post('/auth/logout');
+      setUser(null);
+      if (user) {
+        console.log(`현재 로그아웃한 유저는 ${user.nickname} 입니다`);
+      }
+      onHide();
+      navigate('/mainAccountInfo');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+  const savedSetting = () => {
+    onHide();
+  }
+
   return (
+    <Modal show={show} onHide={onHide} centered>
+    <Modal.Header>
+      <Modal.Title>Account Info</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
     <div className="acountInfo container">
       <div>
         <div className="d-flex align-items-center line row" style={{margin: '12px'}}>
@@ -74,6 +97,16 @@ const AcountInfoModal = ({ id, nickname, created_at, onHide  }) => {
         </div>
       </div>
     </div>
+    </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={handleLogout}>
+        로그아웃
+        </Button>
+        <Button onClick={savedSetting}>
+        확인
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 };
 

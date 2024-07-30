@@ -11,7 +11,7 @@ import SelectedList from '../components/task_list/selectedList.js';
 
 
 const ReadTaskPage = ({ tasks, updateTask, deleteTask,
-  lists, addList, updateList, deleteList
+  lists, addList, updateList, deleteList, refreshTasks
  }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [taskTitle, setTaskTitle] = useState(tasks.title);
@@ -23,7 +23,6 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
   const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALRAM');
   const [selectedList, setSelectedList] = useState(null);
   
-
   useEffect(() => {
     setTaskTitle(tasks.title);
     setTaskContent(tasks.content);
@@ -32,32 +31,36 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
     setSelectedButton(tasks.dateStatus || 'DATE');
     setIsRepeat(tasks.isRepeated || 'NOREPEAT');
     setIsNotified(tasks.isNotified || 'NOALRAM');
-    setSelectedList(lists.find(list => list.id === tasks.listId) || null);
+    setSelectedList(lists.find(list => list.no === tasks.list.no) || null);
   }, [tasks, lists]);
 
-  const handleTitleChange = (e) => {
+  const handleTitleChange = async (e) => {
     const newTitle = e.target.value;
     setTaskTitle(newTitle);
-    updateTask({ ...tasks, title: newTitle });
+    await updateTask({ ...tasks, title: newTitle });
+    await refreshTasks(); 
   };
 
-  const handleContentChange = (e) => {
+  const handleContentChange = async (e) => {
     const newContent = e.target.value;
     setTaskContent(newContent);
-    updateTask({ ...tasks, content: newContent });
+    await updateTask({ ...tasks, content: newContent });
+    await refreshTasks(); 
   };
 
-  const handleDateChange = (startDate, endDate) => {
+  const handleDateChange = async (startDate, endDate) => {
     setStartDate(startDate);
     setEndDate(endDate);
-    updateTask({ ...tasks, startDate, endDate });
+    await updateTask({ ...tasks, startDate, endDate });
+    await refreshTasks(); 
   };
 
-  const handleSelectedButtonChange = (button) => {
+  const handleSelectedButtonChange = async (button) => {
     setSelectedButton(button);
-    updateTask({ ...tasks, dateStatus: button.toUpperCase() });
+    await updateTask({ ...tasks, dateStatus: button.toUpperCase() });
+    await refreshTasks(); 
   };
-  const handleRepeatClick = (option) => {
+  const handleRepeatClick = async (option) => {
     const repeatMapping = {
       "반복없음": "NOREPEAT",
       "매일": "DAILY",
@@ -68,10 +71,11 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
     const isRepeated = repeatMapping[option] || "NOREPEAT";
     setIsRepeat(isRepeated);
     const updatedTasks = { ...tasks, isRepeated:  isRepeated };
-    updateTask(updatedTasks);
+    await updateTask(updatedTasks);
+    await  refreshTasks(); 
   };
 
-  const handleAlarmClick = (option) => {
+  const handleAlarmClick =async  (option) => {
     const alarmMapping = {
       "알림없음": "NOALRAM",
       "정각": "ONTIME",
@@ -82,7 +86,8 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
     const isNotified = alarmMapping[option] || "NOALRAM";
     setIsNotified(isNotified);
     const updatedTasks = { ...tasks, isNotified: isNotified };
-    updateTask(updatedTasks);
+    await  updateTask(updatedTasks);
+    await refreshTasks(); 
   };
   // const handleKeyDown = (e) => {
   //   if (e.key === 'Enter') {

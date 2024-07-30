@@ -2,61 +2,36 @@ import React, { useState, useEffect } from 'react';
 import '../styles/basicStyle.css';
 import '../styles/sideBar.css';
 import instance from '../api/axios'
-
 import ListItemsBox from './task_state/listItemsBox';
 import CreateList from './task_list/createListModal';
-const SideBar = () => {
+import { useOutletContext } from 'react-router-dom';
+
+const SideBar = ({ toggleSidebar, 
+  tasks, addTask, updateTask, deleteTask, 
+  lists, addList, updateList, deleteList }) => {
   const [showCreateListModal, setShowCreateListModal] = useState(false);
-  const [lists, setLists] = useState([]);
+  const [tasksByLists, setTasksByLists] = useState([]);
+  const [selectedList, setSelectedList] = useState(null);
 
   useEffect(() => {
-    const fetchTableData = async () => {
-      try {
-        const response_listData = await instance.get('/lists/list');
-        const data_list = response_listData.data
-        setLists(data_list);
-      } catch (error) {
-        console.error('Error get taskData:', error);
-      }
+    if (selectedList) {
+      const fetchTasksByList = async () => {
+        try {
+          const response_taskByLists = await instance.get(`/tasks/byList?listId=${selectedList.no}`);
+          const data_tasks = response_taskByLists.data;
+          setTasksByLists(data_tasks);
+        } catch (error) {
+          console.error('Error getting taskByLists:', error);
+        }
+      };
+      fetchTasksByList();
     }
-    fetchTableData();
-  }, []);
+  }, [selectedList]);
 
   const showCreateList = () => {
     setShowCreateListModal(true);
   };
-  const
-    addList = async (newList) => {
-      try {
-        const response = await instance.post('/lists/list', newList);
-        const addedlist = response.data;
-        setLists([...lists, addedlist]);
-      } catch (error) {
-        console.error('Error adding list:', error);
-      }
-    };
 
-  const updateList = async (updatedList) => {
-    try {
-      const response = await instance.put(`/lists/list/${updatedList.no}`, updatedList);
-      const updatedlists = lists.map(list =>
-        list.no === updatedList.no ? response.data : list
-      );
-      setLists(updatedlists);
-    } catch (error) {
-      console.error('Error updating list:', error);
-    }
-  };
-
-  const deleteList = async (deletedList) => {
-    try {
-      await instance.delete(`/lists/list/${deletedList.no}`);
-      // console.log(deletedlist.no);
-      setLists(lists.filter(list => list.no !== deletedList.no));
-    } catch (error) {
-      console.error('Error deleting list:', error);
-    }
-  };
   return (
     <div>
       <div className="sideBar">
@@ -66,7 +41,7 @@ const SideBar = () => {
               <h6 className="item">Smart Lists</h6>
             </div>
             <div className="list">
-              <ListItemsBox value="" />
+              {/* <ListItemsBox value="" toggleSidebar={toggleSidebar}/> */}
             </div>
           </div>
           <hr />
@@ -77,7 +52,11 @@ const SideBar = () => {
             </div>
             <div className="list">
               <ListItemsBox  
-              lists={lists} />
+              lists={lists}
+              toggleSidebar={toggleSidebar}
+              deleteList ={deleteList }
+              updateList={updateList}
+              />
             </div>
           </div>
         </div>

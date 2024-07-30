@@ -6,12 +6,14 @@ import CreateTask from '../../components/task_state/createTaskModal';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Col } from 'react-bootstrap';
+import { useParams, useOutletContext } from 'react-router-dom';
 
-const MonthlyBoard = ({ tasks, addTask, updateTask, deleteTask,
-  lists, addList, updateList, deleteList
-}) => {
+
+const MonthlyBoard = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const { tasks, addTask, updateTask, deleteTask, lists, addList, updateList, deleteList } = useOutletContext();
+
   const createTaskModalRef = useRef(null);
   const todayRef = useRef(null);
   const weeks = [1, 2, 3, 4, 5];
@@ -105,6 +107,14 @@ const MonthlyBoard = ({ tasks, addTask, updateTask, deleteTask,
     );
   };
 
+  const getTaskListColor = (task) => {
+    if (!task || !task.list || !lists) {
+      return 'transparent';
+    }
+    const list = lists.find(list => list.no === task.list.no);
+    return list ? list.color : 'transparent';
+  };
+
   return (
     <div className="monthly-board-container">
       <h4 className="list-title">MonthlyBoard</h4>
@@ -166,6 +176,7 @@ const MonthlyBoard = ({ tasks, addTask, updateTask, deleteTask,
                               addList={addList}
                               updateList={updateList}
                               deleteList={deleteList}
+                              style={{backgroundColor: getTaskListColor(task) }}
                             // showTitle={!isTaskEndDate(task, date)}
                             />
                           ))}
@@ -178,19 +189,6 @@ const MonthlyBoard = ({ tasks, addTask, updateTask, deleteTask,
             ))}
           </tbody>
         </table>
-        {/* <div className="filtered-tasks">
-        <h5>Tasks for {selectedDate.toDateString()}</h5>
-        {filteredTasks.map(task => (
-          <TaskBoxForCal
-            key={task.no}
-            tasks={task}
-            updateTask={updateTask}
-            deleteTask={deleteTask}
-            className="filtered-task"
-            showTitle={true}
-          />
-        ))}
-      </div> */}
       </div>
       <CreateTask
         ref={createTaskModalRef} date={startDate} addTask={addTask} />

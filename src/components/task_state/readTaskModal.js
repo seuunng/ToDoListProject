@@ -12,6 +12,7 @@ import { FaCalendarCheck } from "react-icons/fa";
 import Checkbox from '../../modules/checkBoxModule';
 import { PiLineVerticalThin } from "react-icons/pi";
 import SetTask from './setTask';
+import SelectedList from '../task_list/selectedList.js';
 
 const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
   lists, addList, updateList, deleteList
@@ -25,6 +26,7 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
   const [selectedButton, setSelectedButton] = useState(tasks.dateStatus || 'DATE');
   const [isRepeat, setIsRepeat] = useState(tasks.isRepeated || 'NOREPEAT');
   const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALRAM');
+  const [selectedList, setSelectedList] = useState(null);
 
   useEffect(() => {
     setTaskTitle(tasks.title);
@@ -34,9 +36,10 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
     setSelectedButton(tasks.dateStatus || 'DATE');
     setIsRepeat(tasks.isRepeated || 'NOREPEAT');
     setIsNotified(tasks.isNotified || 'NOALRAM');
-  }, [tasks]);
+    setSelectedList(lists.find(list => list.no === tasks.list.no) || null);
+  }, [tasks,  lists]);
 
-  const handleClose = () => {
+  const handleClose = () => { 
     const updatedTask = {
       ...tasks,
       title: taskTitle,
@@ -149,7 +152,15 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
       <Modal.Footer>
         <div className="d-flex align-items-center line row"
           style={{ width: "100vw" }}>
-          <div className="list-title col lefted">{tasks.title}</div>
+          <div className="list-title col lefted">
+          <SelectedList 
+            lists={lists} 
+            selectedList={selectedList} 
+            setSelectedList={setSelectedList}
+            tasks={tasks}
+            updateTask={updateTask}
+             />
+            </div>
           <div className="setting-icon col righted">
             <SetTask
               task={tasks}
