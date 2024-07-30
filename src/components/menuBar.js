@@ -20,7 +20,7 @@ const MenuBar = () => {
 
   const handleSubButtonClick = () => {
     setShowAccountInfo(false);
-    navigate('/logout');
+    navigate('/mainAccountInfo');
   };
   
     return (

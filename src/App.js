@@ -10,15 +10,7 @@ function App() {
   return (
     <div>
       {/* <CustomerStatusProvider> */}
-      <RouterProvider router={RouterInfo}>
-        <Routes>
-          <Route path="/oauth2/authorization/google"
-            element={<Navigate to="http://localhost:9099/oauth2/authorization/google" />} />
-            <Route path="/logout" element={<Logout />} />
-            {/* <Route path="/*" element={<RouterInfo />} /> */}
-          {/* <Route path="/" element={<MyComponent />} /> */}
-        </Routes>
-      </RouterProvider>
+      <RouterProvider router={RouterInfo}/>
       {/* </CustomerStatusProvider> */}
     </div>
   );
