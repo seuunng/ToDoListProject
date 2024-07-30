@@ -10,7 +10,7 @@ import instance from '../../api/axios';
 import AlertModalModule from '../../modules/alertModalModule';
 import { FaRegEdit } from "react-icons/fa";
 
-const MainAccountInfo = () => {
+const MainAccountInfo = ({user}) => {
     const navigate = useNavigate();
     const [showAlertModal, setShowAlertModal] = useState(false);
     const [alertTitle, setAlertTitle] = useState('');
@@ -22,6 +22,9 @@ const MainAccountInfo = () => {
             if (response.status === 200) {
                 setAlertMessage('게스트로 로그인 되었습니다.');
                 setShowAlertModal(true);
+                if (user) {
+                  console.log(`현재 로그인한 유저는 ${user.nickname} 입니다`);
+                }
                 navigate('/monthlyBoard');
             }
         } catch (error) {

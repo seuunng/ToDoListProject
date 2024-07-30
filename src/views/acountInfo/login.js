@@ -10,7 +10,7 @@ import instance from '../../api/axios';
 import AlertModalModule from '../../modules/alertModalModule';
 import { FaRegEdit } from "react-icons/fa";
 
-const Login = () => {
+const Login = ({ user, setUser }) => {
     const navigate = useNavigate();
     const [activeContainer, setActiveContainer] = useState('logout');
     const [email, setEmail] = useState('');
@@ -30,8 +30,10 @@ const Login = () => {
                 password
             });
             if (response.status === 200) {
-                setAlertMessage(`${nickname}님, 환영합니다!`);
+                setUser(response.data);
+                setAlertMessage(`${user.nickname}님, 환영합니다!`);
                 setShowAlertModal(true);
+                console.log(`현재 로그인한 유저는 ${user.nickname} 입니다`);
                 navigate('/monthlyBoard');
             }
         } catch (error) {

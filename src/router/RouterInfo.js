@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, {useState} from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 import Layout from '../layout/layout.js'
@@ -19,26 +20,26 @@ import WeeklyBoard from '../views/boards/weeklyBoard.js';
 import ReadTaskPage from '../views/readTaskPage.js';
 
 
-export const RouterInfo = createBrowserRouter([
+export const RouterInfo = (user = {}, setUser = () => {}) => createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: <Layout  user={user} setUser={setUser}  />,
     children: [ 
-      { path: "/", element: `<MainAccountInfo />` }, 
-      {path: "findPW", element: <FindPW />, },
-      {path: "logout", element: <Logout />,},
-      {path: "signUp", element: <SignUp />, },
-      {path: "mainAccountInfo", element: <MainAccountInfo />, },
-      {path: "login", element: <Login />, },
-      {path: "mainBoard/:boardType", element: <MainBoard />,},
-      {path: "basicBoard/:listId", element: <BasicBoard />,},
-      {path: "monthlyBoard", element: <MainBoard />,},
-      {path: "dailyBoard", element: <DailyBoard />,},
-      {path: "kanbanBoard", element: <KanbanBoard />,},
-      {path: "updateSimplePW", element: <UpdateSimplePW />,},
-      {path: "timeLineBoard", element: <TimeLineBoard />,},
-      {path: "weeklyBoard", element: <WeeklyBoard />,},
-      {path: "readTaskPage", element: <ReadTaskPage />,},
+      { path: "/", element: <MainAccountInfo  user={user} setUser={setUser} />}, 
+      {path: "findPW", element: <FindPW  user={user} setUser={setUser} />, },
+      {path: "logout", element: <Logout  user={user} setUser={setUser} />,},
+      {path: "signUp", element: <SignUp  user={user} setUser={setUser} />, },
+      {path: "mainAccountInfo", element: <MainAccountInfo  user={user} setUser={setUser} />, },
+      {path: "login", element: <Login  user={user} setUser={setUser} />, },
+      {path: "mainBoard/:boardType", element: <MainBoard  user={user} setUser={setUser} />,},
+      {path: "basicBoard/:listId", element: <BasicBoard  user={user} setUser={setUser} />,},
+      {path: "monthlyBoard", element: <MainBoard  user={user} setUser={setUser} />,},
+      {path: "dailyBoard", element: <DailyBoard  user={user} setUser={setUser} />,},
+      {path: "kanbanBoard", element: <KanbanBoard  user={user} setUser={setUser} />,},
+      {path: "updateSimplePW", element: <UpdateSimplePW  user={user} setUser={setUser} />,},
+      {path: "timeLineBoard", element: <TimeLineBoard  user={user} setUser={setUser} />,},
+      {path: "weeklyBoard", element: <WeeklyBoard  user={user} setUser={setUser} />,},
+      {path: "readTaskPage", element: <ReadTaskPage  user={user} setUser={setUser} />,},
       {path: "oauth2/authorization/google",
         element: <Navigate to="http://localhost:9099/oauth2/authorization/google" />
       },

@@ -6,7 +6,7 @@ import { Outlet } from 'react-router-dom';
 import instance from '../api/axios';
 
 
-const Layout = () => {
+const Layout = ({setUser, user}) => {
     const [sidebarVisible, setSidebarVisible] = useState(false);
     const [tasks, setTasks] = useState([]);
     const [lists, setLists] = useState([]);
@@ -14,26 +14,30 @@ const Layout = () => {
     useEffect(() => {
         const fetchTableData = async () => {
             try {
-                const response_taskData = await instance.get('/tasks/task');
-                const data = response_taskData.data;
+                const response_taskData = await instance.get('/tasks/task/${user.userId}');
+                const data = Array.isArray(response_taskData.data) ? response_taskData.data : [];
                 setTasks(data);
 
                 const response_listData = await instance.get('/lists/list');
-                const data_list = response_listData.data;
+                const data_list = Array.isArray(response_listData) ? response_listData : [];
                 // console.log(data_list);
                 setLists(data_list);
             } catch (error) {
                 console.error('Error getting data:', error);
+                setTasks([]);
+                setLists([]);
             }
         }
-        fetchTableData();
-    }, []);
+        if (user) {
+            fetchTableData();
+        }
+    }, [user]);
 
     const addTask = async (newTask) => {
         try {
             const response = await instance.post('/tasks/task', newTask);
             const addedTask = response.data;
-            setTasks([...tasks, addedTask]);
+            setTasks((prevTasks) => [...prevTasks, addedTask]);
         } catch (error) {
             console.error('Error adding task:', error);
         }
@@ -101,7 +105,9 @@ const Layout = () => {
     };
     return (
         <div onClick={hideSidebar}>
-            <MenuBar />
+            <MenuBar 
+                setUser={setUser} 
+                user={user}/>
             <div className="icon" onClick={(e) => { e.stopPropagation(); toggleSidebar(); }}
                 style={{ zIndex: 1001, }}>
                 <i

@@ -30,6 +30,7 @@ const SignUp = () => {
         setAlertTitle('회원가입 성공');
         setAlertMessage(`로그인 해주세요`);
         setShowAlertModal(true);
+        navigate('/login');
       } else {
         // 오류 처리
         console.error('회원가입 실패');
