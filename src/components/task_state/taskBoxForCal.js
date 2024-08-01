@@ -9,7 +9,8 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
   lists, addList, updateList, deleteList, showTitle=true, style }) => {
   const readTaskModalRef = useRef(null);
   const taskBoxRef = useRef(null);
-
+  const listNo = tasks.list ? tasks.list.no : null;
+  
   useEffect(() => {
     const readMemo = (e) => {
       if (readTaskModalRef.current) {

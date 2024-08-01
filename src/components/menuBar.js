@@ -33,7 +33,7 @@ const MenuBar = ({ setUser, user }) => {
         <Link to="/mainBoard/basic" className="item">
           <FontAwesomeIcon icon={faSquareCheck} />
         </Link>
-        <Link to="/mainBoard/monthly" className="item">
+        <Link to="/monthlyBoard" className="item">
           <FontAwesomeIcon icon={faCalendarDays} />
         </Link>
         <div className="item" onClick={() => setShowSettingModal(true)}>

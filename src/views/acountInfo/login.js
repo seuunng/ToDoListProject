@@ -12,10 +12,8 @@ import { FaRegEdit } from "react-icons/fa";
 
 const Login = ({ user, setUser }) => {
     const navigate = useNavigate();
-    const [activeContainer, setActiveContainer] = useState('logout');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [nickname, setNickname] = useState('');
     const [showAlertModal, setShowAlertModal] = useState(false);
     const [alertTitle, setAlertTitle] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
@@ -25,28 +23,49 @@ const Login = ({ user, setUser }) => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
+            console.log("Login attempt with email:", email); // 이메일 값 출력
             const response = await instance.post('/auth/login', {
                 email,
                 password
-            });
-            if (response.status === 200) {
-                setUser(response.data);
-                setAlertMessage(`${user.nickname}님, 환영합니다!`);
-                setShowAlertModal(true);
-                console.log(`현재 로그인한 유저는 ${user.nickname} 입니다`);
-                navigate('/monthlyBoard');
-            }
+                // email: this.email,
+                // password: this.password
+            }, { withCredentials: true })
+            
+            const user = response.data.user;
+            console.log("response.data", response.data);
+            setUser(user);
+            setAlertMessage(`${user.nickname}님, 환영합니다!`);
+            setShowAlertModal(true);
+            console.log(`현재 로그인한 유저는 ${user.nickname} 입니다`);
+
+            // 로그인 후 세션 확인
+            await checkSession();
+
+            navigate('/monthlyBoard');
         } catch (error) {
             console.error('Login failed:', error.response ? error.response.data : error.message);
             setAlertTitle('로그인 실패');
-            setAlertMessage(error.response ? error.response.data : '서버와의 연결이 원활하지 않습니다.');
+            setAlertMessage(error.response ? error.response.data.message  : '서버와의 연결이 원활하지 않습니다.');
             setShowAlertModal(true);
         }
     };
-
+    const checkSession = async () => {
+        console.log('Checking session...');
+        try {
+            const response = await instance.get('/api/session', { withCredentials: true });
+            console.log('Session check response:', response.data);
+            setUser(response.data.user);
+        } catch (error) {
+            console.error('Session check failed:', error.response ? error.response.data : error.message);
+            setUser(null);
+        }
+    };
+    useEffect(() => {
+        checkSession();
+    }, []);
     const handleALertClick = () => {
         // deleteList(list);
-        setShowAlertModal(false);
+        setShowAlertModal(true);
     };
     const handleFindPW = () => {
         navigate('/findPW');
@@ -63,46 +82,46 @@ const Login = ({ user, setUser }) => {
                 </h4>
             </div>
             <div className="accountInfo-container">
-                    <div className="login-container">
-                        <div className='centered login-btn'>
-                            <input
-                                type="email"
-                                style={{ width: "250px", height: "38px" }}
-                                placeholder='Email'
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}  />
-                        </div>
-                        <div className='centered login-btn'>
-                            <input
-                                type="password"
-                                style={{ width: "250px", height: "38px" }}
-                                placeholder='Password'
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)} />
-                        </div>
-                        <div className='centered login-btn'>
-                            <Button style={{ width: "250px" }} onClick={handleLogin}>
-                                로그인
-                            </Button>
-                        </div>
-                        <div className='centered login-btn'>
-                            <div className='row'
-                                style={{ width: "250px" }}>
-                                <span className='col col-7 lefted'
-                                    style={{
-                                        color: "grey",
-                                        cursor: "pointer"
-                                    }}
-                                    onClick={handleFindPW}>비밀번호 찾기</span>
-                                <span className='col col-5 righted'
-                                    style={{
-                                        color: "grey",
-                                        cursor: "pointer"
-                                    }}
-                                    onClick={handleSignUp}>회원가입</span>
-                            </div>
+                <div className="login-container">
+                    <div className='centered login-btn'>
+                        <input
+                            type="email"
+                            style={{ width: "250px", height: "38px" }}
+                            placeholder='Email'
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)} />
+                    </div>
+                    <div className='centered login-btn'>
+                        <input
+                            type="password"
+                            style={{ width: "250px", height: "38px" }}
+                            placeholder='Password'
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)} />
+                    </div>
+                    <div className='centered login-btn'>
+                        <Button style={{ width: "250px" }} onClick={handleLogin}>
+                            로그인
+                        </Button>
+                    </div>
+                    <div className='centered login-btn'>
+                        <div className='row'
+                            style={{ width: "250px" }}>
+                            <span className='col col-7 lefted'
+                                style={{
+                                    color: "grey",
+                                    cursor: "pointer"
+                                }}
+                                onClick={handleFindPW}>비밀번호 찾기</span>
+                            <span className='col col-5 righted'
+                                style={{
+                                    color: "grey",
+                                    cursor: "pointer"
+                                }}
+                                onClick={handleSignUp}>회원가입</span>
                         </div>
                     </div>
+                </div>
             </div>
 
             <AlertModalModule
