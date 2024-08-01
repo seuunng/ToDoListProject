@@ -12,7 +12,7 @@ import { useParams, useOutletContext } from 'react-router-dom';
 const MonthlyBoard = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const { tasks, addTask, updateTask, deleteTask, lists, addList, updateList, deleteList } = useOutletContext();
+  const { tasks, addTask, updateTask, deleteTask, lists, addList, updateList, deleteList, user, setUser } = useOutletContext();
 
   const createTaskModalRef = useRef(null);
   const todayRef = useRef(null);

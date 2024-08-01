@@ -13,15 +13,22 @@ const Layout = ({setUser, user}) => {
 
     useEffect(() => {
         const fetchTableData = async () => {
+            if (!user || !user.id) {
+                console.error('User ID is not available');
+                return;
+            }
             try {
-                const response_taskData = await instance.get('/tasks/task/${user.userId}');
+                console.log("조회", user.id)
+                const response_taskData = await instance.get(`/tasks/task/${user.id}`);
                 const data = Array.isArray(response_taskData.data) ? response_taskData.data : [];
+                console.log("fetchTableData ", data)
+
                 setTasks(data);
 
-                const response_listData = await instance.get('/lists/list');
-                const data_list = Array.isArray(response_listData) ? response_listData : [];
-                // console.log(data_list);
-                setLists(data_list);
+                // const response_listData = await instance.get('/lists/list');
+                // const data_list = Array.isArray(response_listData) ? response_listData : [];
+                // // console.log(data_list);
+                // setLists(data_list);
             } catch (error) {
                 console.error('Error getting data:', error);
                 setTasks([]);
@@ -35,8 +42,14 @@ const Layout = ({setUser, user}) => {
 
     const addTask = async (newTask) => {
         try {
-            const response = await instance.post('/tasks/task', newTask);
+            const response = await instance.post('/tasks/task', {
+                ...newTask,
+                user: user, // 사용자 정보를 포함시킴
+                list: newTask.list ? newTask.list : { no: null } // list가 없을 때 기본 값 설정
+            });
             const addedTask = response.data;
+            console.log(user)
+            console.log(addedTask)
             setTasks((prevTasks) => [...prevTasks, addedTask]);
         } catch (error) {
             console.error('Error adding task:', error);
@@ -138,6 +151,8 @@ const Layout = ({setUser, user}) => {
                         addList={addList}
                         updateList={updateList}
                         deleteList={deleteList}
+                        user={user}
+                        setUser={setUser}
                     />
                 </div>
             )}
@@ -165,6 +180,8 @@ const Layout = ({setUser, user}) => {
                             addList={addList}
                             updateList={updateList}
                             deleteList={deleteList}
+                            user={user}
+                            setUser={setUser}
                         />
                     </div>
                 )}
@@ -177,7 +194,10 @@ const Layout = ({setUser, user}) => {
                         lists,
                         addList,
                         updateList,
-                        deleteList
+                        deleteList,
+                        user,
+                        setUser
+                    
                     }} />
                 </main>
             </div>

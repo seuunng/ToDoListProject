@@ -40,58 +40,58 @@ const Logout = () => {
     const handleFindPW = () => {
         navigate('/findPW', { state: { activeContainer } });
     };
-    const handleLogin = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await instance.post('/auth/login', {
-                email,
-                password
-            });
-            if (response.status === 200) {
-                setAlertMessage(`${nickname}님, 환영합니다!`);
-                setShowAlertModal(true);
-                navigate('/monthlyBoard');
-            }
-        } catch (error) {
-            console.error('Login failed:', error.response ? error.response.data : error.message);
-            setAlertTitle('로그인 실패');
-            setAlertMessage(error.response ? error.response.data : '서버와의 연결이 원활하지 않습니다.');
-            setShowAlertModal(true);
-        }
-    };
+    // const handleLogin = async (e) => {
+    //     e.preventDefault();
+    //     try {
+    //         const response = await instance.post('/auth/login', {
+    //             email,
+    //             password
+    //         });
+    //         if (response.status === 200) {
+    //             setAlertMessage(`${nickname}님, 환영합니다!`);
+    //             setShowAlertModal(true);
+    //             navigate('/monthlyBoard');
+    //         }
+    //     } catch (error) {
+    //         console.error('Login failed:', error.response ? error.response.data : error.message);
+    //         setAlertTitle('로그인 실패');
+    //         setAlertMessage(error.response ? error.response.data : '서버와의 연결이 원활하지 않습니다.');
+    //         setShowAlertModal(true);
+    //     }
+    // };
 
-    const handleSignUp = async () => {
-        try {
-            const response = await instance.post('/auth/signup', {
-                nickname,
-                email,
-                password
-            });
-            if (response.status === 201) {
-                setAlertTitle('회원가입 성공');
-                setAlertMessage(`로그인 해주세요`);
-                setShowAlertModal(true);
-                showLoginContainer();
-            } else {
-                // 오류 처리
-                console.error('회원가입 실패');
-            }
-        } catch (error) {
-            console.error('회원가입 중 오류 발생:', error);
-        }
-    };
-    const handleGuestLogin = async () => {
-        try {
-            const response = await instance.post('/auth/guest-login');
-            if (response.status === 200) {
-                setAlertMessage('게스트로 로그인 되었습니다.');
-                setShowAlertModal(true);
-                navigate('/monthlyBoard');
-            }
-        } catch (error) {
-            console.error('게스트 로그인 실패:', error);
-        }
-    };
+    // const handleSignUp = async () => {
+    //     try {
+    //         const response = await instance.post('/auth/signup', {
+    //             nickname,
+    //             email,
+    //             password
+    //         });
+    //         if (response.status === 201) {
+    //             setAlertTitle('회원가입 성공');
+    //             setAlertMessage(`로그인 해주세요`);
+    //             setShowAlertModal(true);
+    //             showLoginContainer();
+    //         } else {
+    //             // 오류 처리
+    //             console.error('회원가입 실패');
+    //         }
+    //     } catch (error) {
+    //         console.error('회원가입 중 오류 발생:', error);
+    //     }
+    // };
+    // const handleGuestLogin = async () => {
+    //     try {
+    //         const response = await instance.post('/auth/guest-login');
+    //         if (response.status === 200) {
+    //             setAlertMessage('게스트로 로그인 되었습니다.');
+    //             setShowAlertModal(true);
+    //             navigate('/monthlyBoard');
+    //         }
+    //     } catch (error) {
+    //         console.error('게스트 로그인 실패:', error);
+    //     }
+    // };
     const handleALertClick = () => {
         // deleteList(list);
         setShowAlertModal(false);
