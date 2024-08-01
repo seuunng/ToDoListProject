@@ -39,7 +39,7 @@ const Login = ({ user, setUser }) => {
             console.log(`현재 로그인한 유저는 ${user.nickname} 입니다`);
 
             // 로그인 후 세션 확인
-            await checkSession();
+            // await checkSession();
 
             navigate('/monthlyBoard');
         } catch (error) {
@@ -49,20 +49,19 @@ const Login = ({ user, setUser }) => {
             setShowAlertModal(true);
         }
     };
-    const checkSession = async () => {
-        console.log('Checking session...');
-        try {
-            const response = await instance.get('/api/session', { withCredentials: true });
-            console.log('Session check response:', response.data);
-            setUser(response.data.user);
-        } catch (error) {
-            console.error('Session check failed:', error.response ? error.response.data : error.message);
-            setUser(null);
-        }
-    };
-    useEffect(() => {
-        checkSession();
-    }, []);
+    // const checkSession = async () => {
+    //     try {
+    //         const response = await instance.post('/auth/login', { withCredentials: true });
+    //         console.log('Session check response:', response.data);
+    //         setUser(response.data.user);
+    //     } catch (error) {
+    //         console.error('Session check failed:', error.response ? error.response.data : error.message);
+    //         setUser(null);
+    //     }
+    // };
+    // useEffect(() => {
+    //     checkSession();
+    // }, []);
     const handleALertClick = () => {
         // deleteList(list);
         setShowAlertModal(true);

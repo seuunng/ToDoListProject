@@ -5,18 +5,14 @@ import { Modal, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 
-const AcountInfoModal = ({ id, nickname, created_at, onHide , user, setUser, show }) => {
+const AcountInfoModal = ({ onHide , user, setUser, show }) => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isGuest, setIsGuest] = useState(false);
-  const [editableId, setEditableId] = useState(id);
-  const [editableNickname, setEditableNickname] = useState(nickname);
-  const [editableCreatedAt, setEditableCreatedAt] = useState(created_at);
-
-  const toggleEdit = () => {
-    setIsEditing(!isEditing);
-  };
+  const [editableEmail, setEditableEmail] = useState(user.email);
+  const [editableNickname, setEditableNickname] = useState(user.nickname);
+  const [editableCreatedAt, setEditableCreatedAt] = useState(user.created_at);
   
   const navigate = useNavigate();
 
@@ -46,6 +42,23 @@ const AcountInfoModal = ({ id, nickname, created_at, onHide , user, setUser, sho
   const savedSetting = () => {
     onHide();
   }
+  const handleDoubleClick = (field) => {
+    setIsEditing((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const handleBlur = (field) => {
+    setIsEditing((prev) => ({ ...prev, [field]: false }));
+  };
+
+  const userEmail = user?.email || '';
+  const userNickname = user?.nickname || '';
+  const userCreatedAt = formatDate(user?.created_at);
+
+  function formatDate(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0]; // This formats the date as YYYY-MM-DD
+  }
 
   return (
     <Modal show={show} onHide={onHide} centered>
@@ -60,7 +73,14 @@ const AcountInfoModal = ({ id, nickname, created_at, onHide , user, setUser, sho
             <h5>이메일</h5>
           </Col>
           <Col className='righted'>
-            <div>{!isEditing ? id : <input value={editableId} onChange={(e) => setEditableId(e.target.value)} />}</div>
+            <div onDoubleClick={() => handleDoubleClick('email')}>
+              {!isEditing.email ? userEmail : (
+                <input
+                  value={editableEmail}
+                  onChange={(e) => setEditableEmail(e.target.value)}
+                  onBlur={() => handleBlur('email')} />
+              )}
+            </div>
           </Col>
         </div>
         <div className="d-flex align-items-center line row" style={{margin: '12px'}}>
@@ -68,7 +88,15 @@ const AcountInfoModal = ({ id, nickname, created_at, onHide , user, setUser, sho
             <h5>닉네임</h5>
           </Col>
           <Col className='righted'>  
-            <div>{!isEditing ? nickname : <input value={editableNickname} onChange={(e) => setEditableNickname(e.target.value)} />}</div>
+            <div onDoubleClick={() => handleDoubleClick('nickname')}>
+              {!isEditing.nickname ? userNickname : (
+                    <input
+                      value={editableNickname}
+                      onChange={(e) => setEditableNickname(e.target.value)}
+                      onBlur={() => handleBlur('nickname')}
+                    />
+                  )}
+                </div>
           </Col>
         </div>
         <div className="d-flex align-items-center line row" style={{margin: '12px'}}>
@@ -76,7 +104,15 @@ const AcountInfoModal = ({ id, nickname, created_at, onHide , user, setUser, sho
             <h5>가입일</h5>
           </Col>  
           <Col className='righted'>
-            <div>{!isEditing ? created_at : <input value={editableCreatedAt} onChange={(e) => setEditableCreatedAt(e.target.value)} />}</div>
+            <div onDoubleClick={() => handleDoubleClick('created_at')}>
+            {!isEditing.created_at ? userCreatedAt : (
+                    <input
+                      value={editableCreatedAt}
+                      onChange={(e) => setEditableCreatedAt(e.target.value)}
+                      onBlur={() => handleBlur('created_at')}
+                    />
+                  )}
+                </div>
           </Col>
         </div>
         <div className="d-flex align-items-center line row" style={{margin: '12px'}}>
@@ -99,7 +135,7 @@ const AcountInfoModal = ({ id, nickname, created_at, onHide , user, setUser, sho
     </div>
     </Modal.Body>
       <Modal.Footer>
-        <Button onClick={handleLogout}>
+        <Button onClick={handleLogout} variant="outline-dark">
         로그아웃
         </Button>
         <Button onClick={savedSetting}>

@@ -41,6 +41,7 @@ const MenuBar = ({ setUser, user }) => {
         </div>
       </div>
       <AccountInfo
+        user={user}
         setUser={setUser}
         show={showAccountInfo}
         onHide={() => setShowAccountInfo(false)}

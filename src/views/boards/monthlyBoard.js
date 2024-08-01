@@ -115,9 +115,10 @@ const MonthlyBoard = () => {
     return list ? list.color : 'transparent';
   };
 
+  const userEmail = user?.email || '';
   return (
     <div className="monthly-board-container">
-      <h4 className="list-title">MonthlyBoard</h4>
+      <h4 className="list-title">MonthlyBoard {userEmail}</h4>
       <div className="month-year-title row">
         <Col>
           <DatePicker
