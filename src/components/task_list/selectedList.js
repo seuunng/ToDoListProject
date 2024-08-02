@@ -53,6 +53,9 @@ const Lists = React.forwardRef(
 );
 
 const SelectedList = ({ lists, selectedList, setSelectedList, tasks, updateTask  }) => {
+  if (!lists || !Array.isArray(lists)) {
+    return null; // 또는 적절한 오류 처리
+  }
   const handleSelect = (list) => {
     setSelectedList(list);
     updateTask({ ...tasks, list: { no: list.no } });
