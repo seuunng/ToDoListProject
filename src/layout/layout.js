@@ -11,8 +11,22 @@ const Layout = ({setUser, user}) => {
     const [tasks, setTasks] = useState([]);
     const [lists, setLists] = useState([]);
 
-    const token = localStorage.getItem('token');
-    
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            instance.get('/api/session')
+                .then(response => {
+                    setUser(response.data);
+                    console.log("response.data.user", response.data);
+                })
+                .catch(error => {
+                    console.error('Session check failed:', error.response ? error.response.data : error.message);
+                    setUser(null);
+                });
+        }
+    }, [setUser]);
+
     useEffect(() => {
         const fetchTableData = async () => {
             if (!user || !user.id) {

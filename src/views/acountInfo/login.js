@@ -23,20 +23,15 @@ const Login = ({ user, setUser }) => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await instance.post('/auth/login', {
-                email,
-                password
-                // email: this.email,
-                // password: this.password
-            }, { withCredentials: true })
-
-            if (response.ok) {
-                const data = await response.json();
+            const response = await instance.post('/auth/login', { email, password });
+      
+            if (response.status === 200) {
+                const data = response.data;
                 localStorage.setItem('token', data.token);
                 setUser(data.user);
-            setAlertMessage(`${user.nickname}님, 환영합니다!`);
+            setAlertMessage(`${data.user.nickname}님, 환영합니다!`);
             setShowAlertModal(true);
-            console.log(`현재 로그인한 유저는 ${user.nickname} 입니다`);
+            console.log(`현재 로그인한 유저는 ${data.user.nickname} 입니다`);
 
             navigate('/monthlyBoard');
             }
@@ -73,8 +68,7 @@ const Login = ({ user, setUser }) => {
     return (
         <div className="contents">
             <div>
-                <h4
-                    className="list-title">
+                <h4 className="list-title">
                     To-do List
                 </h4>
             </div>
