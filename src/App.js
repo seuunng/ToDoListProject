@@ -4,8 +4,7 @@ import { RouterProvider, Router, Routes, Route, Navigate } from 'react-router-do
 import { RouterInfo } from './router/RouterInfo';
 import Logout from './views/acountInfo/logout';
 import instance from './api/axios';
-
-//import { CustomerStatusProvider } from './Components/Customer/settingModal/CustomerStatusSettingContext';
+import { SettingsProvider } from './context/SettingsContext';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -14,9 +13,9 @@ function App() {
 
   return (
     <div>
-      {/* <CustomerStatusProvider> */}
-      <RouterProvider router={RouterInfo(user, setUser)}/>
-      {/* </CustomerStatusProvider> */}
+      <SettingsProvider>
+        <RouterProvider router={RouterInfo(user, setUser)}/>
+      </SettingsProvider>
     </div>
   );
 }

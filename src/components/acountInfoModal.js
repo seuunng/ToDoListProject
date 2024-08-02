@@ -5,14 +5,15 @@ import { Modal, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 
-const AcountInfoModal = ({ onHide , user, setUser, show }) => {
+const AcountInfoModal = ({ onHide , user = {}, setUser, show }) => {
 
+  const { email = '', nickname = '', created_at = '' } = user || {};
   const [isEditing, setIsEditing] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isGuest, setIsGuest] = useState(false);
-  const [editableEmail, setEditableEmail] = useState(user.email);
-  const [editableNickname, setEditableNickname] = useState(user.nickname);
-  const [editableCreatedAt, setEditableCreatedAt] = useState(user.created_at);
+  const [editableEmail, setEditableEmail] = useState(email);
+  const [editableNickname, setEditableNickname] = useState(nickname);
+  const [editableCreatedAt, setEditableCreatedAt] = useState(created_at);
   
   const navigate = useNavigate();
 
@@ -50,9 +51,7 @@ const AcountInfoModal = ({ onHide , user, setUser, show }) => {
     setIsEditing((prev) => ({ ...prev, [field]: false }));
   };
 
-  const userEmail = user?.email || '';
-  const userNickname = user?.nickname || '';
-  const userCreatedAt = formatDate(user?.created_at);
+  const userCreatedAtFormatted = formatDate(user?.created_at);
 
   function formatDate(dateString) {
     if (!dateString) return '';
@@ -60,6 +59,10 @@ const AcountInfoModal = ({ onHide , user, setUser, show }) => {
     return date.toISOString().split('T')[0]; // This formats the date as YYYY-MM-DD
   }
 
+  if (!user) {
+    return null; // 또는 적절한 fallback UI를 반환
+  }
+  
   return (
     <Modal show={show} onHide={onHide} centered>
     <Modal.Header>
@@ -74,7 +77,7 @@ const AcountInfoModal = ({ onHide , user, setUser, show }) => {
           </Col>
           <Col className='righted'>
             <div onDoubleClick={() => handleDoubleClick('email')}>
-              {!isEditing.email ? userEmail : (
+              {!isEditing.email ? editableEmail : (
                 <input
                   value={editableEmail}
                   onChange={(e) => setEditableEmail(e.target.value)}
@@ -89,7 +92,7 @@ const AcountInfoModal = ({ onHide , user, setUser, show }) => {
           </Col>
           <Col className='righted'>  
             <div onDoubleClick={() => handleDoubleClick('nickname')}>
-              {!isEditing.nickname ? userNickname : (
+              {!isEditing.nickname ? editableNickname : (
                     <input
                       value={editableNickname}
                       onChange={(e) => setEditableNickname(e.target.value)}
@@ -105,7 +108,7 @@ const AcountInfoModal = ({ onHide , user, setUser, show }) => {
           </Col>  
           <Col className='righted'>
             <div onDoubleClick={() => handleDoubleClick('created_at')}>
-            {!isEditing.created_at ? userCreatedAt : (
+            {!isEditing.created_at ? userCreatedAtFormatted : (
                     <input
                       value={editableCreatedAt}
                       onChange={(e) => setEditableCreatedAt(e.target.value)}

@@ -11,6 +11,8 @@ const Layout = ({setUser, user}) => {
     const [tasks, setTasks] = useState([]);
     const [lists, setLists] = useState([]);
 
+    const token = localStorage.getItem('token');
+    
     useEffect(() => {
         const fetchTableData = async () => {
             if (!user || !user.id) {

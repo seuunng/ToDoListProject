@@ -23,25 +23,23 @@ const Login = ({ user, setUser }) => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            console.log("Login attempt with email:", email); // 이메일 값 출력
             const response = await instance.post('/auth/login', {
                 email,
                 password
                 // email: this.email,
                 // password: this.password
             }, { withCredentials: true })
-            
-            const user = response.data.user;
-            console.log("response.data", response.data);
-            setUser(user);
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('token', data.token);
+                setUser(data.user);
             setAlertMessage(`${user.nickname}님, 환영합니다!`);
             setShowAlertModal(true);
             console.log(`현재 로그인한 유저는 ${user.nickname} 입니다`);
 
-            // 로그인 후 세션 확인
-            // await checkSession();
-
             navigate('/monthlyBoard');
+            }
         } catch (error) {
             console.error('Login failed:', error.response ? error.response.data : error.message);
             setAlertTitle('로그인 실패');

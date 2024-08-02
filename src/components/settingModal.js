@@ -7,8 +7,10 @@ import SwitchBtn from '../modules/switchButtonModule';
 import BasicBtn from '../modules/BasicButton';
 import Col from 'react-bootstrap/Col';
 import { Modal, Button } from 'react-bootstrap';
+import { useSettings } from '../context/SettingsContext';
 
 const SettingModal = ({ show, onHide }) => {
+  const { selectedOptions, setSelectedOptions, switches, setSwitches } = useSettings();
   // const [show, setShow] = useState(false);
   // const settingModalRef = useRef(null);
   const [allSwitchesList, setAllSwitchesList] = useState(true);
@@ -20,20 +22,20 @@ const SettingModal = ({ show, onHide }) => {
   const dropdownOptionsAlarmMethod = ["이메일", "카톡알림", "팝업"];
   const dropdownOptionsAlarmSound = ["벨소리", "진동", "무음"];
 
-  const [selectedOptions, setSelectedOptions] = useState({
-    week: "선택",
-    time: "선택",
-    alarmTime: "선택",
-    alarmMethod: "선택",
-    alarmSound: "선택",
-  });
+  // const [selectedOptions, setSelectedOptions] = useState({
+  //   week: "선택",
+  //   time: "선택",
+  //   alarmTime: "선택",
+  //   alarmMethod: "선택",
+  //   alarmSound: "선택",
+  // });
 
-  const [switches, setSwitches] = useState({
-    today: false,
-    tomorrow: false,
-    next7Days: false,
-    defaultBox: false,
-  });
+  // const [switches, setSwitches] = useState({
+  //   today: false,
+  //   tomorrow: false,
+  //   next7Days: false,
+  //   defaultBox: false,
+  // });
 
   useEffect(() => {
     // 로컬 스토리지에서 설정 값 불러오기
@@ -82,13 +84,8 @@ const SettingModal = ({ show, onHide }) => {
     localStorage.setItem('allSwitchesAlarm', JSON.stringify(allSwitchesAlarm));
     console.log(JSON.stringify(selectedOptions));
     console.log(JSON.stringify(switches));
-    console.log(JSON.stringify(allSwitchesList));
-    console.log(JSON.stringify(allSwitchesAlarm));
     onHide();
-
   }
-
-
 
   return (
     <Modal show={show} onHide={onHide} centered>
