@@ -25,7 +25,7 @@ const SignUp = () => {
         password
       });
       if (response.status === 201) {
-        
+
         toast.success(`회원가입되었습니다. 로그인해주세요!`, {
           position: "top-right",
           autoClose: 4000,
@@ -34,7 +34,7 @@ const SignUp = () => {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-      });
+        });
         navigate('/login');
       } else {
         toast.error('회원가입에 실패하였습니다. 정보를 확인해주세요.', {
@@ -45,7 +45,7 @@ const SignUp = () => {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-      });
+        });
       }
     } catch (error) {
       console.error('SignUp failed:', error);
@@ -57,7 +57,7 @@ const SignUp = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-    });
+      });
     }
   };
   const handleLogin = () => {
@@ -68,13 +68,13 @@ const SignUp = () => {
   };
   return (
     <div className="contents">
-      <div>
-        <h4
-          className="list-title">
-          To-do List
-        </h4>
-      </div>
       <div className="accountInfo-container">
+        <div className="todolistMainTitle">
+          Todo List
+        </div>
+        <br></br>
+        <br></br>
+        <br></br>
         <div className="signUp-container">
           <div className='centered login-btn'>
             <input

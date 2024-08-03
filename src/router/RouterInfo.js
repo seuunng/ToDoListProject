@@ -18,6 +18,7 @@ import MonthlyBoard from '../views/boards/monthlyBoard.js';
 import TimeLineBoard from '../views/boards/timeLineBoard.js';
 import WeeklyBoard from '../views/boards/weeklyBoard.js';
 import ReadTaskPage from '../views/readTaskPage.js';
+import LoginSuccess from '../views/acountInfo/googleLogin';
 
 
 export const RouterInfo = (user = {}, setUser = () => {}) => createBrowserRouter([
@@ -43,6 +44,7 @@ export const RouterInfo = (user = {}, setUser = () => {}) => createBrowserRouter
       {path: "oauth2/authorization/google",
         element: <Navigate to="http://localhost:9099/oauth2/authorization/google" />
       },
+      {path: "googleLogin", element: <LoginSuccess  user={user} setUser={setUser} />,},
       // {path:"/mainBoard", element: <MainBoard />},
       // {path:"/", element: <Navigate to="/mainBoard" />}
     ]

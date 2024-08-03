@@ -26,6 +26,7 @@ const MenuBar = ({ setUser, user }) => {
 
   return (
     <div>
+      {user ? 
       <div className="menuBar">
         <div className="item" onClick={() => setShowAccountInfo(true)}>
           {user ? <FontAwesomeIcon icon={faCat} /> : <AiFillAppstore />}
@@ -40,6 +41,7 @@ const MenuBar = ({ setUser, user }) => {
           <FontAwesomeIcon icon={faGear} />
         </div>
       </div>
+        :''}
       <AccountInfo
         user={user}
         setUser={setUser}

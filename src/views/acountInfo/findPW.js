@@ -7,24 +7,23 @@ import Button from 'react-bootstrap/Button';
 
 const FindPW = () => {
   const navigate = useNavigate();
-  const showLoginContainer = () => {
-    navigate('/logout', { state: { activeContainer: 'login' } });
+  const handleLogin = () => {
+    navigate('/login');
   };
 
-  const handleUpdatePW = () => {
-    navigate('/updatePW');
-  };
-  
-  const showSignUpContainer = () => {
-    navigate('/logout', { state: { activeContainer: 'signUp' } });
-  };
+  const handleSignUp = () => {
+    navigate('/signUp');
+};
   return (
     <div>
-      <div>
-        <h4 className="list-title">비밀번호 재설정</h4>
-      </div>
       <div className="accountInfo-container">
         <div className="button-container">
+          <div className="todolistMainTitle">
+            Todo List
+          </div>
+          <br></br>
+          <br></br>
+          <br></br>
           <div className='centered login-btn'>
             <input
               type="email"
@@ -45,17 +44,17 @@ const FindPW = () => {
                   color: "grey",
                   cursor: "pointer",
                   fontSize: "14px",
-                  paddingLeft:0
+                  paddingLeft: 0
                 }}
-                onClick={showLoginContainer}>로그인으로 돌아가기</span>
+                onClick={handleLogin}>로그인으로 돌아가기</span>
               <span className='col col-5 righted'
                 style={{
                   color: "grey",
                   cursor: "pointer",
                   fontSize: "14px",
-                  paddingRight:0
+                  paddingRight: 0
                 }}
-                onClick={showSignUpContainer}>회원가입</span>
+                onClick={handleSignUp}>회원가입</span>
             </div>
           </div>
         </div>

@@ -148,10 +148,12 @@ const Layout = ({setUser, user}) => {
                 user={user}/>
             <div className="icon" onClick={(e) => { e.stopPropagation(); toggleSidebar(); }}
                 style={{ zIndex: 1001, }}>
+                    { user ? 
                 <i
                     className="fa-solid fa-bars"
                     style={{ color: '#000000' }}
                     alt="Toggle Sidebar"></i>
+                    :''}
             </div>
             {sidebarVisible && (
                 <div

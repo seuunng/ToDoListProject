@@ -78,12 +78,13 @@ const Login = ({ user, setUser }) => {
     };
     return (
         <div className="contents">
-            <div>
-                <h4 className="list-title">
-                    To-do List
-                </h4>
-            </div>
             <div className="accountInfo-container">
+                <div className="todolistMainTitle">
+                    Todo List
+                </div>
+                <br></br>
+                <br></br>
+                <br></br>
                 <div className="login-container">
                     <div className='centered login-btn'>
                         <input
