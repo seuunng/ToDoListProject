@@ -31,9 +31,13 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
     setSelectedButton(tasks.dateStatus || 'DATE');
     setIsRepeat(tasks.isRepeated || 'NOREPEAT');
     setIsNotified(tasks.isNotified || 'NOALRAM');
-    setSelectedList(lists.find(list => list.no === tasks.list.no) || null);
+    setSelectedList(lists.find(list => list.no === tasks.listNo) || null);
   }, [tasks, lists]);
-
+  useEffect(() => {
+    if (tasks && tasks.list && tasks.list.no) {
+      console.log("Task List No:", tasks.list.no);
+    }
+  }, [tasks]);
   const handleTitleChange = async (e) => {
     const newTitle = e.target.value;
     setTaskTitle(newTitle);
@@ -89,18 +93,13 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
     await  updateTask(updatedTasks);
     await refreshTasks(); 
   };
-  // const handleKeyDown = (e) => {
-  //   if (e.key === 'Enter') {
-
-  //   const updatedTask = {
-  //     ...tasks,
-  //     title: taskTitle,
-  //     content: taskContent,
-  //     startDate,
-  //   };
-  //   updateTask(updatedTask);
-  //   }
-  // };
+  const handleSaveSettings = (settings) => {
+    console.log("Saved settings:", settings);
+    // 저장된 설정을 처리하는 로직 추가
+};
+// const handleOnHide = () => {
+//   setShowDatePicker(false);
+// };
   return (
     <div className="readTaskPage">
       <div className="d-flex align-items-center">
@@ -108,7 +107,7 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
         <PiLineVerticalThin style={{ marginLeft: "5px", marginRight: "5px" }} />
         <FaCalendarCheck onClick={() => setShowDatePicker(true)} />
         <DatePickerModule
-          show={setShowDatePicker}
+          onHide={() => setShowDatePicker(false)}
           startDate={startDate}
           endDate={endDate}
           onDateChange={handleDateChange}
@@ -118,6 +117,7 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
           setSelectedButton={handleSelectedButtonChange}
           initialRepeat={isRepeat}
           initialAlram={isNotified}
+          onSave={handleSaveSettings}
         />
       </div>
       {/* <i className="fa-regular fa-flag"></i> */}

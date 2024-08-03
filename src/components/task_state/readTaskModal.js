@@ -99,7 +99,13 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
       handleClose();
     }
   };
-
+  const handleSaveSettings = (settings) => {
+    console.log("Saved settings:", settings);
+    // 저장된 설정을 처리하는 로직 추가
+};
+// const handleOnHide = () => {
+//   setShowDatePicker(false);
+// };
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header>
@@ -108,7 +114,7 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
           <PiLineVerticalThin style={{ marginLeft: "5px", marginRight: "5px" }} />
           <FaCalendarCheck />
           <DatePickerModule
-            show={setShowDatePicker}
+            onHide={() => setShowDatePicker(false)}
             startDate={startDate}
             endDate={endDate}
             onDateChange={handleDateChange}
@@ -118,6 +124,7 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
             setSelectedButton={handleSelectedButtonChange}
             initialRepeat={isRepeat}
             initialAlram={isNotified}
+            onSave={handleSaveSettings}
           />
         </div>
       </Modal.Header>

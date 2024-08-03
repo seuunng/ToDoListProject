@@ -14,6 +14,7 @@ const MonthlyBoard = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const { tasks, addTask, updateTask, deleteTask, lists, addList, updateList, deleteList, user, setUser } = useOutletContext();
 
+
   const createTaskModalRef = useRef(null);
   const todayRef = useRef(null);
   const weeks = [1, 2, 3, 4, 5];
@@ -99,6 +100,7 @@ const MonthlyBoard = () => {
   // };
 
   const isTaskEndDate = (task, date) => {
+    if (!task.endDate) return false;
     const taskEndDate = new Date(task.endDate);
     return (
       date.getDate() === taskEndDate.getDate() &&
@@ -114,7 +116,17 @@ const MonthlyBoard = () => {
     const list = lists.find(list => list.no === task.list.no);
     return list ? list.color : 'transparent';
   };
-
+  const addListToTasks = (tasks, lists) => {
+    return tasks.map(task => {
+      const list = lists.find(list => list.no === task.listNo); // task.listNo는 task가 속한 리스트의 ID입니다.
+      return {
+        ...task,
+        list: list || null,
+      };
+    });
+  };
+  const tasksWithLists = addListToTasks(tasks, lists);
+  // console.log("tasksWithLists ", tasksWithLists )
   const userEmail = user?.email || '';
   return (
     <div className="monthly-board-container">
@@ -156,16 +168,14 @@ const MonthlyBoard = () => {
                   const todayClass = isToday(date) ? 'today-cell' : 'date-cell';
                   const dayTasksForPeriod = filterTasksForPeriod(date);
                   // const dayTasksForDate = filterTasksForDate(date);
-                  const dayTasks = [
-                    ...dayTasksForPeriod,
-                    // ...dayTasksForDate
-                  ];
+                  const dayTasks = addListToTasks(dayTasksForPeriod, lists);
                   return (
                     <td key={day} ref={isToday(date) ? todayRef : null} className="calendar-cell">
                       <div className="day-cell">
                         <div className={todayClass}>{date.getDate()}</div>
                         <div className="task-cell" onClick={(e) => handleTaskCellClick(e, date)}>
                           {dayTasks.map(task => (
+                             task.list ? (
                             <TaskBoxForCal
                               key={task.no}
                               showdate={date.getDate().toString()}
@@ -180,6 +190,7 @@ const MonthlyBoard = () => {
                               style={{backgroundColor: getTaskListColor(task) }}
                             // showTitle={!isTaskEndDate(task, date)}
                             />
+                          ) : null
                           ))}
                         </div>
                       </div>
@@ -192,7 +203,7 @@ const MonthlyBoard = () => {
         </table>
       </div>
       <CreateTask
-        ref={createTaskModalRef} date={startDate} addTask={addTask} />
+        ref={createTaskModalRef} date={startDate} addTask={addTask} lists={lists} />
     </div>
   );
 };

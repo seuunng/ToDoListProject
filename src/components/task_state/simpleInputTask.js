@@ -21,12 +21,11 @@ const SimpleInputTask = ({ addTask , lists, listTitle, refreshTasks }) => {
       const task = {
         title: newTask,
         content: '',
-        isNotified: 'NOALRAM',
+        isNotified: 'NOALARM',
         isRepeated: 'NOREPEAT',
         startDate: new Date().toISOString(),
         endDate: '',
         priority: 'MEDIUM',
-        taskStatus: 'PENDING',
         list: { no: lists.no }
       };
       await addTask(task); 

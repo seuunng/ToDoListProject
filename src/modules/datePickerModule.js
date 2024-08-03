@@ -9,9 +9,10 @@ import { Button, Col } from 'react-bootstrap';
 import DropdownBtn from './dropdownModule';
 import { IoMdTime } from "react-icons/io";
 
-const DatePickerModule = ({ startDate, endDate, onDateChange, onRepeatClick, initialRepeat, onAlarmClick, initialAlram, dateFormat,  selectedButton, setSelectedButton, show }) => {
+const DatePickerModule = ({ startDate, endDate, onDateChange, 
+    onRepeatClick, initialRepeat, onAlarmClick, initialAlram, dateFormat, selectedButton, setSelectedButton, onHide, onSave }) => {
     const [dateRange, setDateRange] = useState([startDate, endDate]);
-    const [timeValue, setTimeValue] = useState(''); 
+    const [timeValue, setTimeValue] = useState('');
     const dropdownOptionsAlarmTime = ["알림없음", "정각", "5분전", "30분전", "하루전"];
     const dropdownOptionsRepeat = ["반복없음", "매일", "매주", "매달", "매년"];
 
@@ -40,7 +41,7 @@ const DatePickerModule = ({ startDate, endDate, onDateChange, onRepeatClick, ini
         setDateRange([startDate, endDate]);
         setSelectedOptions({
             repeat: repeatMappingToKorean[initialRepeat] || "반복없음",
-            alarmTime: alarmMappingToKorean[initialAlram] || "알림없음"  
+            alarmTime: alarmMappingToKorean[initialAlram] || "알림없음"
         });
     }, [startDate, endDate, initialAlram, initialRepeat]);
 
@@ -63,13 +64,22 @@ const DatePickerModule = ({ startDate, endDate, onDateChange, onRepeatClick, ini
     };
     const handleButtonClick = (buttonType) => {
         if (buttonType === 'DATE') {
-            setDateRange([null, null]); 
+            setDateRange([null, null]);
         }
         setSelectedButton(buttonType);
     };
-    const handleClose = () =>  {
-        show(false);
-      };
+    const handleOnHide = () => {
+        onHide();
+    };
+    const handleSave = () => {
+        onSave({
+            dateRange,
+            timeValue,
+            selectedOptions,
+            selectedButton
+        });
+        onHide();
+    };
     const CustomInput = forwardRef(({ value, onClick, className }, ref) => (
         <button className={className} onClick={onClick} ref={ref}
             style={{
@@ -97,8 +107,7 @@ const DatePickerModule = ({ startDate, endDate, onDateChange, onRepeatClick, ini
                         const newValue = e.target.value;
                         onChange(newValue);
                         setTimeValue(newValue);
-                    }
-                    }
+                    }}
                     style={{
                         width: "120px",
                         padding: "5px",
@@ -239,24 +248,24 @@ const DatePickerModule = ({ startDate, endDate, onDateChange, onRepeatClick, ini
                             />
                         </Col>
                     </div>
-                    <div className="d-flex align-items-center line row">
+                    {/* <div className="d-flex align-items-center line row">
                         <Col
-                            style={{ marginTop: "5px", marginRight: "0",  }}>
+                            style={{ marginTop: "5px", marginRight: "0", }}>
                             <Button variant="outline-dark"
-                             style={{ width: "100%"  }}
-                             onClick={handleClose}>
+                                style={{ width: "100%" }}
+                                onClick={handleOnHide}>
                                 취소
                             </Button>
                         </Col>
                         <Col
                             style={{ marginTop: "5px", marginleft: "0" }}>
                             <Button
-                             style={{ width: "100%"  }}
-                             onClick={handleClose}>
+                                style={{ width: "100%" }}
+                                onClick={handleSave}>
                                 저장
                             </Button>
                         </Col>
-                    </div>
+                    </div> */}
                 </div>
             </DatePicker>
         </div>

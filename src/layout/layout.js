@@ -18,7 +18,7 @@ const Layout = ({setUser, user}) => {
             instance.get('/api/session')
                 .then(response => {
                     setUser(response.data);
-                    console.log("response.data.user", response.data);
+                    // console.log("response.data.user", response.data);
                 })
                 .catch(error => {
                     console.error('Session check failed:', error.response ? error.response.data : error.message);
@@ -34,17 +34,28 @@ const Layout = ({setUser, user}) => {
                 return;
             }
             try {
-                console.log("조회", user.id)
+                // console.log("조회", user.id)
                 const response_taskData = await instance.get(`/tasks/task/${user.id}`);
                 const data = Array.isArray(response_taskData.data) ? response_taskData.data : [];
-                console.log("fetchTableData ", data)
 
-                setTasks(data);
+                // console.log("data", data);
 
-                // const response_listData = await instance.get('/lists/list');
-                // const data_list = Array.isArray(response_listData) ? response_listData : [];
-                // // console.log(data_list);
-                // setLists(data_list);
+                const response_listData = await instance.get('/lists/list');
+                const data_list = Array.isArray(response_listData.data) ? response_listData.data : [];
+                
+                const tasksWithLists = data.map(task => {
+                    if (!task.listNo) {
+                        console.warn(`Task with ID ${task.no} does not have a listNo property.`);
+                        return { ...task, list: null };
+                    }
+                    const list = data_list.find(list => list.no === task.listNo);
+                    return { ...task, list: list || null };
+                });
+
+                // console.log("tasksWithLists", tasksWithLists);
+
+                setTasks(tasksWithLists);
+                setLists(data_list);
             } catch (error) {
                 console.error('Error getting data:', error);
                 setTasks([]);
@@ -64,8 +75,6 @@ const Layout = ({setUser, user}) => {
                 list: newTask.list ? newTask.list : { no: null } // list가 없을 때 기본 값 설정
             });
             const addedTask = response.data;
-            console.log(user)
-            console.log(addedTask)
             setTasks((prevTasks) => [...prevTasks, addedTask]);
         } catch (error) {
             console.error('Error adding task:', error);
