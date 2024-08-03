@@ -11,9 +11,9 @@ const AcountInfoModal = ({ onHide , user = {}, setUser, show }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isGuest, setIsGuest] = useState(false);
-  const [editableEmail, setEditableEmail] = useState(email);
-  const [editableNickname, setEditableNickname] = useState(nickname);
-  const [editableCreatedAt, setEditableCreatedAt] = useState(created_at);
+  const [editableEmail, setEditableEmail] = useState(user.email);
+  const [editableNickname, setEditableNickname] = useState(user.nickname);
+  const [editableCreatedAt, setEditableCreatedAt] = useState(user.created_at);
   
   const navigate = useNavigate();
 
@@ -110,7 +110,7 @@ const AcountInfoModal = ({ onHide , user = {}, setUser, show }) => {
             <div onDoubleClick={() => handleDoubleClick('created_at')}>
             {!isEditing.created_at ? userCreatedAtFormatted : (
                     <input
-                      value={editableCreatedAt}
+                      value={userCreatedAtFormatted}
                       onChange={(e) => setEditableCreatedAt(e.target.value)}
                       onBlur={() => handleBlur('created_at')}
                     />

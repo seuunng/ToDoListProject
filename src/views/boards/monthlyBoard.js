@@ -118,7 +118,7 @@ const MonthlyBoard = () => {
   const userEmail = user?.email || '';
   return (
     <div className="monthly-board-container">
-      <h4 className="list-title">MonthlyBoard {userEmail}</h4>
+      <h4 className="list-title">MonthlyBoard</h4>
       <div className="month-year-title row">
         <Col>
           <DatePicker
