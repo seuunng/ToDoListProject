@@ -1,20 +1,26 @@
 
 import React from 'react';
-import { Slide, ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const toastlModule = () => {
+const ToastModule = ({title, subTitle, content}) => {
 
-  return (
-    <ToastContainer
-        position="top-center"
-        transition={Slide}
-        autoClose={2000}
-        hideProgressBar={true}
-        closeOnClick
-        rtl={false}
-        limit={1}
-    />
-  );
+  const showToast = () => {
+    toast.info(
+      <div>
+        <strong>{title}</strong>
+        <div>{subTitle}</div>
+        <div>{content}</div>
+      </div>
+    );
+  };
+
+  // useEffect 등을 사용하여 특정 조건에서 showToast를 호출할 수 있습니다.
+  React.useEffect(() => {
+    showToast();
+  }, []); // 이 예시에서는 컴포넌트가 마운트될 때 토스트를 표시합니다.
+
+  return <ToastContainer />;
 };
 
-export default toastlModule;
+export default ToastModule;

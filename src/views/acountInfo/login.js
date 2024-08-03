@@ -7,44 +7,53 @@ import { FcGoogle } from "react-icons/fc";
 import { PiSignInBold } from "react-icons/pi";
 import { useNavigate } from 'react-router-dom';
 import instance from '../../api/axios';
-import AlertModalModule from '../../modules/alertModalModule';
+import ToastModule from '../../modules/toastModule';
 import { FaRegEdit } from "react-icons/fa";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = ({ user, setUser }) => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [showAlertModal, setShowAlertModal] = useState(false);
-    const [alertTitle, setAlertTitle] = useState('');
-    const [alertMessage, setAlertMessage] = useState('');
-
+    // const [showToast, setShowToast] = useState(false);
+    // const [toastTitle, setToastTitle] = useState('');
+    // const [toastSubTitle, setToastSubTitle] = useState('');
+    // const [toastContent, setToastContent] = useState('');
 
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await instance.post('/auth/login', {
-                email,
-                password
-                // email: this.email,
-                // password: this.password
-            }, { withCredentials: true })
+            const response = await instance.post('/auth/login', { email, password });
 
-            if (response.ok) {
-                const data = await response.json();
+            if (response.status === 200) {
+                const data = response.data;
                 localStorage.setItem('token', data.token);
                 setUser(data.user);
-            setAlertMessage(`${user.nickname}님, 환영합니다!`);
-            setShowAlertModal(true);
-            console.log(`현재 로그인한 유저는 ${user.nickname} 입니다`);
+                toast.success(`${data.user.nickname}님, 환영합니다!`, {
+                    position: "top-right",
+                    autoClose: 4000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
 
-            navigate('/monthlyBoard');
+                navigate('/monthlyBoard');
             }
         } catch (error) {
             console.error('Login failed:', error.response ? error.response.data : error.message);
-            setAlertTitle('로그인 실패');
-            setAlertMessage(error.response ? error.response.data.message  : '서버와의 연결이 원활하지 않습니다.');
-            setShowAlertModal(true);
+            toast.error('아이디 혹은 비밀번호를 확인해주세요', {
+                position: "top-right",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         }
     };
     // const checkSession = async () => {
@@ -60,10 +69,7 @@ const Login = ({ user, setUser }) => {
     // useEffect(() => {
     //     checkSession();
     // }, []);
-    const handleALertClick = () => {
-        // deleteList(list);
-        setShowAlertModal(true);
-    };
+
     const handleFindPW = () => {
         navigate('/findPW');
     };
@@ -73,8 +79,7 @@ const Login = ({ user, setUser }) => {
     return (
         <div className="contents">
             <div>
-                <h4
-                    className="list-title">
+                <h4 className="list-title">
                     To-do List
                 </h4>
             </div>
@@ -120,14 +125,6 @@ const Login = ({ user, setUser }) => {
                     </div>
                 </div>
             </div>
-
-            <AlertModalModule
-                show={showAlertModal}
-                onHide={() => setShowAlertModal(false)}
-                handleALertClick={handleALertClick}
-                title={alertTitle}
-                alert={alertMessage}
-            />
         </div>
     );
 };

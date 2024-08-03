@@ -1,20 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/basicStyle.css';
 import Col from 'react-bootstrap/Col';
 import { Modal, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AcountInfoModal = ({ onHide , user = {}, setUser, show }) => {
-
-  const { email = '', nickname = '', created_at = '' } = user || {};
-  const [isEditing, setIsEditing] = useState(false);
+  const defaultUser = {
+    email: '',
+    nickname: '',
+    created_at: ''
+  };
+  
+  const safeUser = user || defaultUser;
+  const [isEditing, setIsEditing] = useState({
+    email: false,
+    nickname: false,
+    created_at: false
+  });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isGuest, setIsGuest] = useState(false);
-  const [editableEmail, setEditableEmail] = useState(email);
-  const [editableNickname, setEditableNickname] = useState(nickname);
-  const [editableCreatedAt, setEditableCreatedAt] = useState(created_at);
-  
+  const [editableEmail, setEditableEmail] = useState(safeUser.email);
+  const [editableNickname, setEditableNickname] = useState(safeUser.nickname);
+  const [editableCreatedAt, setEditableCreatedAt] = useState(safeUser.created_at);
+
+  useEffect(() => {
+    setEditableEmail(safeUser.email);
+    setEditableNickname(safeUser.nickname);
+    setEditableCreatedAt(formatDate(safeUser.created_at));
+  }, [user]);
+
   const navigate = useNavigate();
 
   const handleUpdateSimplePW = () => {
@@ -30,14 +47,30 @@ const AcountInfoModal = ({ onHide , user = {}, setUser, show }) => {
   const handleLogout = async () => {
     try {
       await axios.post('/auth/logout');
+      localStorage.removeItem('token');
       setUser(null);
-      if (user) {
-        console.log(`현재 로그아웃한 유저는 ${user.nickname} 입니다`);
-      }
       onHide();
+      toast.success(`로그아웃 되었습니다. 또 만나요 :)`, {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
       navigate('/mainAccountInfo');
     } catch (error) {
       console.error('Logout failed:', error);
+      toast.error('로그아웃 실패. 다시 시도해주세요.', {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
   const savedSetting = () => {
@@ -51,7 +84,7 @@ const AcountInfoModal = ({ onHide , user = {}, setUser, show }) => {
     setIsEditing((prev) => ({ ...prev, [field]: false }));
   };
 
-  const userCreatedAtFormatted = formatDate(user?.created_at);
+  const userCreatedAtFormatted = formatDate(safeUser.created_at);
 
   function formatDate(dateString) {
     if (!dateString) return '';
@@ -110,7 +143,7 @@ const AcountInfoModal = ({ onHide , user = {}, setUser, show }) => {
             <div onDoubleClick={() => handleDoubleClick('created_at')}>
             {!isEditing.created_at ? userCreatedAtFormatted : (
                     <input
-                      value={editableCreatedAt}
+                      value={userCreatedAtFormatted}
                       onChange={(e) => setEditableCreatedAt(e.target.value)}
                       onBlur={() => handleBlur('created_at')}
                     />

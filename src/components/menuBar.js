@@ -30,13 +30,13 @@ const MenuBar = ({ setUser, user }) => {
         <div className="item" onClick={() => setShowAccountInfo(true)}>
           {user ? <FontAwesomeIcon icon={faCat} /> : <AiFillAppstore />}
         </div>
-        <Link to="/mainBoard/basic" className="item">
-          <FontAwesomeIcon icon={faSquareCheck} />
+        <Link to={user ? "/mainBoard/basic":''} className="item">
+        <FontAwesomeIcon icon={faSquareCheck} />
         </Link>
-        <Link to="/monthlyBoard" className="item">
+        <Link to={user ? "/monthlyBoard":''} className="item">
           <FontAwesomeIcon icon={faCalendarDays} />
         </Link>
-        <div className="item" onClick={() => setShowSettingModal(true)}>
+        <div className="item" onClick={user ? () => setShowSettingModal(true) : () => {}}>
           <FontAwesomeIcon icon={faGear} />
         </div>
       </div>

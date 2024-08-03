@@ -9,8 +9,11 @@ import { useNavigate } from 'react-router-dom';
 import instance from '../../api/axios';
 import AlertModalModule from '../../modules/alertModalModule';
 import { FaRegEdit } from "react-icons/fa";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const MainAccountInfo = ({user}) => {
+
+const MainAccountInfo = ({user, setUser}) => {
     const navigate = useNavigate();
     const [showAlertModal, setShowAlertModal] = useState(false);
     const [alertTitle, setAlertTitle] = useState('');
@@ -19,16 +22,33 @@ const MainAccountInfo = ({user}) => {
     const handleGuestLogin = async () => {
         try {
             const response = await instance.post('/auth/guest-login');
+            const data = response.data;
+            const token = response.data.token;
+            localStorage.setItem('token', token);
+            setUser(data.user);
             if (response.status === 200) {
-                setAlertMessage('게스트로 로그인 되었습니다.');
-                setShowAlertModal(true);
-                if (user) {
-                  console.log(`현재 로그인한 유저는 ${user.nickname} 입니다`);
-                }
+                toast.success(`${data.user.nickname}님, 환영합니다!`, {
+                    position: "top-right",
+                    autoClose: 4000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
                 navigate('/monthlyBoard');
             }
         } catch (error) {
             console.error('게스트 로그인 실패:', error);
+            toast.error('게스트 로그인 실패. 다시 시도해주세요.', {
+                position: "top-right",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         }
     };
     const handleALertClick = () => {

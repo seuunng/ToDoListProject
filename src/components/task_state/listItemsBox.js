@@ -9,15 +9,20 @@ const ListItemsBox = ({ lists, toggleSidebar, deleteList, updateList }) => {
   if (!Array.isArray(lists)) {
     return null;
   }
+  // console.log('Rendering ListItemsBox with lists:', lists);
   return (
     <div>
-      {lists.map((list, index) => (
+      {lists.map((list, index) => {
+        if (!list) {
+          return null;
+        }
+        return (
         <div key={index} className="list-item">
           <span className="list-content">
 
             <Row>
               <Col style={{ padding: "0" }}>
-                <Link to={`/basicBoard/${list.no}`}
+                <Link to={`/basicBoard/${list?.no}`}
                   className="item"
                   style={{ textDecoration: "none" }}
                   onClick={toggleSidebar} >
@@ -53,7 +58,8 @@ const ListItemsBox = ({ lists, toggleSidebar, deleteList, updateList }) => {
             </Row>
           </span>
         </div>
-      ))}
+      );
+      })}
     </div>
   );
 };

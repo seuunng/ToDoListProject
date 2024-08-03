@@ -21,9 +21,6 @@ const SetListToggle = React.forwardRef(({ children, onClick }, ref) => (
       onClick(e);
     }}
     style={{
-      // display: 'inline-flex',
-      // alignItems: 'center',
-      // justifyContent: 'center',
       cursor: 'pointer',
       color: 'black',
       textDecoration: 'none'
