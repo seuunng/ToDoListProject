@@ -7,17 +7,15 @@ import { FcGoogle } from "react-icons/fc";
 import { PiSignInBold } from "react-icons/pi";
 import { useNavigate } from 'react-router-dom';
 import instance from '../../api/axios';
-import AlertModalModule from '../../modules/alertModalModule';
 import { FaRegEdit } from "react-icons/fa";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignUp = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [nickname, setNickname] = useState('');
-  const [showAlertModal, setShowAlertModal] = useState(false);
-  const [alertTitle, setAlertTitle] = useState('');
-  const [alertMessage, setAlertMessage] = useState('');
 
   const handleSignUp = async () => {
     try {
@@ -27,21 +25,40 @@ const SignUp = () => {
         password
       });
       if (response.status === 201) {
-        setAlertTitle('회원가입 성공');
-        setAlertMessage(`로그인 해주세요`);
-        setShowAlertModal(true);
+        
+        toast.success(`회원가입되었습니다. 로그인해주세요!`, {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+      });
         navigate('/login');
       } else {
-        // 오류 처리
-        console.error('회원가입 실패');
+        toast.error('회원가입에 실패하였습니다. 정보를 확인해주세요.', {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+      });
       }
     } catch (error) {
-      console.error('회원가입 중 오류 발생:', error);
+      console.error('SignUp failed:', error);
+      toast.error('회원가입에 실패하였습니다. 정보를 확인해주세요.', {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
     }
-  };
-  const handleALertClick = () => {
-    // deleteList(list);
-    setShowAlertModal(false);
   };
   const handleLogin = () => {
     navigate('/login');
@@ -111,14 +128,6 @@ const SignUp = () => {
           </div>
         </div>
       </div>
-
-      <AlertModalModule
-        show={showAlertModal}
-        onHide={() => setShowAlertModal(false)}
-        handleALertClick={handleALertClick}
-        title={alertTitle}
-        alert={alertMessage}
-      />
     </div>
   );
 };
