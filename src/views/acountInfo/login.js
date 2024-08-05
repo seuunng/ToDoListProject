@@ -16,17 +16,13 @@ const Login = ({ user, setUser }) => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    // const [showToast, setShowToast] = useState(false);
-    // const [toastTitle, setToastTitle] = useState('');
-    // const [toastSubTitle, setToastSubTitle] = useState('');
-    // const [toastContent, setToastContent] = useState('');
-
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
             const response = await instance.post('/auth/login', { email, password });
 
+            console.log(response.data)
             if (response.status === 200) {
                 const data = response.data;
                 localStorage.setItem('token', data.token);
@@ -56,19 +52,6 @@ const Login = ({ user, setUser }) => {
             });
         }
     };
-    // const checkSession = async () => {
-    //     try {
-    //         const response = await instance.post('/auth/login', { withCredentials: true });
-    //         console.log('Session check response:', response.data);
-    //         setUser(response.data.user);
-    //     } catch (error) {
-    //         console.error('Session check failed:', error.response ? error.response.data : error.message);
-    //         setUser(null);
-    //     }
-    // };
-    // useEffect(() => {
-    //     checkSession();
-    // }, []);
 
     const handleFindPW = () => {
         navigate('/findPW');
@@ -78,12 +61,13 @@ const Login = ({ user, setUser }) => {
     };
     return (
         <div className="contents">
-            <div>
-                <h4 className="list-title">
-                    To-do List
-                </h4>
-            </div>
             <div className="accountInfo-container">
+                <div className="todolistMainTitle">
+                    Todo List
+                </div>
+                <br></br>
+                <br></br>
+                <br></br>
                 <div className="login-container">
                     <div className='centered login-btn'>
                         <input

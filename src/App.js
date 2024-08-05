@@ -1,5 +1,5 @@
 import './App.css';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouterProvider, Router, Routes, Route, Navigate } from 'react-router-dom';
 import { RouterInfo } from './router/RouterInfo';
 import Logout from './views/acountInfo/logout';
@@ -15,10 +15,9 @@ function App() {
 
   return (
     <div>
-      
       <ToastContainer />
       <SettingsProvider>
-        <RouterProvider router={RouterInfo(user, setUser)}/>
+        <RouterProvider router={RouterInfo(user, setUser)} />
       </SettingsProvider>
     </div>
   );

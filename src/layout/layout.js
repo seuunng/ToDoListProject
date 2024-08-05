@@ -15,10 +15,10 @@ const Layout = ({setUser, user}) => {
         const token = localStorage.getItem('token');
         if (token) {
             instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            instance.get('/api/session')
+            instance.get('/auth/session')
                 .then(response => {
                     setUser(response.data);
-                    // console.log("response.data.user", response.data);
+                    console.log("response.data.user", response.data);
                 })
                 .catch(error => {
                     console.error('Session check failed:', error.response ? error.response.data : error.message);
@@ -34,11 +34,8 @@ const Layout = ({setUser, user}) => {
                 return;
             }
             try {
-                // console.log("조회", user.id)
                 const response_taskData = await instance.get(`/tasks/task/${user.id}`);
                 const data = Array.isArray(response_taskData.data) ? response_taskData.data : [];
-
-                // console.log("data", data);
 
                 const response_listData = await instance.get('/lists/list');
                 const data_list = Array.isArray(response_listData.data) ? response_listData.data : [];
@@ -51,8 +48,6 @@ const Layout = ({setUser, user}) => {
                     const list = data_list.find(list => list.no === task.listNo);
                     return { ...task, list: list || null };
                 });
-
-                // console.log("tasksWithLists", tasksWithLists);
 
                 setTasks(tasksWithLists);
                 setLists(data_list);
@@ -71,8 +66,8 @@ const Layout = ({setUser, user}) => {
         try {
             const response = await instance.post('/tasks/task', {
                 ...newTask,
-                user: user, // 사용자 정보를 포함시킴
-                list: newTask.list ? newTask.list : { no: null } // list가 없을 때 기본 값 설정
+                user: user, 
+                list: newTask.list ? newTask.list : { no: null } 
             });
             const addedTask = response.data;
             setTasks((prevTasks) => [...prevTasks, addedTask]);
@@ -148,10 +143,12 @@ const Layout = ({setUser, user}) => {
                 user={user}/>
             <div className="icon" onClick={(e) => { e.stopPropagation(); toggleSidebar(); }}
                 style={{ zIndex: 1001, }}>
+                    { user ? 
                 <i
                     className="fa-solid fa-bars"
                     style={{ color: '#000000' }}
                     alt="Toggle Sidebar"></i>
+                    :''}
             </div>
             {sidebarVisible && (
                 <div
