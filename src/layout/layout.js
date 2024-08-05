@@ -17,8 +17,8 @@ const Layout = ({setUser, user}) => {
             instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             instance.get('/auth/session')
                 .then(response => {
-                    setUser(response.data);
-                    console.log("response.data.user", response.data);
+                    setUser(response.data.user);
+                    // console.log("response.data.user", response.data);
                 })
                 .catch(error => {
                     console.error('Session check failed:', error.response ? error.response.data : error.message);
@@ -29,6 +29,7 @@ const Layout = ({setUser, user}) => {
 
     useEffect(() => {
         const fetchTableData = async () => {
+            console.log("fetchTableData user.id : ", user.id)
             if (!user || !user.id) {
                 console.error('User ID is not available');
                 return;

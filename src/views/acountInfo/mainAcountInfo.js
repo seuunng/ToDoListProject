@@ -14,7 +14,6 @@ import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 const MainAccountInfo = ({ user, setUser }) => {
     const navigate = useNavigate();
-    const [showGoogleModal, setShowGoogleModal] = useState(false);
 
     const handleGuestLogin = async () => {
         try {
@@ -49,41 +48,45 @@ const MainAccountInfo = ({ user, setUser }) => {
         }
     };
     const handleGoogleLogin = () => {
-        if (window.google) {
-            const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+        // if (window.google) {
+        //     const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
             
-            console.log("handleGoogleLogin 실행 clientId : ", clientId);
-            console.log(window.google.accounts.id.renderButton);
+        //     console.log("handleGoogleLogin 실행 clientId : ", clientId);
+        //     console.log(window.google.accounts.id.renderButton);
 
-            window.google.accounts.id.initialize({
-                client_id: clientId,
-                callback: (response) => {
-                    console.log("Callback 실행됨", response);
-                    handleLoginSuccess(response);
-                },
-            });
-            console.log("Google API 초기화 완료");
+        //     window.google.accounts.id.initialize({
+        //         client_id: clientId,
+        //         callback: (response) => {
+        //             console.log("Callback 실행됨", response);
+        //             handleLoginSuccess(response);
+        //         },
+        //     });
+        //     console.log("Google API 초기화 완료");
+
+        //     setShowGoogleModal(true);
+
+        //     const button = document.getElementById("google-signin-button");
+        //     if (button) {
+        //         window.google.accounts.id.renderButton(
+        //             button,
+        //             { theme: "outline", size: "large" }
+        //         );
+        //         console.log("Google 버튼 렌더링 완료");
+        //     } else {
+        //         console.error("Google 버튼을 찾을 수 없습니다.");
+        //     }
             
-            setShowGoogleModal(true);
+        //     window.google.accounts.id.prompt(); // 이 부분은 자동으로 팝업을 띄워주는 역할을 합니다.
+        //     console.log("Google prompt 호출 완료");
 
-            const button = document.getElementById("google-signin-button");
-            if (button) {
-                window.google.accounts.id.renderButton(
-                    button,
-                    { theme: "outline", size: "large" }
-                );
-                console.log("Google 버튼 렌더링 완료");
-            } else {
-                console.error("Google 버튼을 찾을 수 없습니다.");
-            }
-            
-            window.google.accounts.id.prompt(); // 이 부분은 자동으로 팝업을 띄워주는 역할을 합니다.
-            console.log("Google prompt 호출 완료");
-
-        } else {
-            console.error('Google API가 로드되지 않았습니다.');
-        }
-        
+        // } else {
+        //     console.error('Google API가 로드되지 않았습니다.');
+        // }
+        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?
+		client_id=${process.env.REACT_APP_GOOGLE_CLIENT_ID}
+		&redirect_uri=${process.env.REACT_APP_GOOGLE_AUTH_REDIRECT_URI}
+		&response_type=code
+		&scope=email profile`;
     };
     const handleLoginSuccess = (response) => {
         console.log("handleLoginSuccess 실행", response);
@@ -178,11 +181,12 @@ const MainAccountInfo = ({ user, setUser }) => {
                             onClick={handleGoogleLogin}
                             >
                             <FcGoogle /> 구글 로그인   
-                        </Button> 
-                        <div id="google-signin-button"></div> */}
+                        </Button>  */}
+                        {/* <div id="google-signin-button"></div> */}
+                        
                         <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
                             <GoogleLogin   
-                                onSuccess={(response) => {
+                                onSuccess={response => {
                                     console.log("onSuccess 콜백 실행");
                                     handleLoginSuccess(response);
                                   }}
@@ -190,8 +194,9 @@ const MainAccountInfo = ({ user, setUser }) => {
                                     console.log("onError 콜백 실행");
                                     handleLoginFailure(error);
                                   }}
-                                useOneTap
-                                cookiePolicy={'single_host_origin'}
+                                // useOneTap
+                                // cookiePolicy={'single_host_origin'}
+                                auto_select
                             />
                         </GoogleOAuthProvider>
                     </div>
@@ -213,19 +218,6 @@ const MainAccountInfo = ({ user, setUser }) => {
                     </div>
                 </div>
             </div>
-            <Modal show={showGoogleModal} onHide={() => setShowGoogleModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Google 로그인</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div id="google-signin-button"></div>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowGoogleModal(false)}>
-                        닫기
-                    </Button>
-                </Modal.Footer>
-            </Modal>
         </div>
     );
 };

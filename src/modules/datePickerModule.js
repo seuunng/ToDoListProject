@@ -10,7 +10,9 @@ import DropdownBtn from './dropdownModule';
 import { IoMdTime } from "react-icons/io";
 
 const DatePickerModule = ({ startDate, endDate, onDateChange, 
-    onRepeatClick, initialRepeat, onAlarmClick, initialAlram, dateFormat, selectedButton, setSelectedButton, onHide, onSave }) => {
+    onRepeatClick, initialRepeat, onAlarmClick, initialAlram, 
+    dateFormat, selectedButton, setSelectedButton, onHide, onSave }) => {
+
     const [dateRange, setDateRange] = useState([startDate, endDate]);
     const [timeValue, setTimeValue] = useState('');
     const dropdownOptionsAlarmTime = ["알림없음", "정각", "5분전", "30분전", "하루전"];
@@ -25,13 +27,31 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
     };
 
     const alarmMappingToKorean = {
-        "NOALRAM": "알림없음",
+        "NOALARM": "알림없음",
         "ONTIME": "정각",
         "FIVEMINS": "5분전",
         "THIRTYMINS": "30분전",
         "DAYEARLY": "하루전"
     };
-
+    useEffect(() => {
+        const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
+        const savedSelectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
+        console.log("savedAllSwitchesAlarm", savedAllSwitchesAlarm);
+        console.log("savedSelectedOptions ", savedSelectedOptions);
+        console.log("savedSelectedOptions.alarmTime ", savedSelectedOptions.alarmTime);
+    
+        const alarmMapping = {
+          "정각": "ONTIME",
+          "5분전": "FIVEMINS",
+          "30분전": "THIRTYMINS",
+          "하루전": "DAYEARLY"
+        };
+    
+        const initialAlarm = savedAllSwitchesAlarm ? alarmMapping[savedSelectedOptions.alarmTime] : "NOALARM";
+        setIsNotified(initialAlarm);
+        console.log("initialAlarm", initialAlarm);
+        
+      }, []);
     const [selectedOptions, setSelectedOptions] = useState({
         alarmTime: alarmMappingToKorean[initialAlram] || "알림없음",
         repeat: repeatMappingToKorean[initialRepeat] || "반복없음",
@@ -40,16 +60,30 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
     useEffect(() => {
         setDateRange([startDate, endDate]);
         setSelectedOptions({
+            alarmTime: alarmMappingToKorean[initialAlram] || "알림없음",
             repeat: repeatMappingToKorean[initialRepeat] || "반복없음",
-            alarmTime: alarmMappingToKorean[initialAlram] || "알림없음"
         });
+        console.log("initialAlram", initialAlram); 
     }, [startDate, endDate, initialAlram, initialRepeat]);
+
+    useEffect(() => {
+        if (dateRange[0]) {
+            const date = new Date(dateRange[0]);
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            setTimeValue(`${hours}:${minutes}`);
+        } else {
+            setTimeValue('');
+        }
+    }, [dateRange]);
 
     const handleDateChange = (update) => {
         setDateRange(update);
         if (selectedButton === 'PERIOD') {
+            // setDateRange(update);
             onDateChange(update[0], update[1]);
         } else {
+            // setDateRange([update, null]);
             onDateChange(update, null);
         }
     };
@@ -68,18 +102,6 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         }
         setSelectedButton(buttonType);
     };
-    const handleOnHide = () => {
-        onHide();
-    };
-    const handleSave = () => {
-        onSave({
-            dateRange,
-            timeValue,
-            selectedOptions,
-            selectedButton
-        });
-        onHide();
-    };
     const CustomInput = forwardRef(({ value, onClick, className }, ref) => (
         <button className={className} onClick={onClick} ref={ref}
             style={{
@@ -97,57 +119,6 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         </button>
     ),
     );
-    const CustomTimeInput = ({ date, value, onChange }) => (
-        <div className='row'>
-            <Col>
-                <input
-                    type="time"
-                    value={timeValue}
-                    onChange={e => {
-                        const newValue = e.target.value;
-                        onChange(newValue);
-                        setTimeValue(newValue);
-                    }}
-                    style={{
-                        width: "120px",
-                        padding: "5px",
-                        borderRadius: "4px",
-                        border: "none",
-                        marginTop: "5px",
-                        fontSize: "16px",
-                        cursor: "pointer",
-                        marginRight: "0"
-                    }}
-                />
-            </Col>
-            <Col>
-                <Button
-                    onClick={() => {
-                        setTimeValue('');
-                    }}
-                    style={{
-                        width: "20px",
-                        fontSize: "16px",
-                        cursor: "pointer",
-                        backgroundColor: "white",
-                        border: "none",
-                        color: "black",
-                        marginLeft: "-20px",
-                        marginRight: "0"
-                    }}
-                >
-                    x
-                </Button>
-            </Col>
-        </div>
-    );
-
-    const CustomTimeLabel = () => (
-        <span style={{ fontSize: "16px", marginLeft: "-6px" }}>
-            시간 설정
-        </span>
-    );
-
     const MyContainer = ({ className, children }) => {
         return (
             <div >
@@ -203,6 +174,68 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
             </div>
         );
     };
+
+
+    const CustomTimeLabel = () => (
+        <span style={{ fontSize: "16px", marginLeft: "-6px" }}>
+            시간 설정
+        </span>
+    );
+    const CustomTimeInput = ({ date, value, onChange }) => (
+        <div className='row'>
+            <Col>
+                <input
+                    type="time"
+                    value={timeValue}
+                    onChange={e => {
+                        const newValue = e.target.value;
+                        onChange(newValue);
+                        setTimeValue(newValue);
+
+                        const [hours, minutes] = newValue.split(':');
+                        const newDate = new Date(dateRange[0]);
+                        newDate.setHours(hours);
+                        newDate.setMinutes(minutes);
+                        setDateRange([newDate, dateRange[1]]);
+                        onDateChange(newDate, dateRange[1]);
+                    }}
+                    style={{
+                        width: "120px",
+                        padding: "5px",
+                        borderRadius: "4px",
+                        border: "none",
+                        marginTop: "5px",
+                        fontSize: "16px",
+                        cursor: "pointer",
+                        marginRight: "0"
+                    }}
+                />
+            </Col>
+            <Col>
+                <Button
+                    onClick={() => {
+                        setTimeValue('');
+                    }}
+                    style={{
+                        width: "20px",
+                        fontSize: "16px",
+                        cursor: "pointer",
+                        backgroundColor: "white",
+                        border: "none",
+                        color: "black",
+                        marginLeft: "-20px",
+                        marginRight: "0"
+                    }}
+                >
+                    x
+                </Button>
+            </Col>
+        </div>
+    );
+   
+    
+
+
     return (
         <div className="custom-date-picker">
 

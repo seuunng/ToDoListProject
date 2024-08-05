@@ -33,11 +33,13 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
     setIsNotified(tasks.isNotified || 'NOALRAM');
     setSelectedList(lists.find(list => list.no === tasks.listNo) || null);
   }, [tasks, lists]);
+
   useEffect(() => {
     if (tasks && tasks.list && tasks.list.no) {
       console.log("Task List No:", tasks.list.no);
     }
   }, [tasks]);
+  
   const handleTitleChange = async (e) => {
     const newTitle = e.target.value;
     setTaskTitle(newTitle);

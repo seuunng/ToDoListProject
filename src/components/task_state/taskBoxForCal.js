@@ -43,7 +43,7 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
           {showTitle && (
             <span className="task-title col-8">{tasks.title}</span>
           )}
-          {tasks.isNotified !== 'NOALRAM'&& (
+          {tasks.isNotified !== 'NOALARM'&& (
             <span className="taskBoxForCal-alram col-2">
               <FaRegBell />
             </span>

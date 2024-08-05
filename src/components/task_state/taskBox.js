@@ -77,12 +77,11 @@ const TaskBox = ({ tasks, deleteTask, updateTask, lists, addList, updateList, de
 
           {tasks.isRepeated !== 'NOREPEAT' && (
             <span className="repeat col-2"
-            style={{ width: 20 }}>
-
+            style={{ width: 16 }}>
               <LuRepeat style={{ color: "grey" }} />
             </span>
           )}
-          {tasks.isNotified !== 'NOALRAM' && (
+          {tasks.isNotified !== 'NOALARM' && (
             <span className="alram col-2"
             style={{ width: 16 }}>
               <FaRegBell style={{ color: "grey" }} />

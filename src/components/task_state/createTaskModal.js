@@ -17,10 +17,10 @@ import SetTask from './setTask';
 import SelectedList from '../task_list/selectedList.js';
 
 const CreateTaskModal = forwardRef((props, ref) => {
-  const { addTask, date, tasks = {}, updateTask, deleteTask, lists = [], } = props;
+  const { addTask, date, tasks = {}, deleteTask, lists = [], } = props;
 
   const [showDatePicker, setShowDatePicker] = useState(false);
-  
+
   // 날짜 유효성 검증 함수
   const isValidDate = (date) => {
     return date instanceof Date && !isNaN(date);
@@ -32,16 +32,24 @@ const CreateTaskModal = forwardRef((props, ref) => {
   const [isRepeat, setIsRepeat] = useState(tasks?.isRepeated || 'NOREPEAT');
   const [isNotified, setIsNotified] = useState(tasks?.isNotified || 'NOALRAM');
 
+  // const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
+  // const savedSelectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
+
   const [show, setShow] = useState(false);
   const [newTask, setNewTask] = useState({
     title: '',
     content: '',
     startDate: date,
+    endDate: null,
+    isNotified: 'NOALARM',
+    isRepeated: 'NOREPEAT',
+    dateStatus: 'DATE',
     list: null,
   });
   const [selectedList, setSelectedList] = useState(null);
   const { selectedOptions, switches } = useSettings();
   // console.log(" CreateTaskModal lists", lists)
+
   useEffect(() => {
     if (show) {
       initializeTaskState();
@@ -50,26 +58,50 @@ const CreateTaskModal = forwardRef((props, ref) => {
         startDate: date,
         list: selectedList,
       }));
-      console.log("NewTask", newTask)
-      console.log("selectedList", selectedList)
       setStartDate(date);
     }
   }, [show, date, selectedList]);
 
-  const handleClose = () =>  {
+  const handleClose = () => {
     if (newTask.title.trim()) {
       addTask(newTask);
     }
     setShow(false);
   };
 
+  useEffect(() => {
+    const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
+    const savedSelectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
+    console.log("savedAllSwitchesAlarm", savedAllSwitchesAlarm);
+    console.log("savedSelectedOptions ", savedSelectedOptions);
+    console.log("savedSelectedOptions.alarmTime ", savedSelectedOptions.alarmTime);
+
+    const alarmMapping = {
+      "정각": "ONTIME",
+      "5분전": "FIVEMINS",
+      "30분전": "THIRTYMINS",
+      "하루전": "DAYEARLY"
+    };
+
+    const initialAlarm = savedAllSwitchesAlarm ? alarmMapping[savedSelectedOptions.alarmTime] : "NOALARM";
+    setIsNotified(initialAlarm);
+    console.log("initialAlarm", initialAlarm);
+    // console.log("IsNotified", isNotified); 
+  }, []);
+
+  useEffect(() => {
+    console.log("IsNotified", isNotified);
+  }, [isNotified]);
+
   const handleShow = () => {
     setNewTask({
       title: '',
       content: '',
       startDate: date,
-      isNotified: switches?.today ? 'ALARM' : 'NOALARM',
+      endDate: null,
+      isNotified: 'NOALARM',
       isRepeated: 'NOREPEAT',
+      dateStatus: 'DATE',
       list: selectedList,
     });
     setStartDate(date)
@@ -80,6 +112,40 @@ const CreateTaskModal = forwardRef((props, ref) => {
     showModal: handleShow,
   }));
 
+  useEffect(() => {
+    if (isRepeat !== 'NOREPEAT') {
+      console.log("isRepeat")
+      const intervalId = setInterval(() => {
+        const now = new Date();
+        let nextDate = new Date(startDate);
+
+        switch (isRepeat) {
+          case 'DAILY':
+            nextDate.setDate(nextDate.getDate() + 1);
+            break;
+          case 'WEEKLY':
+            nextDate.setDate(nextDate.getDate() + 7);
+            break;
+          case 'MONTHLY':
+            nextDate.setMonth(nextDate.getMonth() + 1);
+            break;
+          case 'YEARLY':
+            nextDate.setFullYear(nextDate.getFullYear() + 1);
+            break;
+          default:
+            break;
+        }
+
+        if (nextDate <= now) {
+          createTask();
+          setStartDate(nextDate);
+        }
+      }, 24 * 60 * 60 * 1000); // 1일마다 확인
+
+      return () => clearInterval(intervalId);
+    }
+  }, [isRepeat, startDate]);
+
   const createTask = () => {
     if (newTask.title.trim()) {
       addTask(newTask);
@@ -87,11 +153,12 @@ const CreateTaskModal = forwardRef((props, ref) => {
         title: '',
         content: '',
         startDate: date,
-        isNotified: switches?.today ? 'ALARM' : 'NOALARM', // 기본 알람 여부 초기화
+        isNotified: 'NOALARM',
         isRepeated: 'NOREPEAT',
+        dateStatus: 'DATE',
         endDate: '',
         list: null,
-        
+
       });
       handleClose();
     }
@@ -111,13 +178,16 @@ const CreateTaskModal = forwardRef((props, ref) => {
     }));
   };
 
-  const handleDateChange = (date) => {
+  const handleDateChange = (start, end) => {
+    setStartDate(start);
+    setEndDate(end);
     setNewTask(prevState => ({
       ...prevState,
-      startDate: date
+      startDate: start,
+      endDate: end
     }));
   };
-  
+
   const initializeTaskState = () => {
     if (tasks && lists.length > 0) {
       setStartDate(isValidDate(new Date(tasks.startDate)) ? new Date(tasks.startDate) : new Date());
@@ -129,7 +199,6 @@ const CreateTaskModal = forwardRef((props, ref) => {
     }
   };
 
-
   const handleRepeatClick = (option) => {
     const repeatMapping = {
       "반복없음": "NOREPEAT",
@@ -140,8 +209,10 @@ const CreateTaskModal = forwardRef((props, ref) => {
     };
     const isRepeated = repeatMapping[option] || "NOREPEAT";
     setIsRepeat(isRepeated);
-    const updatedTasks = { ...tasks, isRepeated:  isRepeated };
-    updateTask(updatedTasks);
+    setNewTask(prevState => ({
+      ...prevState,
+      isRepeated: isRepeated,
+    }));
   };
 
   const handleAlarmClick = (option) => {
@@ -152,34 +223,40 @@ const CreateTaskModal = forwardRef((props, ref) => {
       "30분전": "THIRTYMINS",
       "하루전": "DAYEARLY"
     };
-    const isNotified = alarmMapping[option] || "NOALRAM";
+    const isNotified = alarmMapping[option] || "NOALARM";
     setIsNotified(isNotified);
-    const updatedTasks = { ...tasks, isNotified: isNotified };
-    updateTask(updatedTasks);
+    setNewTask(prevState => ({
+      ...prevState,
+      isNotified: isNotified,
+    }));
   };
+
   const handleSelectedButtonChange = (button) => {
     setSelectedButton(button);
-    updateTask({ ...tasks, dateStatus: button.toUpperCase() });
+    setNewTask(prevState => ({
+      ...prevState,
+      dateStatus: button.toUpperCase()
+    }));
   }
+
   useEffect(() => {
     setNewTask(prevState => ({
       ...prevState,
       list: selectedList,
     }));
   }, [selectedList]);
+
   const handleSaveSettings = (settings) => {
     console.log("Saved settings:", settings);
     // 저장된 설정을 처리하는 로직 추가
-};
-// const handleOnHide = () => {
-//   setShowDatePicker(false);
-// };
+  };
+
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header>
         <div className="d-flex align-items-center">
           <FaCalendarCheck />
-          <DatePicker 
+          <DatePicker
             onHide={() => setShowDatePicker(false)}
             startDate={startDate}
             endDate={endDate}
@@ -222,17 +299,17 @@ const CreateTaskModal = forwardRef((props, ref) => {
         </div>
       </Modal.Body>
       <Modal.Footer>
-      <div className="d-flex align-items-center line row"
+        <div className="d-flex align-items-center line row"
           style={{ width: "100vw" }}>
           <div className="list-title col lefted">
-          <SelectedList 
-            lists={lists} 
-            selectedList={selectedList} 
-            setSelectedList={setSelectedList}
-            tasks={newTask}
-            updateTask={addTask}
-             />
-            </div>
+            <SelectedList
+              lists={lists}
+              selectedList={selectedList}
+              setSelectedList={setSelectedList}
+              tasks={newTask}
+              updateTask={addTask}
+            />
+          </div>
           <div className="setting-icon col righted">
             <SetTask
               task={tasks}

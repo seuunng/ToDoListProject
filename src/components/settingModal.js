@@ -18,7 +18,7 @@ const SettingModal = ({ show, onHide }) => {
 
   const dropdownOptionsWeek = ["월요일", "일요일"];
   const dropdownOptionsTime = ["12시간", "24시간"];
-  const dropdownOptionsAlarmTime = ["정각", "10분전", "30분전", "하루전"];
+  const dropdownOptionsAlarmTime = ["정각", "5분전", "30분전", "하루전"];
   const dropdownOptionsAlarmMethod = ["이메일", "카톡알림", "팝업"];
   const dropdownOptionsAlarmSound = ["벨소리", "진동", "무음"];
 
