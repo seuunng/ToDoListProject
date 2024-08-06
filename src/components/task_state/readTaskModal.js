@@ -25,7 +25,7 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
   const [endDate, setEndDate] = useState(tasks.endDate ? new Date(tasks.endDate) : null);
   const [selectedButton, setSelectedButton] = useState(tasks.dateStatus || 'DATE');
   const [isRepeat, setIsRepeat] = useState(tasks.isRepeated || 'NOREPEAT');
-  const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALRAM');
+  const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALARM');
   const [selectedList, setSelectedList] = useState(null);
 
   useEffect(() => {
@@ -38,7 +38,17 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
     setIsNotified(tasks.isNotified || 'NOALRAM');
     setSelectedList(lists.find(list => list.no === tasks.list.no) || null);
   }, [tasks,  lists]);
-
+  
+  const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
+  const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
+  const alarmMapping = {
+      "정각": "ONTIME",
+      "5분전": "FIVEMINS",
+      "30분전": "THIRTYMINS",
+      "하루전": "DAYEARLY"
+  };
+  const initialAlarm =savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
+  
   const handleClose = () => { 
     const updatedTask = {
       ...tasks,
@@ -123,7 +133,7 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
             selectedButton={selectedButton}
             setSelectedButton={handleSelectedButtonChange}
             initialRepeat={isRepeat}
-            initialAlram={isNotified}
+            initialAlarm={initialAlarm}
             onSave={handleSaveSettings}
           />
         </div>
