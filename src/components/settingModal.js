@@ -44,6 +44,7 @@ const SettingModal = ({ show, onHide }) => {
     const savedAllSwitchesList = JSON.parse(localStorage.getItem('allSwitchesList'));
     const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
 
+    // console.log("savedAllSwitchesList", savedAllSwitchesList)
     if (savedOptions) {
       setSelectedOptions(savedOptions);
     }

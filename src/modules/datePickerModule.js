@@ -9,8 +9,8 @@ import { Button, Col } from 'react-bootstrap';
 import DropdownBtn from './dropdownModule';
 import { IoMdTime } from "react-icons/io";
 
-const DatePickerModule = ({ startDate, endDate, onDateChange, 
-    onRepeatClick, initialRepeat, onAlarmClick, initialAlram, 
+const DatePickerModule = ({ startDate, endDate, onDateChange,
+    onRepeatClick, initialRepeat, onAlarmClick, initialAlarm, 
     dateFormat, selectedButton, setSelectedButton, onHide, onSave }) => {
 
     const [dateRange, setDateRange] = useState([startDate, endDate]);
@@ -25,7 +25,6 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         "MONTHLY": "매달",
         "YEARLY": "매년"
     };
-
     const alarmMappingToKorean = {
         "NOALARM": "알림없음",
         "ONTIME": "정각",
@@ -33,38 +32,25 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         "THIRTYMINS": "30분전",
         "DAYEARLY": "하루전"
     };
-    useEffect(() => {
-        const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
-        const savedSelectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
-        console.log("savedAllSwitchesAlarm", savedAllSwitchesAlarm);
-        console.log("savedSelectedOptions ", savedSelectedOptions);
-        console.log("savedSelectedOptions.alarmTime ", savedSelectedOptions.alarmTime);
-    
-        const alarmMapping = {
-          "정각": "ONTIME",
-          "5분전": "FIVEMINS",
-          "30분전": "THIRTYMINS",
-          "하루전": "DAYEARLY"
-        };
-    
-        const initialAlarm = savedAllSwitchesAlarm ? alarmMapping[savedSelectedOptions.alarmTime] : "NOALARM";
-        setIsNotified(initialAlarm);
-        console.log("initialAlarm", initialAlarm);
-        
-      }, []);
+
     const [selectedOptions, setSelectedOptions] = useState({
-        alarmTime: alarmMappingToKorean[initialAlram] || "알림없음",
+        alarmTime: alarmMappingToKorean[initialAlarm] || "알림없음",
         repeat: repeatMappingToKorean[initialRepeat] || "반복없음",
     });
 
     useEffect(() => {
         setDateRange([startDate, endDate]);
         setSelectedOptions({
-            alarmTime: alarmMappingToKorean[initialAlram] || "알림없음",
+            alarmTime: alarmMappingToKorean[initialAlarm] || "알림없음",
             repeat: repeatMappingToKorean[initialRepeat] || "반복없음",
-        });
-        console.log("initialAlram", initialAlram); 
-    }, [startDate, endDate, initialAlram, initialRepeat]);
+        }); 
+    }, [startDate, endDate, initialAlarm, initialRepeat]);
+
+    useEffect(() => {
+        console.log("5 initialAlarm", initialAlarm);  
+        console.log("5 alarmMappingToKorean[initialAlarm]",  alarmMappingToKorean[initialAlarm]);  
+        console.log("5 SelectedOptions", selectedOptions.alarmTime);  
+    }, [initialAlarm]);
 
     useEffect(() => {
         if (dateRange[0]) {
@@ -88,7 +74,8 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         }
     };
     const handleOptionSelected = (type, option) => {
-        setSelectedOptions({ ...selectedOptions, [type]: option });
+        const updatedOptions = ({ ...selectedOptions, [type]: option });
+        setSelectedOptions(updatedOptions);
         if (type === 'repeat') {
             onRepeatClick(option);
         }
@@ -232,8 +219,8 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
             </Col>
         </div>
     );
-   
-    
+
+
 
 
     return (

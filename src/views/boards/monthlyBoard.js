@@ -188,6 +188,7 @@ const MonthlyBoard = () => {
                               updateList={updateList}
                               deleteList={deleteList}
                               style={{backgroundColor: getTaskListColor(task) }}
+                              
                             // showTitle={!isTaskEndDate(task, date)}
                             />
                           ) : null
