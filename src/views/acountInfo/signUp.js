@@ -16,8 +16,18 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [nickname, setNickname] = useState('');
+  const [isValid, setIsValid] = useState(true);
+  const [isValidPW, setIsValidPW] = useState(true);
 
   const handleSignUp = async () => {
+    if (!validateEmail(email)) {
+      setIsValid(false);
+      return;
+    }
+    if (!validatePassword(password)) {
+      setIsValidPW(false);
+      return;
+    }
     try {
       const response = await instance.post('/auth/signup', {
         nickname,
@@ -60,6 +70,25 @@ const SignUp = () => {
       });
     }
   };
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+  const validatePassword = (password) => {
+    return password.length >= 8;
+  };
+  const handleChange = (e) => {
+    setEmail(e.target.value);
+    setIsValid(true);
+  };
+  const handleChangePW = (e) => {
+    setPassword(e.target.value);
+    setIsValidPW(true);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleSignUp();
+  };
   const handleLogin = () => {
     navigate('/login');
   };
@@ -75,33 +104,37 @@ const SignUp = () => {
         <br></br>
         <br></br>
         <br></br>
-        <div className="signUp-container">
+        <div className="signUp-container" >
+          <form onSubmit={handleSubmit}>
+            <div className='centered login-btn'>
+              <input
+                type="text"
+                style={{ width: "250px", height: "38px" }}
+                placeholder='Nickname'
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)} />
+            </div>
+            <div className='centered login-btn'>
+              <input
+                type="email"
+                style={{ width: "250px", height: "38px" }}
+                placeholder='Email'
+                value={email}
+                onChange={handleChange}
+                required />
+            </div>
+            <div className='centered login-btn'>
+              <input
+                type="password"
+                style={{ width: "250px", height: "38px" }}
+                placeholder='Password'
+                value={password}
+                onChange={handleChangePW}
+                required />
+            </div>
+          </form>
           <div className='centered login-btn'>
-            <input
-              type="text"
-              style={{ width: "250px", height: "38px" }}
-              placeholder='Nickname'
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)} />
-          </div>
-          <div className='centered login-btn'>
-            <input
-              type="email"
-              style={{ width: "250px", height: "38px" }}
-              placeholder='Email'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)} />
-          </div>
-          <div className='centered login-btn'>
-            <input
-              type="password"
-              style={{ width: "250px", height: "38px" }}
-              placeholder='Password'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)} />
-          </div>
-          <div className='centered login-btn'>
-            <Button style={{ width: "250px" }} onClick={handleSignUp}>
+            <Button style={{ width: "250px" }} onClick={handleSubmit}>
               회원가입
             </Button>
           </div>
@@ -127,6 +160,22 @@ const SignUp = () => {
             </div>
           </div>
         </div>
+        <br></br>
+        <span className='explain'
+          style={{ width: '350px' }}>
+          {!isValid && 
+          <p style={{
+            color: 'red',
+            fontSize: "14px" }} >
+            유효한 이메일 주소를 입력하세요.
+          </p>}
+          {!isValidPW && 
+          <p style={{
+            color: 'red',
+            fontSize: "14px" }} >
+            비밀번호는 8글자 이상으로 설정해야 합니다.
+          </p>}
+        </span>
       </div>
     </div>
   );
