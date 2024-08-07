@@ -43,7 +43,7 @@ const handleGoogleLogin = useCallback(async (credentialResponse) => {
     }
     try {
         const userInfo = await fetchGoogleUserInfo(credentialResponse.access_token);
-        console.log("credentialResponse:", credentialResponse);
+        console.log("credentialResponse:", userInfo);
             const response = await instance.post('http://localhost:9099/auth/google',
                 { accessToken: credentialResponse.access_token }, // 요청 본문에 accessToken 포함
             {
@@ -53,7 +53,6 @@ const handleGoogleLogin = useCallback(async (credentialResponse) => {
             }
         );
             if (response && response.data) {
-                console.log("response", response);
                 const { user, token } = response.data;
                 localStorage.setItem('token', token);
                 setUser(user);
@@ -71,8 +70,28 @@ const handleGoogleLogin = useCallback(async (credentialResponse) => {
                 throw new Error('Unexpected response structure');
             }
         } catch (error) {
-                console.error('Google 로그인 실패:', error);    
-                toast.error('Google 로그인 실패하였습니다. 다시 시도해주세요.', {
+            console.error('Google 로그인 실패:', error);
+
+            if (error.response) {
+                console.error('Error response data:', error.response.data);
+                console.error('Error response status:', error.response.status);
+                console.error('Error response headers:', error.response.headers);
+                toast.error(`Google 로그인 실패: ${error.response.data.message}`, {
+                    position: "top-right",
+                    autoClose: 4000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }console.error('Google 로그인 실패:', error);
+
+            if (error.response) {
+                console.error('Error response data:', error.response.data);
+                console.error('Error response status:', error.response.status);
+                console.error('Error response headers:', error.response.headers);
+                toast.error(`Google 로그인 실패: ${error.response.data.message}`, {
                     position: "top-right",
                     autoClose: 4000,
                     hideProgressBar: false,
@@ -82,6 +101,7 @@ const handleGoogleLogin = useCallback(async (credentialResponse) => {
                     progress: undefined,
                 });
             }
+        }
     }, [navigate, setUser]);
 
     const login = useGoogleLogin({

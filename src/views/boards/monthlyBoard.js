@@ -12,7 +12,11 @@ import { useParams, useOutletContext } from 'react-router-dom';
 const MonthlyBoard = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const { tasks, addTask, updateTask, deleteTask, lists, addList, updateList, deleteList, user, setUser } = useOutletContext();
+  const [daysOfWeek, setDaysOfWeek] = useState([]);
+  const [firstDayOfWeek, setFirstDayOfWeek] = useState(0);
+  const {
+    tasks, addTask, updateTask, deleteTask, lists, addList, updateList, deleteList, user, setUser
+  } = useOutletContext();
 
 
   const createTaskModalRef = useRef(null);
@@ -20,11 +24,29 @@ const MonthlyBoard = () => {
   const weeks = [1, 2, 3, 4, 5];
   const days = [1, 2, 3, 4, 5, 6, 7];
 
+  // Setting모달 설정값
+  const savedSeletedFirstDay = JSON.parse(localStorage.getItem('selectedOptions')) || { week: '일요일' };
+ 
+  useEffect(() => {
+    if (todayRef.current) {
+      todayRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [selectedDate]);
+
+  useEffect(() => {
+    const firstDay = savedSeletedFirstDay.week === '월요일' ? 1 : 0; // 1 for Monday, 0 for Sunday
+    setFirstDayOfWeek(firstDay);
+    const daysOfWeek = firstDay === 1 ? ['월', '화', '수', '목', '금', '토', '일'] : ['일', '월', '화', '수', '목', '금', '토'];  
+    setDaysOfWeek(daysOfWeek);
+  }, [savedSeletedFirstDay.week]);
+  
+
   const getDate = (week, day) => {
     const firstDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
-    const dayOffset = (week - 1) * 7 + (day - firstDayOfMonth.getDay());
-    const date = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1 + dayOffset);
-    return date;
+    const firstDayOffset = (firstDayOfMonth.getDay() + 7 - firstDayOfWeek) % 7;
+    const dayOffset = (week - 1) * 7 + (day - 1) - firstDayOffset;
+    return new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1 + dayOffset);
+ 
   };
 
   const createMemo = (date) => {
@@ -58,12 +80,6 @@ const MonthlyBoard = () => {
     setSelectedDate(new Date());
   };
 
-  useEffect(() => {
-    if (todayRef.current) {
-      todayRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  }, [selectedDate]);
-
   const filterTasksForPeriod = (date) => {
     return tasks.filter(task => {
       const taskStartDate = new Date(task.startDate);
@@ -79,18 +95,19 @@ const MonthlyBoard = () => {
         );
     });
   };
-  const filterTasksForDate = (date) => {
-    return tasks.filter(task => {
-      const taskDate = new Date(task.startDate);
-      // if (tasks.dateStatus === 'DATE') {
-      return (
-        taskDate.getDate() === date.getDate() &&
-        taskDate.getMonth() === date.getMonth() &&
-        taskDate.getFullYear() === date.getFullYear()
-      );
-      // }
-    });
-  };
+
+  // const filterTasksForDate = (date) => {
+  //   return tasks.filter(task => {
+  //     const taskDate = new Date(task.startDate);
+  //     // if (tasks.dateStatus === 'DATE') {
+  //     return (
+  //       taskDate.getDate() === date.getDate() &&
+  //       taskDate.getMonth() === date.getMonth() &&
+  //       taskDate.getFullYear() === date.getFullYear()
+  //     );
+  //     // }
+  //   });
+  // };
   // const getFilteredTasks = (date) => {
   //   if (selectedButton === 'date') {
   //     return filterTasksForDate(date);
@@ -116,6 +133,7 @@ const MonthlyBoard = () => {
     const list = lists.find(list => list.no === task.list.no);
     return list ? list.color : 'transparent';
   };
+
   const addListToTasks = (tasks, lists) => {
     return tasks.map(task => {
       const list = lists.find(list => list.no === task.listNo); // task.listNo는 task가 속한 리스트의 ID입니다.
@@ -125,9 +143,11 @@ const MonthlyBoard = () => {
       };
     });
   };
-  const tasksWithLists = addListToTasks(tasks, lists);
+
+  // const tasksWithLists = addListToTasks(tasks, lists);
   // console.log("tasksWithLists ", tasksWithLists )
-  const userEmail = user?.email || '';
+  // const userEmail = user?.email || '';
+
   return (
     <div className="monthly-board-container">
       <h4 className="list-title">MonthlyBoard</h4>
@@ -148,16 +168,13 @@ const MonthlyBoard = () => {
       </div>
       <div className="calendar">
         <table className="calendar-table">
-          <thead className="days_of_the_week"
-          >
+          <thead className="days_of_the_week">
             <tr>
-              <td style={{ backGroundColor: "grey" }}>월</td>
-              <td>화</td>
-              <td>수</td>
-              <td>목</td>
-              <td>금</td>
-              <td>토</td>
-              <td>일</td>
+              {daysOfWeek.map(day => (
+                <td key={day} >
+                  <div>{day}</div>
+                </td>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -165,7 +182,7 @@ const MonthlyBoard = () => {
               <tr key={week}>
                 {days.map((day) => {
                   const date = getDate(week, day);
-                  const todayClass = isToday(date) ? 'today-cell' : 'date-cell';
+                  const todayClass = isToday(date) ? 'today-cell' : 'date-cell'; //오늘날짜 음영
                   const dayTasksForPeriod = filterTasksForPeriod(date);
                   // const dayTasksForDate = filterTasksForDate(date);
                   const dayTasks = addListToTasks(dayTasksForPeriod, lists);
@@ -175,23 +192,23 @@ const MonthlyBoard = () => {
                         <div className={todayClass}>{date.getDate()}</div>
                         <div className="task-cell" onClick={(e) => handleTaskCellClick(e, date)}>
                           {dayTasks.map(task => (
-                             task.list ? (
-                            <TaskBoxForCal
-                              key={task.no}
-                              showdate={date.getDate().toString()}
-                              tasks={task}
-                              updateTask={updateTask}
-                              deleteTask={deleteTask}
-                              className={isTaskEndDate(task, date) ? 'task-end-date' : ''}
-                              lists={lists}
-                              addList={addList}
-                              updateList={updateList}
-                              deleteList={deleteList}
-                              style={{backgroundColor: getTaskListColor(task) }}
-                              
-                            // showTitle={!isTaskEndDate(task, date)}
-                            />
-                          ) : null
+                            task.list ? (
+                              <TaskBoxForCal
+                                key={task.no}
+                                showdate={date.getDate().toString()}
+                                tasks={task}
+                                updateTask={updateTask}
+                                deleteTask={deleteTask}
+                                className={isTaskEndDate(task, date) ? 'task-end-date' : ''}
+                                lists={lists}
+                                addList={addList}
+                                updateList={updateList}
+                                deleteList={deleteList}
+                                style={{ backgroundColor: getTaskListColor(task) }}
+
+                              // showTitle={!isTaskEndDate(task, date)}
+                              />
+                            ) : null
                           ))}
                         </div>
                       </div>

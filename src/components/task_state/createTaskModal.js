@@ -42,7 +42,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
   };
   const initialAlarm =savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
   
-  console.log("4 initialAlarm", initialAlarm);  
+  // console.log("4 initialAlarm", initialAlarm);  
 
   const [show, setShow] = useState(false);
   const [newTask, setNewTask] = useState({
@@ -159,9 +159,6 @@ const CreateTaskModal = forwardRef((props, ref) => {
   };
   //모달 종료+메모 저장
   const handleClose = () => {
-    if (newTask.title.trim()) {
-      addTask(newTask);
-    }
     setShow(false);
   };
   //메모 저장

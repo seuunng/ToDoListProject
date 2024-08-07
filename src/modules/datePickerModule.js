@@ -17,6 +17,9 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
     const [timeValue, setTimeValue] = useState('');
     const dropdownOptionsAlarmTime = ["알림없음", "정각", "5분전", "30분전", "하루전"];
     const dropdownOptionsRepeat = ["반복없음", "매일", "매주", "매달", "매년"];
+    const savedSeleted = JSON.parse(localStorage.getItem('selectedOptions'));
+    const [dateFormatTimeInput, setDateFormatTimeInput] = useState(savedSeleted.time === "24시간" ? "yyyy/MM/dd H:mm" : "yyyy/MM/dd h:mm aa");
+   
 
     const repeatMappingToKorean = {
         "NOREPEAT": "반복없음",
@@ -46,11 +49,11 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         }); 
     }, [startDate, endDate, initialAlarm, initialRepeat]);
 
-    useEffect(() => {
-        console.log("5 initialAlarm", initialAlarm);  
-        console.log("5 alarmMappingToKorean[initialAlarm]",  alarmMappingToKorean[initialAlarm]);  
-        console.log("5 SelectedOptions", selectedOptions.alarmTime);  
-    }, [initialAlarm]);
+    // useEffect(() => {
+    //     console.log("5 initialAlarm", initialAlarm);  
+    //     console.log("5 alarmMappingToKorean[initialAlarm]",  alarmMappingToKorean[initialAlarm]);  
+    //     console.log("5 SelectedOptions", selectedOptions.alarmTime);  
+    // }, [initialAlarm]);
 
     useEffect(() => {
         if (dateRange[0]) {
@@ -63,6 +66,10 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         }
     }, [dateRange]);
 
+    useEffect(() => {
+        setDateFormatTimeInput(savedSeleted.time === "24시간" ? "yyyy/MM/dd H:mm" : "yyyy/MM/dd h:mm aa");
+    }, [savedSeleted.time]);
+    
     const handleDateChange = (update) => {
         setDateRange(update);
         if (selectedButton === 'PERIOD') {
@@ -162,12 +169,12 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         );
     };
 
-
     const CustomTimeLabel = () => (
         <span style={{ fontSize: "16px", marginLeft: "-6px" }}>
             시간 설정
         </span>
     );
+
     const CustomTimeInput = ({ date, value, onChange }) => (
         <div className='row'>
             <Col>
@@ -239,7 +246,8 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
                 style={{ margin: "10px", padding: "10px" }}
                 customInput={<CustomInput className="custom-input" />}
                 timeInputLabel={<CustomTimeLabel />}
-                dateFormat={dateFormat ? dateFormat : (timeValue ? "yyyy/MM/dd h:mm aa" : "yyyy/MM/dd")}
+                dateFormatTimeInput={timeValue ? dateFormat : "yyyy/MM/dd"}
+
                 showTimeInput
                 customTimeInput={<CustomTimeInput value={timeValue} onChange={setTimeValue} />}
             >
