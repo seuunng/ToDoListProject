@@ -4,7 +4,8 @@ import { RouterProvider, Router, Routes, Route, Navigate } from 'react-router-do
 import { RouterInfo } from './router/RouterInfo';
 import Logout from './views/acountInfo/logout';
 import instance from './api/axios';
-import { SettingsProvider } from './context/SettingsContext';
+import { SettingsProvider } from './contexts/SettingsContext';
+import { TaskBoxProvider } from './contexts/taskBoxContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -17,7 +18,9 @@ function App() {
     <div>
       <ToastContainer />
       <SettingsProvider>
+      <TaskBoxProvider> 
         <RouterProvider router={RouterInfo(user, setUser)} />
+        </TaskBoxProvider>
       </SettingsProvider>
     </div>
   );

@@ -8,9 +8,9 @@ import { FaCalendarCheck } from "react-icons/fa";
 import DatePickerModule from '../modules/datePickerModule';
 import SetTask from '../components/task_state/setTask';
 import SelectedList from '../components/task_list/selectedList.js';
+import { TaskBoxProvider, useTaskBox   } from '../contexts/taskBoxContext.js';
 
-
-const ReadTaskPage = ({ tasks, updateTask, deleteTask,
+const ReadTaskPageContent = ({ tasks, updateTask, deleteTask,
   lists, addList, updateList, deleteList, refreshTasks
  }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -22,6 +22,7 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
   const [isRepeat, setIsRepeat] = useState(tasks.isRepeated || 'NOREPEAT');
   const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALRAM');
   const [selectedList, setSelectedList] = useState(null);
+  const { setIsTaskBox } = useTaskBox();
   
   useEffect(() => {
     setTaskTitle(tasks.title);
@@ -39,6 +40,11 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
       console.log("Task List No:", tasks.list.no);
     }
   }, [tasks]);
+
+  useEffect(() => {
+    setIsTaskBox(false);
+    return () => setIsTaskBox(false);
+  }, [setIsTaskBox]);
   
   const handleTitleChange = async (e) => {
     const newTitle = e.target.value;
@@ -95,6 +101,7 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
     await  updateTask(updatedTasks);
     await refreshTasks(); 
   };
+  
   const handleSaveSettings = (settings) => {
     console.log("Saved settings:", settings);
     // 저장된 설정을 처리하는 로직 추가
@@ -120,6 +127,7 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
           initialRepeat={isRepeat}
           initialAlram={isNotified}
           onSave={handleSaveSettings}
+          isTaskBox={false}
         />
       </div>
       {/* <i className="fa-regular fa-flag"></i> */}
@@ -162,5 +170,9 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
     </div>
   );
 };
-
+const ReadTaskPage = (props) => (
+  <TaskBoxProvider>
+    <ReadTaskPageContent {...props} />
+  </TaskBoxProvider>
+);
 export default ReadTaskPage;

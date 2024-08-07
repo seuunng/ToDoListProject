@@ -66,6 +66,7 @@ const BasicBoard = () => {
             addList={addList}
             updateList={updateList}
             deleteList={deleteList}
+            refreshTasks={fetchListAndTasks}
           />
         </Col>
         <Col className="ReadTaskPage">

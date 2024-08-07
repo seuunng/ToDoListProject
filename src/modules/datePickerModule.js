@@ -1,6 +1,4 @@
-// 작성자: 박승희
-// 고객현황 데이터 페이지 기간선택 및 검색버튼 컴포넌트
-import React, { useState, useEffect, forwardRef } from 'react'
+import React, { useState, useEffect, forwardRef, useContext } from 'react'
 import DatePicker, { CalendarContainer } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/basicStyle.css';
@@ -8,6 +6,7 @@ import '../styles/datePickerModule.css';
 import { Button, Col } from 'react-bootstrap';
 import DropdownBtn from './dropdownModule';
 import { IoMdTime } from "react-icons/io";
+import { TaskBoxContext } from '../contexts/taskBoxContext';
 
 const DatePickerModule = ({ startDate, endDate, onDateChange,
     onRepeatClick, initialRepeat, onAlarmClick, initialAlarm, 
@@ -19,7 +18,8 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
     const dropdownOptionsRepeat = ["반복없음", "매일", "매주", "매달", "매년"];
     const savedSeleted = JSON.parse(localStorage.getItem('selectedOptions'));
     const [dateFormatTimeInput, setDateFormatTimeInput] = useState(savedSeleted.time === "24시간" ? "yyyy/MM/dd H:mm" : "yyyy/MM/dd h:mm aa");
-   
+    const { isTaskBox } = useContext(TaskBoxContext); 
+
 
     const repeatMappingToKorean = {
         "NOREPEAT": "반복없음",
@@ -49,12 +49,10 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         }); 
     }, [startDate, endDate, initialAlarm, initialRepeat]);
 
-    // useEffect(() => {
-    //     console.log("5 initialAlarm", initialAlarm);  
-    //     console.log("5 alarmMappingToKorean[initialAlarm]",  alarmMappingToKorean[initialAlarm]);  
-    //     console.log("5 SelectedOptions", selectedOptions.alarmTime);  
-    // }, [initialAlarm]);
-
+    useEffect(() => {
+        console.log(timeValue)
+    }, [timeValue]);
+    
     useEffect(() => {
         if (dateRange[0]) {
             const date = new Date(dateRange[0]);
@@ -73,10 +71,8 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
     const handleDateChange = (update) => {
         setDateRange(update);
         if (selectedButton === 'PERIOD') {
-            // setDateRange(update);
             onDateChange(update[0], update[1]);
         } else {
-            // setDateRange([update, null]);
             onDateChange(update, null);
         }
     };
@@ -90,12 +86,14 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
             onAlarmClick(option);
         }
     };
+
     const handleButtonClick = (buttonType) => {
         if (buttonType === 'DATE') {
             setDateRange([null, null]);
         }
         setSelectedButton(buttonType);
     };
+
     const CustomInput = forwardRef(({ value, onClick, className }, ref) => (
         <button className={className} onClick={onClick} ref={ref}
             style={{
@@ -175,7 +173,7 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         </span>
     );
 
-    const CustomTimeInput = ({ date, value, onChange }) => (
+    const CustomTimeInput = ({ onChange }) => (
         <div className='row'>
             <Col>
                 <input
@@ -186,12 +184,14 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
                         onChange(newValue);
                         setTimeValue(newValue);
 
-                        const [hours, minutes] = newValue.split(':');
-                        const newDate = new Date(dateRange[0]);
-                        newDate.setHours(hours);
-                        newDate.setMinutes(minutes);
-                        setDateRange([newDate, dateRange[1]]);
-                        onDateChange(newDate, dateRange[1]);
+                        if (newValue) {
+                            const [hours, minutes] = newValue.split(':');
+                            const newDate = new Date(dateRange[0]);
+                            newDate.setHours(hours);
+                            newDate.setMinutes(minutes);
+                            setDateRange([newDate, dateRange[1]]);
+                            onDateChange(newDate, dateRange[1]);
+                        }
                     }}
                     style={{
                         width: "120px",
@@ -203,12 +203,18 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
                         cursor: "pointer",
                         marginRight: "0"
                     }}
+                    // placeholder="--:--"
                 />
             </Col>
             <Col>
                 <Button
                     onClick={() => {
-                        setTimeValue('');
+                        setTimeValue(null);
+                        const newDate = new Date(dateRange[0]);
+                        newDate.setHours(0);
+                        newDate.setMinutes(0);
+                        setDateRange([newDate, dateRange[1]]);
+                        onDateChange(newDate, dateRange[1]);
                     }}
                     style={{
                         width: "20px",
@@ -226,7 +232,7 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
             </Col>
         </div>
     );
-
+    
 
 
 
@@ -246,8 +252,7 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
                 style={{ margin: "10px", padding: "10px" }}
                 customInput={<CustomInput className="custom-input" />}
                 timeInputLabel={<CustomTimeLabel />}
-                dateFormatTimeInput={timeValue ? dateFormat : "yyyy/MM/dd"}
-
+                dateFormat={isTaskBox ? 'MM/dd' : (timeValue ? dateFormatTimeInput : "yyyy/MM/dd")}
                 showTimeInput
                 customTimeInput={<CustomTimeInput value={timeValue} onChange={setTimeValue} />}
             >

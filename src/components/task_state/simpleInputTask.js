@@ -18,12 +18,16 @@ const SimpleInputTask = ({ addTask , lists, listTitle, refreshTasks }) => {
 
   const createTask = async () => {
     if (newTask.trim()) {
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); 
+
       const task = {
         title: newTask,
         content: '',
         isNotified: 'NOALARM',
         isRepeated: 'NOREPEAT',
-        startDate: new Date().toISOString(),
+        startDate: today.toISOString(),
         endDate: '',
         priority: 'MEDIUM',
         list: { no: lists.no }
