@@ -15,8 +15,18 @@ import SetTask from './setTask';
 import SelectedList from '../task_list/selectedList.js';
 
 const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
-  lists, addList, updateList, deleteList
+  lists, addList, updateList, deleteList, refreshTasks
  }, ref) => {
+  const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
+  const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
+  const alarmMapping = {
+      "정각": "ONTIME",
+      "5분전": "FIVEMINS",
+      "30분전": "THIRTYMINS",
+      "하루전": "DAYEARLY"
+  };
+  const initialAlarm =savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
+  
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [show, setShow] = useState(false);
   const [taskTitle, setTaskTitle] = useState(tasks.title);
@@ -39,16 +49,6 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
     setSelectedList(lists.find(list => list.no === tasks.list.no) || null);
   }, [tasks,  lists]);
   
-  const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
-  const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
-  const alarmMapping = {
-      "정각": "ONTIME",
-      "5분전": "FIVEMINS",
-      "30분전": "THIRTYMINS",
-      "하루전": "DAYEARLY"
-  };
-  const initialAlarm =savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
-  
   const handleClose = () => { 
     const updatedTask = {
       ...tasks,
@@ -62,15 +62,21 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
     updateTask(updatedTask);
     setShow(false);
   }
-  const handleShow = () => setShow(true);
 
+  const handleShow = () => setShow(true);
   useImperativeHandle(ref, () => ({
     openModal: handleShow,
   }));
 
-  const handleDateChange = (date) => {
-    setStartDate(date);
-    updateTask({ ...tasks, startDate: date });
+  // const handleDateChange = (date) => {
+  //   setStartDate(date);
+  //   updateTask({ ...tasks, startDate: date });
+  // };
+  const handleDateChange = async (startDate, endDate) => {
+    setStartDate(startDate);
+    setEndDate(endDate);
+    await updateTask({ ...tasks, startDate, endDate });
+    // await refreshTasks(); 
   };
   const handleSelectedButtonChange = (button) => {
     setSelectedButton(button);
@@ -109,13 +115,6 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
       handleClose();
     }
   };
-  const handleSaveSettings = (settings) => {
-    console.log("Saved settings:", settings);
-    // 저장된 설정을 처리하는 로직 추가
-};
-// const handleOnHide = () => {
-//   setShowDatePicker(false);
-// };
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header>
@@ -134,7 +133,7 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
             setSelectedButton={handleSelectedButtonChange}
             initialRepeat={isRepeat}
             initialAlarm={initialAlarm}
-            onSave={handleSaveSettings}
+            isNotified={isNotified}
           />
         </div>
       </Modal.Header>

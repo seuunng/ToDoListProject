@@ -19,7 +19,17 @@ export const SettingsProvider = ({ children }) => {
     next7Days: false,
     defaultBox: false,
   });
+  // useEffect(() => {
+  //   const savedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
+  //   const savedSwitches = JSON.parse(localStorage.getItem('switches'));
 
+  //   if (savedOptions) {
+  //     setSelectedOptions(savedOptions);
+  //   }
+  //   if (savedSwitches) {
+  //     setSwitches(savedSwitches);
+  //   }
+  // }, []);
   return (
     <SettingsContext.Provider value={{ selectedOptions, setSelectedOptions, switches, setSwitches }}>
       {children}

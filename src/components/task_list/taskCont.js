@@ -6,7 +6,7 @@ import ReadTaskPage from '../../views/readTaskPage';
 import { Row, Col } from 'react-bootstrap';
 
 const TaskCont = ({ tasks, updateTask, deleteTask, onTaskClick, 
-  lists, addList, updateList, deleteList
+  lists, addList, updateList, deleteList, refreshTasks
  }) => {
   if (!Array.isArray(tasks)) {
     return null;
@@ -26,6 +26,7 @@ const TaskCont = ({ tasks, updateTask, deleteTask, onTaskClick,
                   addList={addList} 
                   updateList={updateList}
                   deleteList={deleteList}
+                  refreshTasks={refreshTasks}
                 />
               </td>
             </tr>

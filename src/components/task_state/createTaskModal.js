@@ -12,7 +12,7 @@ import { FaCalendarCheck } from "react-icons/fa";
 import ko from 'date-fns/locale/ko';
 import Checkbox from '../../modules/checkBoxModule';
 import { PiLineVerticalThin } from "react-icons/pi";
-import { useSettings } from '../../context/SettingsContext';
+import { useSettings } from '../../contexts/SettingsContext';
 import SetTask from './setTask';
 import SelectedList from '../task_list/selectedList.js';
 

@@ -7,7 +7,7 @@ import SwitchBtn from '../modules/switchButtonModule';
 import BasicBtn from '../modules/BasicButton';
 import Col from 'react-bootstrap/Col';
 import { Modal, Button } from 'react-bootstrap';
-import { useSettings } from '../context/SettingsContext';
+import { useSettings } from '../contexts/SettingsContext';
 
 const SettingModal = ({ show, onHide }) => {
   const { selectedOptions, setSelectedOptions, switches, setSwitches } = useSettings();
@@ -83,8 +83,8 @@ const SettingModal = ({ show, onHide }) => {
     localStorage.setItem('switches', JSON.stringify(switches));
     localStorage.setItem('allSwitchesList', JSON.stringify(allSwitchesList));
     localStorage.setItem('allSwitchesAlarm', JSON.stringify(allSwitchesAlarm));
-    console.log(JSON.stringify(selectedOptions));
-    console.log(JSON.stringify(switches));
+    // console.log(JSON.stringify(selectedOptions));
+    // console.log(JSON.stringify(switches));
     onHide();
   }
 

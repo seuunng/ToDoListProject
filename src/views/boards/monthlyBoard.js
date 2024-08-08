@@ -205,6 +205,7 @@ const MonthlyBoard = () => {
                                 updateList={updateList}
                                 deleteList={deleteList}
                                 style={{ backgroundColor: getTaskListColor(task) }}
+                                refreshTasks={tasks}
 
                               // showTitle={!isTaskEndDate(task, date)}
                               />

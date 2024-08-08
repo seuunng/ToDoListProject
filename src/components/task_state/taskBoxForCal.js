@@ -7,6 +7,16 @@ import { FaRegBell } from "react-icons/fa";
 
 const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className, 
   lists, addList, updateList, deleteList, showTitle=true, style }) => {
+  const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
+  const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
+  const alarmMapping = {
+      "정각": "ONTIME",
+      "5분전": "FIVEMINS",
+      "30분전": "THIRTYMINS",
+      "하루전": "DAYEARLY"
+  };
+  const initialAlarm =savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
+  
   const readTaskModalRef = useRef(null);
   const taskBoxRef = useRef(null);
   const listNo = tasks.list ? tasks.list.no : null;
@@ -43,7 +53,7 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
           {showTitle && (
             <span className="task-title col-8">{tasks.title}</span>
           )}
-          {tasks.isNotified !== 'NOALARM'&& (
+          {(initialAlarm!=='NOALARM' || tasks.isNotified !== 'NOALARM')&& (
             <span className="taskBoxForCal-alram col-2">
               <FaRegBell />
             </span>

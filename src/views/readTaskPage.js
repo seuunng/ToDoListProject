@@ -8,11 +8,21 @@ import { FaCalendarCheck } from "react-icons/fa";
 import DatePickerModule from '../modules/datePickerModule';
 import SetTask from '../components/task_state/setTask';
 import SelectedList from '../components/task_list/selectedList.js';
+import { TaskBoxProvider, useTaskBox   } from '../contexts/taskBoxContext.js';
 
-
-const ReadTaskPage = ({ tasks, updateTask, deleteTask,
-  lists, addList, updateList, deleteList, refreshTasks
+const ReadTaskPageContent = ({ tasks, updateTask, deleteTask,
+  lists, refreshTasks
  }) => {
+  const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
+  const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
+  const alarmMapping = {
+      "정각": "ONTIME",
+      "5분전": "FIVEMINS",
+      "30분전": "THIRTYMINS",
+      "하루전": "DAYEARLY"
+  };
+  const initialAlarm =savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
+
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [taskTitle, setTaskTitle] = useState(tasks.title);
   const [taskContent, setTaskContent] = useState(tasks.content);
@@ -22,6 +32,7 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
   const [isRepeat, setIsRepeat] = useState(tasks.isRepeated || 'NOREPEAT');
   const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALRAM');
   const [selectedList, setSelectedList] = useState(null);
+  const { setIsTaskBox } = useTaskBox();
   
   useEffect(() => {
     setTaskTitle(tasks.title);
@@ -32,13 +43,15 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
     setIsRepeat(tasks.isRepeated || 'NOREPEAT');
     setIsNotified(tasks.isNotified || 'NOALRAM');
     setSelectedList(lists.find(list => list.no === tasks.listNo) || null);
+    // console.log("1 selectedButton : ", selectedButton);
+    // console.log("2 tasks.selectedButton : ", tasks.selectedButton);
+    // console.log("3 tasks.dateStatus: ", );
   }, [tasks, lists]);
 
   useEffect(() => {
-    if (tasks && tasks.list && tasks.list.no) {
-      console.log("Task List No:", tasks.list.no);
-    }
-  }, [tasks]);
+    setIsTaskBox(false);
+    return () => setIsTaskBox(false);
+  }, [setIsTaskBox]);
   
   const handleTitleChange = async (e) => {
     const newTitle = e.target.value;
@@ -66,6 +79,7 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
     await updateTask({ ...tasks, dateStatus: button.toUpperCase() });
     await refreshTasks(); 
   };
+
   const handleRepeatClick = async (option) => {
     const repeatMapping = {
       "반복없음": "NOREPEAT",
@@ -95,13 +109,7 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
     await  updateTask(updatedTasks);
     await refreshTasks(); 
   };
-  const handleSaveSettings = (settings) => {
-    console.log("Saved settings:", settings);
-    // 저장된 설정을 처리하는 로직 추가
-};
-// const handleOnHide = () => {
-//   setShowDatePicker(false);
-// };
+
   return (
     <div className="readTaskPage">
       <div className="d-flex align-items-center">
@@ -109,7 +117,7 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
         <PiLineVerticalThin style={{ marginLeft: "5px", marginRight: "5px" }} />
         <FaCalendarCheck onClick={() => setShowDatePicker(true)} />
         <DatePickerModule
-          onHide={() => setShowDatePicker(false)}
+          show={setShowDatePicker}
           startDate={startDate}
           endDate={endDate}
           onDateChange={handleDateChange}
@@ -118,8 +126,10 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
           selectedButton={selectedButton}
           setSelectedButton={handleSelectedButtonChange}
           initialRepeat={isRepeat}
-          initialAlram={isNotified}
-          onSave={handleSaveSettings}
+          initialAlarm={initialAlarm}
+          isNotified={isNotified}
+          isTaskBox={false}
+          // onSave={handleSaveSettings}
         />
       </div>
       {/* <i className="fa-regular fa-flag"></i> */}
@@ -162,5 +172,9 @@ const ReadTaskPage = ({ tasks, updateTask, deleteTask,
     </div>
   );
 };
-
+const ReadTaskPage = (props) => (
+  <TaskBoxProvider>
+    <ReadTaskPageContent {...props} />
+  </TaskBoxProvider>
+);
 export default ReadTaskPage;
