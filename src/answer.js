@@ -1,4 +1,4 @@
-import React, { useState, useEffect, forwardRef, useContext } from 'react'
+import React, { useState, useEffect, forwardRef, useContext } from 'react';
 import DatePicker, { CalendarContainer } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/basicStyle.css';
@@ -9,12 +9,11 @@ import { IoMdTime } from "react-icons/io";
 import { TaskBoxContext } from '../contexts/taskBoxContext';
 
 const DatePickerModule = ({ startDate, endDate, onDateChange,
-    onRepeatClick, initialRepeat, onAlarmClick, initialAlarm, isNotified,
+    onRepeatClick, initialRepeat, onAlarmClick, initialAlarm, 
     dateFormat, selectedButton, setSelectedButton, onHide, onSave }) => {
 
     const [dateRange, setDateRange] = useState([startDate, endDate]);
     const [timeValue, setTimeValue] = useState('');
-    // const [isNotified, setIsNotified] = useState('');
     const dropdownOptionsAlarmTime = ["알림없음", "정각", "5분전", "30분전", "하루전"];
     const dropdownOptionsRepeat = ["반복없음", "매일", "매주", "매달", "매년"];
     const savedSeleted = JSON.parse(localStorage.getItem('selectedOptions'));
@@ -43,44 +42,14 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
 
     useEffect(() => {
         setDateRange([startDate, endDate]);
-      }, [startDate, endDate]);
-
-    // 상태가 변경되었는지 여부를 추적하기 위한 플래그
-    const [alarmChanged, setAlarmChanged] = useState(false);
-
-    useEffect(() => {
-        if (!alarmChanged) {
-            setSelectedOptions((prevOptions) => ({
-                ...prevOptions,
-                alarmTime: alarmMappingToKorean[initialAlarm] || "알림없음",
-            }));
-        }
-        // console.log("1 ", isNotified)
-        // console.log("2 ", initialAlarm)
-        // console.log("3 ", selectedOptions.alarmTime)
-        // console.log("4 ", alarmChanged)
-    }, [alarmChanged]);
+        setSelectedOptions({
+            alarmTime: alarmMappingToKorean[initialAlarm] || "알림없음",
+            repeat: repeatMappingToKorean[initialRepeat] || "반복없음",
+        }); 
+    }, [startDate, endDate, initialAlarm, initialRepeat]);
 
     useEffect(() => {
-        if (alarmChanged) {
-            setSelectedOptions((prevOptions) => ({
-                ...prevOptions,
-                alarmTime: alarmMappingToKorean[isNotified] || "알림없음",
-            }));
-        }
-    }, [isNotified, alarmChanged]);
-
-    useEffect(() => {
-            setSelectedOptions((prevOptions) => ({
-              ...prevOptions,
-              repeat: repeatMappingToKorean[initialRepeat] || "반복없음",
-            }));
-        }, [ initialRepeat,]);
-
-    //timeValue설정값에 따라  dateFormat속성 변환 조건문 추가
-    useEffect(() => {
-        dateFormat = (timeValue === '' || timeValue == null) ? dateFormatTimeInput : "yyyy/MM/dd";
-        console.log("timeValue : ", timeValue);
+        console.log(timeValue)
     }, [timeValue]);
     
     useEffect(() => {
@@ -97,20 +66,7 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
     useEffect(() => {
         setDateFormatTimeInput(savedSeleted.time === "24시간" ? "yyyy/MM/dd H:mm" : "yyyy/MM/dd h:mm aa");
     }, [savedSeleted.time]);
-
-    const handleButtonClick = (buttonType) => {
-        // if (buttonType === 'DATE') {
-        //     setDateRange([null, null]);
-        // }else{}
-        setSelectedButton(buttonType);
-        // handleDateChange(buttonType);
-    };
-
-    useEffect(()=>{
-        console.log("SelectedButton : ", selectedButton)
-    },[selectedButton]);
-
-
+    
     const handleDateChange = (update) => {
         setDateRange(update);
         if (selectedButton === 'PERIOD') {
@@ -127,13 +83,16 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
             onRepeatClick(option);
         }
         if (type === 'alarmTime') {
-            setAlarmChanged(true);
             onAlarmClick(option);
-            console.log("alarmTime option : ", option)
         }
     };
 
-
+    const handleButtonClick = (buttonType) => {
+        if (buttonType === 'DATE') {
+            setDateRange([null, null]);
+        }
+        setSelectedButton(buttonType);
+    };
 
     const CustomInput = forwardRef(({ value, onClick, className }, ref) => (
         <button className={className} onClick={onClick} ref={ref}
@@ -150,8 +109,8 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         >
             {value}
         </button>
-    ),
-    );
+    ));
+
     const MyContainer = ({ className, children }) => {
         return (
             <div >
@@ -247,6 +206,7 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
                         cursor: "pointer",
                         marginRight: "0"
                     }}
+                    placeholder="--:--"
                 />
             </Col>
             <Col>
@@ -278,14 +238,13 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
 
     return (
         <div className="custom-date-picker">
-
             <DatePicker
                 selected={dateRange[0]}
                 onChange={handleDateChange}
                 startDate={dateRange[0]}
                 endDate={dateRange[1]}
                 selectsRange={selectedButton === 'PERIOD'}
-
+                
                 showPopperArrow={false}
                 calendarContainer={MyContainer}
                 popperPlacement="bottom-start"
@@ -321,24 +280,6 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
                             />
                         </Col>
                     </div>
-                    {/* <div className="d-flex align-items-center line row">
-                        <Col
-                            style={{ marginTop: "5px", marginRight: "0", }}>
-                            <Button variant="outline-dark"
-                                style={{ width: "100%" }}
-                                onClick={handleOnHide}>
-                                취소
-                            </Button>
-                        </Col>
-                        <Col
-                            style={{ marginTop: "5px", marginleft: "0" }}>
-                            <Button
-                                style={{ width: "100%" }}
-                                onClick={handleSave}>
-                                저장
-                            </Button>
-                        </Col>
-                    </div> */}
                 </div>
             </DatePicker>
         </div>

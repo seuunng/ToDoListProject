@@ -9,7 +9,18 @@ import DatePickerModule from '../../modules/datePickerModule';
 import SetTask from './setTask';
 import { TaskBoxProvider, useTaskBox   } from '../../contexts/taskBoxContext';
 
-const TaskBoxContent = ({ tasks, deleteTask, updateTask, lists, addList, updateList, deleteList,refreshTasks }) => {
+const TaskBoxContent = ({ tasks, deleteTask, updateTask, 
+  lists, refreshTasks }) => {
+  const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
+  const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
+  const alarmMapping = {
+      "정각": "ONTIME",
+      "5분전": "FIVEMINS",
+      "30분전": "THIRTYMINS",
+      "하루전": "DAYEARLY"
+  };
+  const initialAlarm =savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
+  
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [taskTitle, setTaskTitle] = useState(tasks.title);
   const [startDate, setStartDate] = useState(new Date(tasks.startDate));
@@ -20,11 +31,13 @@ const TaskBoxContent = ({ tasks, deleteTask, updateTask, lists, addList, updateL
   const { setIsTaskBox } = useTaskBox();
 
   useEffect(() => {
+    setTaskTitle(tasks.title);
     setStartDate(new Date(tasks.startDate));
     setEndDate(tasks.endDate ? new Date(tasks.endDate) : null);
     setSelectedButton(tasks.dateStatus || 'DATE');
     setIsRepeat(tasks.isRepeated || 'NOREPEAT');
     setIsNotified(tasks.isNotified || 'NOALRAM');
+    // console.log("tasks.dateStatus", tasks.dateStatus)
   }, [tasks]);
 
   useEffect(() => {
@@ -48,10 +61,11 @@ const TaskBoxContent = ({ tasks, deleteTask, updateTask, lists, addList, updateL
 
   const handleSelectedButtonChange = async (button) => {
     setSelectedButton(button);
-    updateTask({ ...tasks, dateStatus: button.toUpperCase() });
+    await updateTask({ ...tasks, dateStatus: button.toUpperCase() });
+    await refreshTasks();
   };
 
-  const handleRepeatClick = (option) => {
+  const handleRepeatClick = async (option) => {
     const repeatMapping = {
       "반복없음": "NOREPEAT",
       "매일": "DAILY",
@@ -62,10 +76,11 @@ const TaskBoxContent = ({ tasks, deleteTask, updateTask, lists, addList, updateL
     const isRepeated = repeatMapping[option] || "NOREPEAT";
     setIsRepeat(isRepeated);
     const updatedTasks = { ...tasks, isRepeated: isRepeated };
-    updateTask(updatedTasks);
+    await updateTask(updatedTasks);
+    await refreshTasks(); 
   };
 
-  const handleAlarmClick = (option) => {
+  const handleAlarmClick = async (option) => {
     const alarmMapping = {
       "알림없음": "NOALRAM",
       "정각": "ONTIME",
@@ -75,8 +90,12 @@ const TaskBoxContent = ({ tasks, deleteTask, updateTask, lists, addList, updateL
     };
     const isNotified = alarmMapping[option] || "NOALRAM";
     setIsNotified(isNotified);
+    console.log("1",isNotified)
+    console.log("2",option)
+  
     const updatedTasks = { ...tasks, isNotified: isNotified };
-    updateTask(updatedTasks);
+    await updateTask(updatedTasks);
+    // await refreshTasks(); 
   };
 
 
@@ -108,7 +127,7 @@ const TaskBoxContent = ({ tasks, deleteTask, updateTask, lists, addList, updateL
               <LuRepeat style={{ color: "grey" }} />
             </span>
           )}
-          {tasks.isNotified !== 'NOALARM' && (
+          {(initialAlarm!=='NOALARM' || tasks.isNotified !== 'NOALARM') && (
             <span className="alram col-2"
               style={{ width: 16 }}>
               <FaRegBell style={{ color: "grey" }} />
@@ -124,13 +143,11 @@ const TaskBoxContent = ({ tasks, deleteTask, updateTask, lists, addList, updateL
             selectedButton={selectedButton}
             setSelectedButton={handleSelectedButtonChange}
             initialRepeat={isRepeat}
-            initialAlram={isNotified}
+            initialAlarm={initialAlarm}
+            isNotified={isNotified}
             dateFormat={'MM/dd'}
-            lists={lists}
-            // addList={addList}
-            // updateList={updateList}
-            // deleteList={deleteList}
             isTaskBox={true}
+            lists={lists}
           /></Col>
         <Col md={1} style={{ padding: "0" }} className='centered'>
           <SetTask

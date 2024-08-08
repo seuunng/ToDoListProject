@@ -63,9 +63,6 @@ const BasicBoard = () => {
             deleteTask={deleteTask}
             onTaskClick={handleTaskClick}
             lists={lists}
-            addList={addList}
-            updateList={updateList}
-            deleteList={deleteList}
             refreshTasks={fetchListAndTasks}
           />
         </Col>
@@ -76,9 +73,6 @@ const BasicBoard = () => {
               updateTask={updateTask}
               deleteTask={deleteTask}
               lists={lists}
-              addList={addList}
-              updateList={updateList}
-              deleteList={deleteList}
               refreshTasks={fetchListAndTasks}
             />
           )}
