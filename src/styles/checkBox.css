@@ -1,0 +1,30 @@
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .hidden-checkbox {
+    display: none;
+  }
+  
+  .custom-checkbox-icon {
+    width: 20px;
+    height: 20px;
+    border: 2px solid gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+    border-radius: 3px;
+  }
+  
+  .custom-checkbox-icon svg {
+    width: 16px;
+    height: 16px;
+    color: gray;
+  }
+  
+  .hidden-checkbox:checked + .custom-checkbox-icon {
+    background-color: #e0e0e0;
+  }

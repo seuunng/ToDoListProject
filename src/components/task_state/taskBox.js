@@ -1,26 +1,25 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../styles/basicStyle.css';
 import CheckBox from '../../modules/checkBoxModule'
 import { Row, Col } from 'react-bootstrap';
 import { LuRepeat } from "react-icons/lu";
 import { FaRegBell } from "react-icons/fa";
-import { format } from 'date-fns';
 import DatePickerModule from '../../modules/datePickerModule';
 import SetTask from './setTask';
-import { TaskBoxProvider, useTaskBox   } from '../../contexts/taskBoxContext';
+import { TaskBoxProvider, useTaskBox } from '../../contexts/taskBoxContext';
+import instance from '../../api/axios';
 
-const TaskBoxContent = ({ tasks, deleteTask, updateTask, 
-  lists, refreshTasks }) => {
+const TaskBoxContent = ({ tasks, deleteTask, updateTask, lists, refreshTasks }) => {
   const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
   const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
   const alarmMapping = {
-      "정각": "ONTIME",
-      "5분전": "FIVEMINS",
-      "30분전": "THIRTYMINS",
-      "하루전": "DAYEARLY"
+    "정각": "ONTIME",
+    "5분전": "FIVEMINS",
+    "30분전": "THIRTYMINS",
+    "하루전": "DAYEARLY"
   };
-  const initialAlarm =savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
-  
+  const initialAlarm = savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
+
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [taskTitle, setTaskTitle] = useState(tasks.title);
   const [startDate, setStartDate] = useState(new Date(tasks.startDate));
@@ -29,6 +28,7 @@ const TaskBoxContent = ({ tasks, deleteTask, updateTask,
   const [isRepeat, setIsRepeat] = useState(tasks.isRepeated || 'NOREPEAT');
   const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALRAM');
   const { setIsTaskBox } = useTaskBox();
+  const [checked, setChecked] = useState(tasks.status === 'COMPLETED');
 
   useEffect(() => {
     setTaskTitle(tasks.title);
@@ -37,7 +37,6 @@ const TaskBoxContent = ({ tasks, deleteTask, updateTask,
     setSelectedButton(tasks.dateStatus || 'DATE');
     setIsRepeat(tasks.isRepeated || 'NOREPEAT');
     setIsNotified(tasks.isNotified || 'NOALRAM');
-    // console.log("tasks.dateStatus", tasks.dateStatus)
   }, [tasks]);
 
   useEffect(() => {
@@ -49,7 +48,7 @@ const TaskBoxContent = ({ tasks, deleteTask, updateTask,
     const newTitle = e.target.value;
     setTaskTitle(newTitle);
     await updateTask({ ...tasks, title: newTitle });
-    await refreshTasks(); 
+    await refreshTasks();
   };
 
   const handleDateChange = async (startDate, endDate) => {
@@ -77,7 +76,7 @@ const TaskBoxContent = ({ tasks, deleteTask, updateTask,
     setIsRepeat(isRepeated);
     const updatedTasks = { ...tasks, isRepeated: isRepeated };
     await updateTask(updatedTasks);
-    await refreshTasks(); 
+    await refreshTasks();
   };
 
   const handleAlarmClick = async (option) => {
@@ -90,14 +89,37 @@ const TaskBoxContent = ({ tasks, deleteTask, updateTask,
     };
     const isNotified = alarmMapping[option] || "NOALRAM";
     setIsNotified(isNotified);
-    console.log("1",isNotified)
-    console.log("2",option)
-  
     const updatedTasks = { ...tasks, isNotified: isNotified };
     await updateTask(updatedTasks);
-    // await refreshTasks(); 
   };
 
+  const handleCheckboxChange = (isChecked) => {
+    setChecked(isChecked);
+  };
+
+  const handleCancel = async () => {
+    const newStatus = 'CANCELLED';
+    if (tasks && tasks.no) {
+      try {
+        const response = await instance.put(`/tasks/${tasks.no}/status`, {
+          status: newStatus,
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+        if (response.status === 200) {
+          await refreshTasks();
+        } else {
+          console.error('Failed to update task status');
+        }
+      } catch (error) {
+        console.error('Error updating task status:', error);
+      }
+    } else {
+      console.error('Task object is missing or task.no is undefined');
+    }
+  };
 
   return (
     <div>
@@ -107,29 +129,31 @@ const TaskBoxContent = ({ tasks, deleteTask, updateTask,
             display: "flex",
             alignItems: "center"
           }}
-        ><CheckBox />&nbsp;
-        <span className="task-title">
-        <input
-          type="text"
-          value={taskTitle}
-          onChange={handleTitleChange}
-          className="form-control"
-          placeholder="Task Title"
-          style={{ border: "none" }}
-        />
-      </span>
+        >
+          <CheckBox
+            task={tasks}
+            checked={checked}
+            onChange={handleCheckboxChange}
+          /> &nbsp;
+          <span className="task-title">
+            <input
+              type="text"
+              value={taskTitle}
+              onChange={handleTitleChange}
+              className="form-control"
+              placeholder="Task Title"
+              style={{ border: "none" }}
+            />
+          </span>
         </Col>
-        <Col md={4} className='righted' style={{ padding: "0" }} >
-
+        <Col md={4} className='righted' style={{ padding: "0" }}>
           {tasks.isRepeated !== 'NOREPEAT' && (
-            <span className="repeat col-2"
-              style={{ width: 16 }}>
+            <span className="repeat col-2" style={{ width: 16 }}>
               <LuRepeat style={{ color: "grey" }} />
             </span>
           )}
-          {(initialAlarm!=='NOALARM' || tasks.isNotified !== 'NOALARM') && (
-            <span className="alram col-2"
-              style={{ width: 16 }}>
+          {(initialAlarm !== 'NOALARM' || tasks.isNotified !== 'NOALARM') && (
+            <span className="alram col-2" style={{ width: 16 }}>
               <FaRegBell style={{ color: "grey" }} />
             </span>
           )}
@@ -148,20 +172,24 @@ const TaskBoxContent = ({ tasks, deleteTask, updateTask,
             dateFormat={'MM/dd'}
             isTaskBox={true}
             lists={lists}
-          /></Col>
+          />
+        </Col>
         <Col md={1} style={{ padding: "0" }} className='centered'>
           <SetTask
             task={tasks}
-            deleteTask={deleteTask} />
+            deleteTask={deleteTask}
+            handleCancel={handleCancel}
+          />
         </Col>
       </Row>
-
     </div>
   );
 };
+
 const TaskBox = (props) => (
   <TaskBoxProvider>
     <TaskBoxContent {...props} />
   </TaskBoxProvider>
 );
+
 export default TaskBox;

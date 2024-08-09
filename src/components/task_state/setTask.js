@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import '../../styles/basicStyle.css';
-import { LuPin } from "react-icons/lu";
-import { LuPinOff } from "react-icons/lu";
+import { LuPin, LuPinOff } from "react-icons/lu";
 import { MdCancelPresentation } from "react-icons/md";
 import { FaRegStickyNote } from "react-icons/fa";
 import { AiOutlineRollback } from "react-icons/ai";
 import { MdLocalPrintshop } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Dropdown from 'react-bootstrap/Dropdown';
-import Form from 'react-bootstrap/Form';
 import { BsThreeDots } from "react-icons/bs";
 
 const SetTaskToggle = React.forwardRef(({ children, onClick }, ref) => (
@@ -36,7 +34,7 @@ const SetTaskToggle = React.forwardRef(({ children, onClick }, ref) => (
   const CustomMenu = React.forwardRef(
     ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
       const [value, setValue] = useState('');
-  
+
       return (
         <div
           ref={ref}
@@ -55,13 +53,13 @@ const SetTaskToggle = React.forwardRef(({ children, onClick }, ref) => (
     },
   );
 
-  const SetTask = ({task, deleteTask}) => {
+  const SetTask = ({task, deleteTask, handleCancel}) => {
     const [isPinned, setIsPinned] = useState(false);
     const [isWontDo, setIsWontDo] = useState(false);
   
     const togglePin = () => setIsPinned(!isPinned);
     const toggleWontDo = () => setIsWontDo(!isWontDo);
-
+    
     return (
       <Dropdown>
         <Dropdown.Toggle as={SetTaskToggle} id="dropdown-custom-components">
@@ -82,7 +80,7 @@ const SetTaskToggle = React.forwardRef(({ children, onClick }, ref) => (
             <AiOutlineRollback /> Reopen
           </Dropdown.Item>
         ) : (
-          <Dropdown.Item eventKey="2" onClick={toggleWontDo}>
+          <Dropdown.Item eventKey="2" onClick={handleCancel}>
             <MdCancelPresentation /> Won't Do
           </Dropdown.Item>
         )}
