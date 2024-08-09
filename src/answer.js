@@ -10,10 +10,11 @@ import { TaskBoxContext } from '../contexts/taskBoxContext';
 
 const DatePickerModule = ({ startDate, endDate, onDateChange,
     onRepeatClick, initialRepeat, onAlarmClick, initialAlarm, 
-    dateFormat, selectedButton, setSelectedButton, onHide, onSave }) => {
+    selectedButton, setSelectedButton, onHide, onSave }) => {
 
     const [dateRange, setDateRange] = useState([startDate, endDate]);
     const [timeValue, setTimeValue] = useState('');
+    const [isTimeSet, setIsTimeSet] = useState(false);  // 시간 설정 여부를 추적하는 상태
     const dropdownOptionsAlarmTime = ["알림없음", "정각", "5분전", "30분전", "하루전"];
     const dropdownOptionsRepeat = ["반복없음", "매일", "매주", "매달", "매년"];
     const savedSeleted = JSON.parse(localStorage.getItem('selectedOptions'));
@@ -47,11 +48,12 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
             repeat: repeatMappingToKorean[initialRepeat] || "반복없음",
         }); 
     }, [startDate, endDate, initialAlarm, initialRepeat]);
-
-    useEffect(() => {
-        console.log(timeValue)
-    }, [timeValue]);
     
+    // timeValue 설정값에 따라 dateFormat 속성 변환 조건문 추가
+    useEffect(() => {
+        console.log("timeValue : ", timeValue);
+    }, [timeValue]);
+
     useEffect(() => {
         if (dateRange[0]) {
             const date = new Date(dateRange[0]);
@@ -84,6 +86,7 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         }
         if (type === 'alarmTime') {
             onAlarmClick(option);
+            console.log("alarmTime option : ", option);
         }
     };
 
@@ -183,6 +186,7 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
                         const newValue = e.target.value;
                         onChange(newValue);
                         setTimeValue(newValue);
+                        setIsTimeSet(!!newValue); // 시간 설정 여부 업데이트
 
                         if (newValue) {
                             const [hours, minutes] = newValue.split(':');
@@ -206,13 +210,13 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
                         cursor: "pointer",
                         marginRight: "0"
                     }}
-                    placeholder="--:--"
                 />
             </Col>
             <Col>
                 <Button
                     onClick={() => {
                         setTimeValue('');
+                        setIsTimeSet(false); // 시간 설정 여부 업데이트
                         const newDate = new Date(dateRange[0]);
                         newDate.setHours(0);
                         newDate.setMinutes(0);
@@ -244,14 +248,13 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
                 startDate={dateRange[0]}
                 endDate={dateRange[1]}
                 selectsRange={selectedButton === 'PERIOD'}
-                
                 showPopperArrow={false}
                 calendarContainer={MyContainer}
                 popperPlacement="bottom-start"
                 style={{ margin: "10px", padding: "10px" }}
                 customInput={<CustomInput className="custom-input" />}
                 timeInputLabel={<CustomTimeLabel />}
-                dateFormat={isTaskBox ? 'MM/dd' : (timeValue ? dateFormatTimeInput : "yyyy/MM/dd")}
+                dateFormat={isTaskBox ? 'MM/dd' : (isTimeSet ? dateFormatTimeInput : "yyyy/MM/dd")} // 시간 설정 여부에 따른 dateFormat 설정
                 showTimeInput
                 customTimeInput={<CustomTimeInput value={timeValue} onChange={setTimeValue} />}
             >

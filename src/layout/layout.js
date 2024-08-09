@@ -29,7 +29,7 @@ const Layout = ({setUser, user}) => {
 
     useEffect(() => {
         const fetchTableData = async () => {
-            console.log("fetchTableData user.id : ", user.id)
+            // console.log("fetchTableData user.id : ", user.id)
             if (!user || !user.id) {
                 console.error('User ID is not available');
                 return;

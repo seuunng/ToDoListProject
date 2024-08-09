@@ -14,7 +14,8 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
 
     const [dateRange, setDateRange] = useState([startDate, endDate]);
     const [timeValue, setTimeValue] = useState('');
-    // const [isNotified, setIsNotified] = useState('');
+    const [isTimeSet, setIsTimeSet] = useState(false); 
+    
     const dropdownOptionsAlarmTime = ["알림없음", "정각", "5분전", "30분전", "하루전"];
     const dropdownOptionsRepeat = ["반복없음", "매일", "매주", "매달", "매년"];
     const savedSeleted = JSON.parse(localStorage.getItem('selectedOptions'));
@@ -45,7 +46,6 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         setDateRange([startDate, endDate]);
       }, [startDate, endDate]);
 
-    // 상태가 변경되었는지 여부를 추적하기 위한 플래그
     const [alarmChanged, setAlarmChanged] = useState(false);
 
     useEffect(() => {
@@ -77,12 +77,6 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
             }));
         }, [ initialRepeat,]);
 
-    //timeValue설정값에 따라  dateFormat속성 변환 조건문 추가
-    useEffect(() => {
-        dateFormat = (timeValue === '' || timeValue == null) ? dateFormatTimeInput : "yyyy/MM/dd";
-        console.log("timeValue : ", timeValue);
-    }, [timeValue]);
-    
     useEffect(() => {
         if (dateRange[0]) {
             const date = new Date(dateRange[0]);
@@ -98,6 +92,7 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         setDateFormatTimeInput(savedSeleted.time === "24시간" ? "yyyy/MM/dd H:mm" : "yyyy/MM/dd h:mm aa");
     }, [savedSeleted.time]);
 
+    //날짜 입력 형식 선택 (날짜||기간)
     const handleButtonClick = (buttonType) => {
         // if (buttonType === 'DATE') {
         //     setDateRange([null, null]);
@@ -110,7 +105,7 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         console.log("SelectedButton : ", selectedButton)
     },[selectedButton]);
 
-
+    //날짜 변경 기능
     const handleDateChange = (update) => {
         setDateRange(update);
         if (selectedButton === 'PERIOD') {
@@ -133,8 +128,6 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         }
     };
 
-
-
     const CustomInput = forwardRef(({ value, onClick, className }, ref) => (
         <button className={className} onClick={onClick} ref={ref}
             style={{
@@ -152,6 +145,9 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         </button>
     ),
     );
+
+
+    // 날짜||기간 선택 버튼 
     const MyContainer = ({ className, children }) => {
         return (
             <div >
@@ -219,11 +215,12 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
             <Col>
                 <input
                     type="time"
-                    value={timeValue}
+                    value={isTimeSet? timeValue:''}
                     onChange={e => {
                         const newValue = e.target.value;
                         onChange(newValue);
                         setTimeValue(newValue);
+                        setIsTimeSet(!!newValue); 
 
                         if (newValue) {
                             const [hours, minutes] = newValue.split(':');
@@ -253,6 +250,7 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
                 <Button
                     onClick={() => {
                         setTimeValue('');
+                        setIsTimeSet(false); 
                         const newDate = new Date(dateRange[0]);
                         newDate.setHours(0);
                         newDate.setMinutes(0);
@@ -292,7 +290,7 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
                 style={{ margin: "10px", padding: "10px" }}
                 customInput={<CustomInput className="custom-input" />}
                 timeInputLabel={<CustomTimeLabel />}
-                dateFormat={isTaskBox ? 'MM/dd' : (timeValue ? dateFormatTimeInput : "yyyy/MM/dd")}
+                dateFormat={isTaskBox ? 'MM/dd' : (isTimeSet ? dateFormatTimeInput : "yyyy/MM/dd")}
                 showTimeInput
                 customTimeInput={<CustomTimeInput value={timeValue} onChange={setTimeValue} />}
             >
@@ -321,24 +319,6 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
                             />
                         </Col>
                     </div>
-                    {/* <div className="d-flex align-items-center line row">
-                        <Col
-                            style={{ marginTop: "5px", marginRight: "0", }}>
-                            <Button variant="outline-dark"
-                                style={{ width: "100%" }}
-                                onClick={handleOnHide}>
-                                취소
-                            </Button>
-                        </Col>
-                        <Col
-                            style={{ marginTop: "5px", marginleft: "0" }}>
-                            <Button
-                                style={{ width: "100%" }}
-                                onClick={handleSave}>
-                                저장
-                            </Button>
-                        </Col>
-                    </div> */}
                 </div>
             </DatePicker>
         </div>
