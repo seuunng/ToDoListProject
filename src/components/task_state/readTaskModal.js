@@ -13,9 +13,11 @@ import Checkbox from '../../modules/checkBoxModule';
 import { PiLineVerticalThin } from "react-icons/pi";
 import SetTask from './setTask';
 import SelectedList from '../task_list/selectedList.js';
+import instance from '../../api/axios';
 
 const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
-  lists, addList, updateList, deleteList, refreshTasks
+  lists, addList, updateList, deleteList, refreshTasks,
+  checked,  setChecked,  isCancelled,  setIsCancelled,  handleCancel,  handleCheckboxChange
  }, ref) => {
   const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
   const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
@@ -48,6 +50,11 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
     setIsNotified(tasks.isNotified || 'NOALRAM');
     setSelectedList(lists.find(list => list.no === tasks.list.no) || null);
   }, [tasks,  lists]);
+
+  useEffect(() => {
+    setChecked(checked)
+    setIsCancelled(isCancelled);
+  }, [tasks,  checked, isCancelled]);
   
   const handleClose = () => { 
     const updatedTask = {
@@ -57,7 +64,6 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
       startDate,
       endDate,
       dateStatus: selectedButton
-      // Add other task fields as necessary
     };
     updateTask(updatedTask);
     setShow(false);
@@ -68,10 +74,6 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
     openModal: handleShow,
   }));
 
-  // const handleDateChange = (date) => {
-  //   setStartDate(date);
-  //   updateTask({ ...tasks, startDate: date });
-  // };
   const handleDateChange = async (startDate, endDate) => {
     setStartDate(startDate);
     setEndDate(endDate);
@@ -115,11 +117,47 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
       handleClose();
     }
   };
+  // const handleCheckboxChange = (isChecked) => {
+  //   setChecked(isChecked);
+  // };
+
+  // const handleCancel = async () => {
+  //   const newStatus = 'CANCELLED';
+  //   if (tasks && tasks.no) {
+  //     try {
+  //       const response = await instance.put(`/tasks/${tasks.no}/status`, {
+  //         status: newStatus,
+  //       }, {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         }
+  //       });
+  //       if (response.status === 200) {
+  //         // await refreshTasks();
+  //         setIsCancelled(newStatus === 'CANCELLED');
+  //       } else {
+  //         console.error('Failed to update task status');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error updating task status:', error);
+  //     }
+  //   } else {
+  //     console.error('Task object is missing or task.no is undefined');
+  //   }
+  // };
+
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header>
         <div className="d-flex align-items-center">
-          <Checkbox />
+          <Checkbox 
+            task={tasks}
+            checked={checked}
+            setChecked={setChecked} 
+            onChange={() => handleCheckboxChange(tasks.no)}
+            setIsCancelled={setIsCancelled}
+            isCancelled={isCancelled}
+            />
           <PiLineVerticalThin style={{ marginLeft: "5px", marginRight: "5px" }} />
           <FaCalendarCheck />
           <DatePickerModule
@@ -180,7 +218,9 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
           <div className="setting-icon col righted">
             <SetTask
               task={tasks}
-              deleteTask={deleteTask} />
+              deleteTask={deleteTask}
+              handleCancel={handleCancel}
+            />
           </div>
         </div>
         {/* <button type="button" className="btn btn-secondary" onClick={handleClose}>Close</button>

@@ -10,20 +10,21 @@ import { useParams, useOutletContext } from 'react-router-dom';
 
 
 const MonthlyBoard = () => {
+  const {
+    tasks, addTask, updateTask, deleteTask, lists, addList, updateList, deleteList, user, setUser,
+    checked,  setChecked,  isCancelled,  setIsCancelled,  handleCancel,  handleCheckboxChange
+  } = useOutletContext();
+
   const [startDate, setStartDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [daysOfWeek, setDaysOfWeek] = useState([]);
   const [firstDayOfWeek, setFirstDayOfWeek] = useState(0);
-  const {
-    tasks, addTask, updateTask, deleteTask, lists, addList, updateList, deleteList, user, setUser
-  } = useOutletContext();
-
 
   const createTaskModalRef = useRef(null);
   const todayRef = useRef(null);
   const weeks = [1, 2, 3, 4, 5];
   const days = [1, 2, 3, 4, 5, 6, 7];
-
+  
   // Setting모달 설정값
   const savedSeletedFirstDay = JSON.parse(localStorage.getItem('selectedOptions')) || { week: '일요일' };
  
@@ -39,14 +40,12 @@ const MonthlyBoard = () => {
     const daysOfWeek = firstDay === 1 ? ['월', '화', '수', '목', '금', '토', '일'] : ['일', '월', '화', '수', '목', '금', '토'];  
     setDaysOfWeek(daysOfWeek);
   }, [savedSeletedFirstDay.week]);
-  
 
   const getDate = (week, day) => {
     const firstDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
     const firstDayOffset = (firstDayOfMonth.getDay() + 7 - firstDayOfWeek) % 7;
     const dayOffset = (week - 1) * 7 + (day - 1) - firstDayOffset;
     return new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1 + dayOffset);
- 
   };
 
   const createMemo = (date) => {
@@ -206,7 +205,12 @@ const MonthlyBoard = () => {
                                 deleteList={deleteList}
                                 style={{ backgroundColor: getTaskListColor(task) }}
                                 refreshTasks={tasks}
-
+                                checked={checked} 
+                                setChecked={setChecked}  
+                                isCancelled={isCancelled}
+                                setIsCancelled={setIsCancelled}
+                                handleCancel={handleCancel}
+                                handleCheckboxChange={handleCheckboxChange}
                               // showTitle={!isTaskEndDate(task, date)}
                               />
                             ) : null

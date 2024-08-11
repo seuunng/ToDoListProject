@@ -6,6 +6,7 @@ import Logout from './views/acountInfo/logout';
 import instance from './api/axios';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { TaskBoxProvider } from './contexts/taskBoxContext';
+import { TaskProvider } from './contexts/taskContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -18,9 +19,11 @@ function App() {
     <div>
       <ToastContainer />
       <SettingsProvider>
-      <TaskBoxProvider> 
-        <RouterProvider router={RouterInfo(user, setUser)} />
-        </TaskBoxProvider>
+        {/* <TaskProvider> */}
+          <TaskBoxProvider>
+            <RouterProvider router={RouterInfo(user, setUser)} />
+          </TaskBoxProvider>
+        {/* </TaskProvider> */}
       </SettingsProvider>
     </div>
   );

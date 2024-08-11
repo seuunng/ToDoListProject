@@ -9,7 +9,9 @@ import instance from '../../api/axios';
 import { useParams, useOutletContext } from 'react-router-dom';
 
 const BasicBoard = () => {
-  const { tasks, addTask, updateTask, deleteTask, lists, addList, updateList, deleteList } = useOutletContext();
+  const { tasks, addTask, updateTask, deleteTask, lists, addList, updateList, deleteList,
+    checked,  setChecked,  isCancelled,  setIsCancelled,  handleCancel,  handleCheckboxChange
+   } = useOutletContext();
   const [tasksByLists, setTasksByLists] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const { listId } = useParams();
@@ -64,6 +66,12 @@ const BasicBoard = () => {
             onTaskClick={handleTaskClick}
             lists={lists}
             refreshTasks={fetchListAndTasks}
+            checked={checked} 
+            setChecked={setChecked}  
+            isCancelled={isCancelled}
+            setIsCancelled={setIsCancelled}
+            handleCancel={handleCancel}
+            handleCheckboxChange={handleCheckboxChange}
           />
         </Col>
         <Col className="ReadTaskPage">
@@ -74,6 +82,12 @@ const BasicBoard = () => {
               deleteTask={deleteTask}
               lists={lists}
               refreshTasks={fetchListAndTasks}
+              checked={checked} 
+              setChecked={setChecked}  
+              isCancelled={isCancelled}
+              setIsCancelled={setIsCancelled}
+              handleCancel={handleCancel}
+              handleCheckboxChange={handleCheckboxChange}
             />
           )}
         </Col>

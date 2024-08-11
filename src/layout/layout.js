@@ -10,6 +10,11 @@ const Layout = ({setUser, user}) => {
     const [sidebarVisible, setSidebarVisible] = useState(false);
     const [tasks, setTasks] = useState([]);
     const [lists, setLists] = useState([]);
+    const [checked, setChecked] = useState(false);
+    const [isCancelled, setIsCancelled] = useState(false);
+    
+    // console.log('Layout checked:', checked);
+    // console.log('Layout setChecked:', typeof setChecked);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -128,6 +133,7 @@ const Layout = ({setUser, user}) => {
             console.error('Error deleting list:', error);
         }
     };
+
     const toggleSidebar = () => {
         setSidebarVisible(!sidebarVisible);
     };
@@ -137,11 +143,92 @@ const Layout = ({setUser, user}) => {
             setSidebarVisible(false);
         }
     };
+
+    const updateTaskStatus = async (taskId, newStatus) => {
+        try {
+          const response = await instance.put(`/tasks/${taskId}/status`, {
+            status: newStatus,
+          }, {
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+          return response;
+        } catch (error) {
+          console.error('Error updateTaskStatus:', error);
+          throw error; 
+        }
+      }
+
+    const handleCheckboxChange = async (taskId) => {
+        let newStatus;
+        const task = tasks.find(task => task.no === taskId);
+        if (!task) {
+            console.error('Task not found');
+            return;
+        }
+        const today = new Date();
+        const taskDueDate = new Date(task.startDate);
+    
+        if (checked) { 
+            if (taskDueDate < today) {
+                newStatus = 'OVERDUE';
+            } else {
+                newStatus = 'PENDING';
+            }
+        } else {
+            newStatus = 'COMPLETED';
+        }
+    
+        setChecked(!checked); 
+        setIsCancelled(newStatus === 'CANCELLED');
+
+        console.log("1 taskId : ", taskId);
+        console.log("1 checked : ", checked);
+        console.log("1 newStatus : ", newStatus);
+        try {
+          const response = await updateTaskStatus(taskId, newStatus); // 응답이 완료될 때까지 대기
+        } catch (error) {
+          console.error('Error updating task status:', error);
+        }
+      }
+    
+    const handleCancel = async () => {
+        const newStatus = 'CANCELLED';
+        if (tasks && tasks.no) {
+          try {
+            const response = await instance.put(`/tasks/${tasks.no}/status`, {
+              status: newStatus,
+            }, {
+              headers: {
+                'Content-Type': 'application/json',
+              }
+            });
+            if (response.status === 200) {
+            //   await refreshTasks();
+              setIsCancelled(newStatus === 'CANCELLED');
+            } else {
+              console.error('Failed to update task status');
+            }
+          } catch (error) {
+            console.error('Error updating task status:', error);
+          }
+        } else {
+          console.error('Task object is missing or task.no is undefined');
+        }
+      };
     return (
         <div onClick={hideSidebar}>
             <MenuBar 
                 setUser={setUser} 
-                user={user}/>
+                user={user}
+                checked={checked} 
+                setChecked={setChecked}  
+                isCancelled={isCancelled}
+                setIsCancelled={setIsCancelled}
+                handleCancel={handleCancel}
+                handleCheckboxChange={handleCheckboxChange}
+                />
             <div className="icon" onClick={(e) => { e.stopPropagation(); toggleSidebar(); }}
                 style={{ zIndex: 1001, }}>
                     { user ? 
@@ -176,6 +263,12 @@ const Layout = ({setUser, user}) => {
                         deleteList={deleteList}
                         user={user}
                         setUser={setUser}
+                        checked={checked} 
+                        setChecked={setChecked}  
+                        isCancelled={isCancelled}
+                        setIsCancelled={setIsCancelled}
+                        handleCancel={handleCancel}
+                        handleCheckboxChange={handleCheckboxChange}
                     />
                 </div>
             )}
@@ -205,6 +298,12 @@ const Layout = ({setUser, user}) => {
                             deleteList={deleteList}
                             user={user}
                             setUser={setUser}
+                            checked={checked} 
+                            setChecked={setChecked}  
+                            isCancelled={isCancelled}
+                            setIsCancelled={setIsCancelled}
+                            handleCancel={handleCancel}
+                            handleCheckboxChange={handleCheckboxChange}
                         />
                     </div>
                 )}
@@ -219,8 +318,13 @@ const Layout = ({setUser, user}) => {
                         updateList,
                         deleteList,
                         user,
-                        setUser
-                    
+                        setUser,
+                        checked,
+                        setChecked,
+                        isCancelled,
+                        setIsCancelled,
+                        handleCancel,
+                        handleCheckboxChange,
                     }} />
                 </main>
             </div>

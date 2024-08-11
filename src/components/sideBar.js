@@ -8,7 +8,8 @@ import { useOutletContext } from 'react-router-dom';
 
 const SideBar = ({ toggleSidebar, 
   tasks, addTask, updateTask, deleteTask, 
-  lists, addList, updateList, deleteList }) => {
+  lists, addList, updateList, deleteList,
+  checked,  setChecked,  isCancelled,  setIsCancelled,  handleCancel,  handleCheckboxChange }) => {
   const [showCreateListModal, setShowCreateListModal] = useState(false);
   const [tasksByLists, setTasksByLists] = useState([]);
   const [selectedList, setSelectedList] = useState(null);
@@ -56,6 +57,12 @@ const SideBar = ({ toggleSidebar,
               toggleSidebar={toggleSidebar}
               deleteList ={deleteList }
               updateList={updateList}
+              checked={checked} 
+              setChecked={setChecked}  
+              isCancelled={isCancelled}
+              setIsCancelled={setIsCancelled}
+              handleCancel={handleCancel}
+              handleCheckboxChange={handleCheckboxChange}
               />
             </div>
           </div>

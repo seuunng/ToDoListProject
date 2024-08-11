@@ -13,7 +13,8 @@ import { AiFillAppstore } from "react-icons/ai";
 import ModalModule from '../modules/modalModule';
 import axios from '../api/axios';
 
-const MenuBar = ({ setUser, user }) => {
+const MenuBar = ({ setUser, user,
+  checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange }) => {
   const [showAccountInfo, setShowAccountInfo] = useState(false);
   const [showSettingModal, setShowSettingModal] = useState(false);
 
@@ -26,22 +27,54 @@ const MenuBar = ({ setUser, user }) => {
 
   return (
     <div>
-      {user ? 
-      <div className="menuBar">
-        <div className="item" onClick={() => setShowAccountInfo(true)}>
-          {user ? <FontAwesomeIcon icon={faCat} /> : <AiFillAppstore />}
+      {user ?
+        <div className="menuBar">
+          <div className="item" onClick={() => setShowAccountInfo(true)}>
+            {user ? <FontAwesomeIcon icon={faCat} /> : <AiFillAppstore />}
+          </div>
+          <Link
+            to={{
+              pathname: user ? "/mainBoard/basic" : '',
+              state: { checked, isCancelled }
+            }}
+            className="item"
+            // checked={checked}
+            // isCancelled={isCancelled}
+            onClick={() => {
+              setChecked(false);
+              setIsCancelled(false);
+              handleCheckboxChange();
+              handleCancel();
+            }}>
+            <FontAwesomeIcon icon={faSquareCheck} />
+          </Link>
+          <Link 
+            to={{
+              pathname: user ? "/monthlyBoard" : '',
+              state: { checked, isCancelled }
+            }}
+            className="item"
+            checked={checked}
+            // // setChecked={setChecked}  
+            // isCancelled={isCancelled}
+            // setIsCancelled={setIsCancelled}
+            // handleCancel={handleCancel}
+            // handleCheckboxChange={handleCheckboxChange}
+            
+            onClick={() => {
+              console.log('Calling setChecked:', typeof setChecked);
+              setChecked(false);
+              setIsCancelled(false);
+              handleCheckboxChange();
+              handleCancel();
+            }}>
+            <FontAwesomeIcon icon={faCalendarDays} />
+          </Link>
+          <div className="item" onClick={user ? () => setShowSettingModal(true) : () => { }}>
+            <FontAwesomeIcon icon={faGear} />
+          </div>
         </div>
-        <Link to={user ? "/mainBoard/basic":''} className="item">
-        <FontAwesomeIcon icon={faSquareCheck} />
-        </Link>
-        <Link to={user ? "/monthlyBoard":''} className="item">
-          <FontAwesomeIcon icon={faCalendarDays} />
-        </Link>
-        <div className="item" onClick={user ? () => setShowSettingModal(true) : () => {}}>
-          <FontAwesomeIcon icon={faGear} />
-        </div>
-      </div>
-        :''}
+        : ''}
       <AccountInfo
         user={user}
         setUser={setUser}
