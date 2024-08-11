@@ -5,12 +5,22 @@ import TaskBox from '../task_state/taskBox';
 import ReadTaskPage from '../../views/readTaskPage';
 import { Row, Col } from 'react-bootstrap';
 
-const TaskCont = ({ tasks, updateTask, deleteTask, onTaskClick, 
-  lists, addList, updateList, deleteList, refreshTasks
+const TaskCont = ({ 
+  tasks = [], updateTask, deleteTask, onTaskClick, 
+  lists, addList, updateList, deleteList, refreshTasks,
+  checked,  setChecked,  isCancelled,  setIsCancelled,  handleCancel,  handleCheckboxChange
  }) => {
   if (!Array.isArray(tasks)) {
+    console.error("Tasks is not an array:", tasks);
     return null;
   }
+  // const { setIsTaskBox } = useTaskBox();
+
+  // useEffect(() => {
+  //   setIsTaskBox(true);
+  //   return () => setIsTaskBox(false);
+  // }, [setIsTaskBox]);
+
   return (
     <div className="TaskContTable">
       <table className="task-table">
@@ -19,7 +29,7 @@ const TaskCont = ({ tasks, updateTask, deleteTask, onTaskClick,
             <tr key={task.no}>
               <td className="task-cell" onClick={() => onTaskClick(task)}>
                 <TaskBox
-                  tasks={task}
+                  task={task}
                   updateTask={updateTask}
                   deleteTask={deleteTask}
                   lists={lists} 
@@ -27,6 +37,12 @@ const TaskCont = ({ tasks, updateTask, deleteTask, onTaskClick,
                   updateList={updateList}
                   deleteList={deleteList}
                   refreshTasks={refreshTasks}
+                  checked={checked} 
+                  setChecked={setChecked}  
+                  isCancelled={isCancelled}
+                  setIsCancelled={setIsCancelled}
+                  handleCancel={handleCancel}
+                  handleCheckboxChange={handleCheckboxChange}
                 />
               </td>
             </tr>

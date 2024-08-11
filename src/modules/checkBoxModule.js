@@ -4,66 +4,75 @@ import '../styles/checkBox.css';
 import { FaCheck } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 
-const Checkbox = ({ task, children, disabled, checked, onChange }) => {
-  const [isCancelled, setIsCancelled] = useState(false);
+const Checkbox = ({ task, children, onChange, checked, setChecked, isCancelled, setIsCancelled }) => {
+  // const [checked, setChecked] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
-    if (task && task.taskStatus) {
+    if (task) {
+      setChecked(task.taskStatus === 'COMPLETED');
       setIsCancelled(task.taskStatus === 'CANCELLED');
     }
+    // console.log(task.taskStatus);
+    // console.log(checked);
   }, [task]);
 
-  const updateTaskStatus = async (taskId, newStatus) => {
-    console.log("updateTaskStatus taskId : ", taskId,);
-    try {
-      const response = instance.put(`/tasks/${taskId}/status`, {
-        status: newStatus,
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
+  // const updateTaskStatus = async (taskId, newStatus) => {
+  //   try {
+  //     const response = await instance.put(`/tasks/${taskId}/status`, {
+  //       status: newStatus,
+  //     }, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       }
+  //     });
+  //     return response;
+  //   } catch (error) {
+  //     console.error('Error updateTaskStatus:', error);
+  //     throw error; 
+  //   }
+  // }
 
-    } catch (error) {
-      console.error('Error updateTaskStatus:', error);
-    }
-  }
+  // const handleChange = async () => {
+  //   let newStatus;
+  //   if (checked) { 
+  //     const today = new Date();
+  //     const taskDueDate = new Date(task.startDate);
+  //     if (taskDueDate < today) {
+  //       newStatus = 'OVERDUE';
+  //     } else {
+  //       newStatus = 'PENDING';
+  //     }
+  //   } else {
+  //     newStatus = 'COMPLETED';
+  //   }
 
-  const handleChange = (isChecked) => {
-    const newStatus = isChecked ? 'COMPLETED' : 'PENDING';
-    if (task && task.no) {
-      updateTaskStatus(task.no, newStatus);
-      onChange(isChecked);
-    } else {
-      console.error('Task object is missing or task.no is undefined');
-    };
-  }
+  //   setChecked(!checked); 
+  //   setIsCancelled(newStatus === 'CANCELLED');
+  //   try {
+  //     const response = await updateTaskStatus(task.no, newStatus); // 응답이 완료될 때까지 대기
+  //   } catch (error) {
+  //     console.error('Error updating task status:', error);
+  //   }
+  // }
 
-  const handleCancel = () => {
-    const newStatus = 'CANCELLED';
-    if (task && task.no) {
-      updateTaskStatus(task.no, newStatus);
-      setIsCancelled(true);
-      onChange(false); // Optional: uncheck the checkbox if task is cancelled
-    } else {
-      console.error('Task object is missing or task.no is undefined');
-    }
-  }
+  // const handleCancel = () => {
+  //   const newStatus = 'CANCELLED';
+  //   if (task && task.no) {
+  //     updateTaskStatus(task.no, newStatus).then(() => {
+  //     });
+  //   } else {
+  //     console.error('Task object is missing or task.no is undefined');
+  //   }
+  // }
 
   return (
     <label className="custom-checkbox">
-      {/* <input
-        type="checkbox"
-        disabled={disabled}
-        checked={checked && !isCancelled}
-        onChange={(e) => handleChange(e.target.checked)}
-      /> */}
-      <span className={`custom-checkbox-icon ${disabled ? 'disabled' : ''}`}
-        onClick={disabled ? null : handleChange}>
+      <span className="custom-checkbox-icon"
+        onClick={onChange} >
         {isCancelled ? <IoClose /> : (checked && <FaCheck />)}
       </span>
       {children}
-      {/* {!isCancelled && <button onClick={handleCancel} disabled={disabled} style={{ marginLeft: '10px' }}>Cancel</button>} */}
     </label>
   );
 }
