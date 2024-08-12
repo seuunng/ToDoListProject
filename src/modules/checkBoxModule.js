@@ -4,73 +4,32 @@ import '../styles/checkBox.css';
 import { FaCheck } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 
-const Checkbox = ({ task, children, onChange, checked, setChecked, isCancelled, setIsCancelled }) => {
-  // const [checked, setChecked] = useState(false);
-  const [disabled, setDisabled] = useState(false);
+const Checkbox = ({ task, children, onChange, 
+  // checked, setChecked, isCancelled, setIsCancelled 
+}) => {
+
+  const [checked, setChecked] = useState(false);
+  const [isCancelled, setIsCancelled] = useState(false);
 
   useEffect(() => {
     if (task) {
-      setChecked(task.taskStatus === 'COMPLETED');
-      setIsCancelled(task.taskStatus === 'CANCELLED');
+      const isTaskCompleted = task.taskStatus === 'COMPLETED';
+      const isTaskCancelled = task.taskStatus === 'CANCELLED';
+      setChecked(isTaskCompleted);
+      setIsCancelled(isTaskCancelled);
     }
-    // console.log(task.taskStatus);
-    // console.log(checked);
   }, [task]);
-
-  // const updateTaskStatus = async (taskId, newStatus) => {
-  //   try {
-  //     const response = await instance.put(`/tasks/${taskId}/status`, {
-  //       status: newStatus,
-  //     }, {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       }
-  //     });
-  //     return response;
-  //   } catch (error) {
-  //     console.error('Error updateTaskStatus:', error);
-  //     throw error; 
-  //   }
-  // }
-
-  // const handleChange = async () => {
-  //   let newStatus;
-  //   if (checked) { 
-  //     const today = new Date();
-  //     const taskDueDate = new Date(task.startDate);
-  //     if (taskDueDate < today) {
-  //       newStatus = 'OVERDUE';
-  //     } else {
-  //       newStatus = 'PENDING';
-  //     }
-  //   } else {
-  //     newStatus = 'COMPLETED';
-  //   }
-
-  //   setChecked(!checked); 
-  //   setIsCancelled(newStatus === 'CANCELLED');
-  //   try {
-  //     const response = await updateTaskStatus(task.no, newStatus); // 응답이 완료될 때까지 대기
-  //   } catch (error) {
-  //     console.error('Error updating task status:', error);
-  //   }
-  // }
-
-  // const handleCancel = () => {
-  //   const newStatus = 'CANCELLED';
-  //   if (task && task.no) {
-  //     updateTaskStatus(task.no, newStatus).then(() => {
-  //     });
-  //   } else {
-  //     console.error('Task object is missing or task.no is undefined');
-  //   }
-  // }
+  
+  useEffect(() => {
+    // 상태가 변경될 때마다 로그를 출력하여 상태 변경을 확인
+    console.log("Checkbox state updated: ", { checked, isCancelled });
+  }, [checked, isCancelled]);
 
   return (
     <label className="custom-checkbox">
       <span className="custom-checkbox-icon"
         onClick={onChange} >
-        {isCancelled ? <IoClose /> : (checked && <FaCheck />)}
+        {isCancelled ? <IoClose /> : (checked ? <FaCheck /> : null)}
       </span>
       {children}
     </label>

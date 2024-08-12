@@ -32,11 +32,12 @@ const ListItemsBox = ({ lists, toggleSidebar, deleteList, updateList,
                     style={{ textDecoration: "none" }}
                     onClick={() => {
                       toggleSidebar();
-                      setChecked(false);
-                      setIsCancelled(false);
-                      handleCheckboxChange();
-                      handleCancel();
-                    }}>
+                      // setChecked(false);
+                      // setIsCancelled(false);
+                      // handleCheckboxChange();
+                      // handleCancel();
+                    }}
+                    >
                     <Row style={{ marginBottom: "8px" }} >
                       <Col sm={2}>
                         {list.icon ? list.icon : <IoReorderThree />}

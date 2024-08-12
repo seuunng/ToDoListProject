@@ -12,10 +12,27 @@ import { TaskBoxProvider, useTaskBox } from '../contexts/taskBoxContext.js';
 import instance from '../api/axios';
 import { useTaskContext } from '../contexts/taskContext.js';
 
-const ReadTaskPageContent = ({ tasks, updateTask, deleteTask,
-  lists, refreshTasks,
-  checked,  setChecked,  isCancelled,  setIsCancelled,  handleCancel,  handleCheckboxChange
+const ReadTaskPageContent = ({
+  task,
+  updateTask, deleteTask, lists, refreshTasks, onTaskClick, 
+  // checked,  setChecked,  isCancelled,  setIsCancelled,
+  handleCancel, handleCheckboxChange
 }) => {
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [taskTitle, setTaskTitle] = useState(task.title);
+  const [taskContent, setTaskContent] = useState(task.content);
+  const [startDate, setStartDate] = useState(new Date(task.startDate));
+  const [endDate, setEndDate] = useState(task.endDate ? new Date(task.endDate) : null);
+  const [selectedButton, setSelectedButton] = useState(task.dateStatus || 'DATE');
+  const [isRepeat, setIsRepeat] = useState(task.isRepeated || 'NOREPEAT');
+  const [isNotified, setIsNotified] = useState(task.isNotified || 'NOALRAM');
+  const [checked, setChecked] = useState(task.taskStatus === 'COMPLETED');
+  const [isCancelled, setIsCancelled] = useState(task.taskStatus === 'CANCELLED');
+
+  const [selectedList, setSelectedList] = useState(null);
+
+  // const { setIsTaskBox } = useTaskBox();
+
   const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
   const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
   const alarmMapping = {
@@ -26,74 +43,60 @@ const ReadTaskPageContent = ({ tasks, updateTask, deleteTask,
   };
   const initialAlarm = savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
 
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [taskTitle, setTaskTitle] = useState(tasks.title);
-  const [taskContent, setTaskContent] = useState(tasks.content);
-  const [startDate, setStartDate] = useState(new Date(tasks.startDate));
-  const [endDate, setEndDate] = useState(tasks.endDate ? new Date(tasks.endDate) : null);
-  const [selectedButton, setSelectedButton] = useState(tasks.dateStatus || 'DATE');
-  const [isRepeat, setIsRepeat] = useState(tasks.isRepeated || 'NOREPEAT');
-  const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALRAM');
-  const [selectedList, setSelectedList] = useState(null);
-  const { setIsTaskBox } = useTaskBox();
-  // const [checked, setChecked] = useState(false);
-  // const [isCancelled, setIsCancelled] = useState(false);
-  // const { checked, setChecked, isCancelled, setIsCancelled } = useTaskContext();
-
   useEffect(() => {
-    setTaskTitle(tasks.title);
-    setTaskContent(tasks.content);
-    setStartDate(new Date(tasks.startDate));
-    setEndDate(tasks.endDate ? new Date(tasks.endDate) : null);
-    setSelectedButton(tasks.dateStatus || 'DATE');
-    setIsRepeat(tasks.isRepeated || 'NOREPEAT');
-    setIsNotified(tasks.isNotified || 'NOALRAM');
-    setSelectedList(lists.find(list => list.no === tasks.listNo) || null);
-    // console.log("1 selectedButton : ", selectedButton);
-    // console.log("2 tasks.selectedButton : ", tasks.selectedButton);
-    // console.log("3 tasks.dateStatus: ", );
-  }, [tasks, lists]);
+    setTaskTitle(task.title);
+    setTaskContent(task.content);
+    setStartDate(new Date(task.startDate));
+    setEndDate(task.endDate ? new Date(task.endDate) : null);
+    setSelectedButton(task.dateStatus || 'DATE');
+    setIsRepeat(task.isRepeated || 'NOREPEAT');
+    setIsNotified(task.isNotified || 'NOALRAM');
+    setSelectedList(lists.find(list => list.no === task.listNo) || null);
+  
+    setChecked(task.taskStatus === 'COMPLETED');
+    setIsCancelled(task.taskStatus === 'CANCELLED');
+  }, [task, lists, setChecked, setIsCancelled]);
 
   // useEffect(() => {
-  //   setChecked(tasks.taskStatus === 'COMPLETED');
-  //   setIsCancelled(tasks.taskStatus === 'CANCELLED');
-  // }, [tasks, setChecked, setIsCancelled]);
-
-
-  useEffect(() => {
-    setChecked(checked)
-    setIsCancelled(isCancelled);
-  }, [tasks,  checked, isCancelled]);
+  //   setIsTaskBox(false);
+  //   return () => setIsTaskBox(false);
+  // }, [setIsTaskBox]);
 
   useEffect(() => {
-    setIsTaskBox(false);
-    return () => setIsTaskBox(false);
-  }, [setIsTaskBox]);
+    console.log("2 ", task.title);
+    console.log("2 ", task.taskStatus);
+    console.log("2 ", checked);
+  }, [task, checked]);
+
+  useEffect(() => {
+    console.log("Checked state has changed:", checked);
+    // 상태가 변경된 후에 필요한 작업을 여기에 추가
+  }, [checked]);
 
   const handleTitleChange = async (e) => {
     const newTitle = e.target.value;
     setTaskTitle(newTitle);
-    await updateTask({ ...tasks, title: newTitle });
+    await updateTask({ ...task, title: newTitle });
     await refreshTasks();
   };
 
   const handleContentChange = async (e) => {
     const newContent = e.target.value;
     setTaskContent(newContent);
-    await updateTask({ ...tasks, content: newContent });
+    await updateTask({ ...task, content: newContent });
     await refreshTasks();
   };
 
   const handleDateChange = async (startDate, endDate) => {
     setStartDate(startDate);
     setEndDate(endDate);
-    await updateTask({ ...tasks, startDate, endDate });
+    await updateTask({ ...task, startDate, endDate });
     await refreshTasks();
   };
 
   const handleSelectedButtonChange = async (button) => {
     setSelectedButton(button);
-    await updateTask({ ...tasks, dateStatus: button.toUpperCase() });
+    await updateTask({ ...task, dateStatus: button.toUpperCase() });
     await refreshTasks();
   };
 
@@ -107,8 +110,8 @@ const ReadTaskPageContent = ({ tasks, updateTask, deleteTask,
     };
     const isRepeated = repeatMapping[option] || "NOREPEAT";
     setIsRepeat(isRepeated);
-    const updatedTasks = { ...tasks, isRepeated: isRepeated };
-    await updateTask(updatedTasks);
+    const updatedTask = { ...task, isRepeated: isRepeated };
+    await updateTask(updatedTask);
     await refreshTasks();
   };
 
@@ -122,49 +125,21 @@ const ReadTaskPageContent = ({ tasks, updateTask, deleteTask,
     };
     const isNotified = alarmMapping[option] || "NOALRAM";
     setIsNotified(isNotified);
-    const updatedTasks = { ...tasks, isNotified: isNotified };
-    await updateTask(updatedTasks);
+    const updatedTask = { ...task, isNotified: isNotified };
+    await updateTask(updatedTask);
     await refreshTasks();
   };
 
-  // const handleCheckboxChange = (isChecked) => {
-  //   setChecked(isChecked);
-  // };
-
-  // const handleCancel = async () => {
-  //   const newStatus = 'CANCELLED';
-  //   if (tasks && tasks.no) {
-  //     try {
-  //       const response = await instance.put(`/tasks/${tasks.no}/status`, {
-  //         status: newStatus,
-  //       }, {
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         }
-  //       });
-  //       if (response.status === 200) {
-  //         await refreshTasks();
-  //         setIsCancelled(newStatus === 'CANCELLED');
-  //       } else {
-  //         console.error('Failed to update task status');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error updating task status:', error);
-  //     }
-  //   } else {
-  //     console.error('Task object is missing or task.no is undefined');
-  //   }
-  // };
   return (
     <div className="readTaskPage">
       <div className="d-flex align-items-center">
         <CheckBox
-          task={tasks}
+          task={task}
           checked={checked}
-          setChecked={setChecked} 
           isCancelled={isCancelled}
+          setChecked={setChecked}
           setIsCancelled={setIsCancelled}
-          onChange={handleCheckboxChange}
+          onChange={() => handleCheckboxChange(task.no)}
         />
         <PiLineVerticalThin style={{ marginLeft: "5px", marginRight: "5px" }} />
         <FaCalendarCheck onClick={() => setShowDatePicker(true)} />
@@ -210,13 +185,13 @@ const ReadTaskPageContent = ({ tasks, updateTask, deleteTask,
               lists={lists}
               selectedList={selectedList}
               setSelectedList={setSelectedList}
-              tasks={tasks}
+              task={task}
               updateTask={updateTask}
             />
           </div>
           <div className="setting-icon col righted">
             <SetTask
-              task={tasks}
+              task={task}
               deleteTask={deleteTask}
               handleCancel={handleCancel}
             />

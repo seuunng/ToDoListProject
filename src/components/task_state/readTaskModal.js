@@ -117,34 +117,6 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
       handleClose();
     }
   };
-  // const handleCheckboxChange = (isChecked) => {
-  //   setChecked(isChecked);
-  // };
-
-  // const handleCancel = async () => {
-  //   const newStatus = 'CANCELLED';
-  //   if (tasks && tasks.no) {
-  //     try {
-  //       const response = await instance.put(`/tasks/${tasks.no}/status`, {
-  //         status: newStatus,
-  //       }, {
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         }
-  //       });
-  //       if (response.status === 200) {
-  //         // await refreshTasks();
-  //         setIsCancelled(newStatus === 'CANCELLED');
-  //       } else {
-  //         console.error('Failed to update task status');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error updating task status:', error);
-  //     }
-  //   } else {
-  //     console.error('Task object is missing or task.no is undefined');
-  //   }
-  // };
 
   return (
     <Modal show={show} onHide={handleClose} centered>

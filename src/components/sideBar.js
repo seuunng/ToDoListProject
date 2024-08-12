@@ -32,7 +32,7 @@ const SideBar = ({ toggleSidebar,
   const showCreateList = () => {
     setShowCreateListModal(true);
   };
-
+      
   return (
     <div>
       <div className="sideBar">

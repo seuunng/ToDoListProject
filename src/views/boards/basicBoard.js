@@ -41,11 +41,14 @@ const BasicBoard = () => {
     }
   }, [listId, lists]);
 
-
-
   const handleTaskClick = (task) => {
     setSelectedTask(task);
   };
+
+  useEffect(() => {
+    // console.log("2 ", tasks.taskStatus);
+    console.log("basicboard ", checked);
+  }, [tasks]);
 
   return (
     <div className="BasicBoard">
@@ -77,9 +80,10 @@ const BasicBoard = () => {
         <Col className="ReadTaskPage">
           {selectedTask && (
             <ReadTaskPage
-              tasks={selectedTask}
+              task={selectedTask}
               updateTask={updateTask}
               deleteTask={deleteTask}
+              onTaskClick={handleTaskClick}
               lists={lists}
               refreshTasks={fetchListAndTasks}
               checked={checked} 

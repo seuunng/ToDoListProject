@@ -11,10 +11,44 @@ const Layout = ({setUser, user}) => {
     const [tasks, setTasks] = useState([]);
     const [lists, setLists] = useState([]);
     const [checked, setChecked] = useState(false);
+    const [checkedTasks, setCheckedTasks] = useState({});
     const [isCancelled, setIsCancelled] = useState(false);
     
-    // console.log('Layout checked:', checked);
-    // console.log('Layout setChecked:', typeof setChecked);
+    const fetchTableData = async () => {
+        if (!user || !user.id) {
+            console.error('User ID is not available');
+            return;
+        }
+        try {
+            const response_taskData = await instance.get(`/tasks/task/${user.id}`);
+            const data = Array.isArray(response_taskData.data) ? response_taskData.data : [];
+
+            const response_listData = await instance.get('/lists/list');
+            const data_list = Array.isArray(response_listData.data) ? response_listData.data : [];
+            
+            const tasksWithLists = data.map(task => {
+                if (!task.listNo) {
+                    console.warn(`Task with ID ${task.no} does not have a listNo property.`);
+                    return { ...task, list: null };
+                }
+                const list = data_list.find(list => list.no === task.listNo);
+                return { ...task, list: list || null };
+            });
+
+            // 상태를 업데이트합니다.
+            setTasks(tasksWithLists);
+            setLists(data_list);
+            const initialChecked = tasksWithLists.reduce((acc, task) => {
+                acc[task.no] = task.taskStatus === 'COMPLETED';
+                return acc;
+            }, {});
+            setCheckedTasks(initialChecked);
+        } catch (error) {
+            console.error('Error getting data:', error);
+            setTasks([]);
+            setLists([]);
+        }
+    };
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -33,41 +67,15 @@ const Layout = ({setUser, user}) => {
     }, [setUser]);
 
     useEffect(() => {
-        const fetchTableData = async () => {
-            // console.log("fetchTableData user.id : ", user.id)
-            if (!user || !user.id) {
-                console.error('User ID is not available');
-                return;
-            }
-            try {
-                const response_taskData = await instance.get(`/tasks/task/${user.id}`);
-                const data = Array.isArray(response_taskData.data) ? response_taskData.data : [];
-
-                const response_listData = await instance.get('/lists/list');
-                const data_list = Array.isArray(response_listData.data) ? response_listData.data : [];
-                
-                const tasksWithLists = data.map(task => {
-                    if (!task.listNo) {
-                        console.warn(`Task with ID ${task.no} does not have a listNo property.`);
-                        return { ...task, list: null };
-                    }
-                    const list = data_list.find(list => list.no === task.listNo);
-                    return { ...task, list: list || null };
-                });
-
-                setTasks(tasksWithLists);
-                setLists(data_list);
-            } catch (error) {
-                console.error('Error getting data:', error);
-                setTasks([]);
-                setLists([]);
-            }
-        }
         if (user) {
             fetchTableData();
         }
     }, [user]);
 
+    const refreshTasks = async () => {
+        await fetchTableData();
+    };
+    
     const addTask = async (newTask) => {
         try {
             const response = await instance.post('/tasks/task', {
@@ -75,8 +83,7 @@ const Layout = ({setUser, user}) => {
                 user: user, 
                 list: newTask.list ? newTask.list : { no: null } 
             });
-            const addedTask = response.data;
-            setTasks((prevTasks) => [...prevTasks, addedTask]);
+            setTasks((prevTasks) => [...prevTasks, response.data]);
         } catch (error) {
             console.error('Error adding task:', error);
         }
@@ -163,6 +170,8 @@ const Layout = ({setUser, user}) => {
     const handleCheckboxChange = async (taskId) => {
         let newStatus;
         const task = tasks.find(task => task.no === taskId);
+        // console.log("handleCheckboxChange 실행 ", task);
+
         if (!task) {
             console.error('Task not found');
             return;
@@ -170,34 +179,39 @@ const Layout = ({setUser, user}) => {
         const today = new Date();
         const taskDueDate = new Date(task.startDate);
     
-        if (checked) { 
+        if (checkedTasks[taskId]) { 
+            // 이미 완료된 상태에서 클릭한 경우
             if (taskDueDate < today) {
                 newStatus = 'OVERDUE';
             } else {
                 newStatus = 'PENDING';
             }
         } else {
+            // 완료되지 않은 상태에서 클릭한 경우
             newStatus = 'COMPLETED';
         }
-    
-        setChecked(!checked); 
+        setCheckedTasks(prevChecked => ({ ...prevChecked, [taskId]: !prevChecked[taskId] }));
+        setChecked(newStatus === 'COMPLETED');
         setIsCancelled(newStatus === 'CANCELLED');
 
-        console.log("1 taskId : ", taskId);
-        console.log("1 checked : ", checked);
-        console.log("1 newStatus : ", newStatus);
         try {
-          const response = await updateTaskStatus(taskId, newStatus); // 응답이 완료될 때까지 대기
+            await updateTaskStatus(taskId, newStatus);
+            await refreshTasks(); // 상태 변경 후 테스크를 새로고침
         } catch (error) {
-          console.error('Error updating task status:', error);
+            console.error('Error updating task status:', error);
         }
       }
-    
-    const handleCancel = async () => {
+      useEffect(() => {
+        console.log("layout taskId : ", tasks);
+        console.log("layout checked : ", checked);
+        console.log("layout newStatus : ", tasks.taskStatus);
+      }, [tasks]);
+
+    const handleCancel = async (task) => {
         const newStatus = 'CANCELLED';
-        if (tasks && tasks.no) {
+        if (task && task.no) {
           try {
-            const response = await instance.put(`/tasks/${tasks.no}/status`, {
+            const response = await instance.put(`/tasks/${task.no}/status`, {
               status: newStatus,
             }, {
               headers: {
@@ -205,7 +219,7 @@ const Layout = ({setUser, user}) => {
               }
             });
             if (response.status === 200) {
-            //   await refreshTasks();
+              await refreshTasks();
               setIsCancelled(newStatus === 'CANCELLED');
             } else {
               console.error('Failed to update task status');

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../../styles/basicStyle.css';
 import '../../styles/taskCont.css';
 import TaskBox from '../task_state/taskBox';
-import ReadTaskPage from '../../views/readTaskPage';
+// import ReadTaskPage from '../../views/readTaskPage';
 import { Row, Col } from 'react-bootstrap';
 
 const TaskCont = ({ 
@@ -10,16 +10,18 @@ const TaskCont = ({
   lists, addList, updateList, deleteList, refreshTasks,
   checked,  setChecked,  isCancelled,  setIsCancelled,  handleCancel,  handleCheckboxChange
  }) => {
+  
+  useEffect(() => {
+    // if(tasks.length > 0){
+    //   console.log("3 ", tasks[0]?.taskStatus);
+      console.log("TaskCont ", checked);
+    // }
+  }, [tasks]);
+
   if (!Array.isArray(tasks)) {
     console.error("Tasks is not an array:", tasks);
     return null;
   }
-  // const { setIsTaskBox } = useTaskBox();
-
-  // useEffect(() => {
-  //   setIsTaskBox(true);
-  //   return () => setIsTaskBox(false);
-  // }, [setIsTaskBox]);
 
   return (
     <div className="TaskContTable">
