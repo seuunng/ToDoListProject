@@ -44,6 +44,19 @@ const CreateTaskModal = forwardRef((props, ref) => {
   
   // console.log("4 initialAlarm", initialAlarm);  
 
+  const getStoredItem = (key) => {
+    try {
+     const storedItem = localStorage.getItem(key);
+     return storedItem ? JSON.parse(storedItem) : null;
+   } catch (error) {
+     console.error(`Error parsing ${key} from localStorage`, error);
+     return null;
+   }
+ };
+
+ const selectedList_localSrotage = getStoredItem('selectedList');
+ const defaultList = getStoredItem('defaultList');
+
   const [show, setShow] = useState(false);
   const [newTask, setNewTask] = useState({
     title: '',
@@ -55,7 +68,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
     dateStatus: 'DATE',
     list: null,
   });
-  const [selectedList, setSelectedList] = useState(null);
+  const [selectedList, setSelectedList] = useState(selectedList_localSrotage||defaultList);
   // const { selectedOptions, switches } = useSettings();
   // console.log(" CreateTaskModal lists", lists)
 

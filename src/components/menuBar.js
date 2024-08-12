@@ -47,7 +47,7 @@ const MenuBar = ({ setUser, user, lists, smartLists,
           </div>
           <Link
             to={{
-              pathname: user ? "/mainBoard/basic" : '',
+              pathname: user ? `/basicBoard/${selectedList?.no}`:'',
               state: { checked, isCancelled, selectedList: selectedList? selectedList.no : defaultList.no }
             }}
             className="item"
