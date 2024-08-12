@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
 import '../../styles/basicStyle.css';
-import { LuPin } from "react-icons/lu";
-import { LuPinOff } from "react-icons/lu";
-import { MdCancelPresentation } from "react-icons/md";
-import { FaRegStickyNote } from "react-icons/fa";
-import { AiOutlineRollback } from "react-icons/ai";
-import { MdLocalPrintshop } from "react-icons/md";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import Dropdown from 'react-bootstrap/Dropdown';
-import Form from 'react-bootstrap/Form';
-import { BsThreeDots } from "react-icons/bs";
 import { IoReorderThree } from "react-icons/io5";
 
 const SetListToggle = React.forwardRef(({ children, onClick }, ref) => (

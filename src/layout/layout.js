@@ -10,6 +10,7 @@ const Layout = ({setUser, user}) => {
     const [sidebarVisible, setSidebarVisible] = useState(false);
     const [tasks, setTasks] = useState([]);
     const [lists, setLists] = useState([]);
+    const [smartLists, setSmartLists] = useState([]);
     const [checked, setChecked] = useState(false);
     const [checkedTasks, setCheckedTasks] = useState({});
     const [isCancelled, setIsCancelled] = useState(false);
@@ -22,10 +23,18 @@ const Layout = ({setUser, user}) => {
         try {
             const response_taskData = await instance.get(`/tasks/task/${user.id}`);
             const data = Array.isArray(response_taskData.data) ? response_taskData.data : [];
+            console.log("response_taskData", response_taskData);
 
             const response_listData = await instance.get('/lists/list');
             const data_list = Array.isArray(response_listData.data) ? response_listData.data : [];
-            
+
+            console.log("data_list", data_list);
+
+            const response_smartListsData = await instance.get('/smartLists/list');
+            const data_smartList = Array.isArray(response_smartListsData.data) ? response_smartListsData.data : [];
+
+            console.log("data_smartList", data_smartList);
+
             const tasksWithLists = data.map(task => {
                 if (!task.listNo) {
                     console.warn(`Task with ID ${task.no} does not have a listNo property.`);
@@ -34,10 +43,19 @@ const Layout = ({setUser, user}) => {
                 const list = data_list.find(list => list.no === task.listNo);
                 return { ...task, list: list || null };
             });
+            // const tasksWithStLists = data.map(task => {
+            //     if (!task.smartListNo) {
+            //         console.warn(`Task with ID ${task.no} does not have a listNo property.`);
+            //         return { ...task, smartList: null };
+            //     }
+            //     const smartLists = data_smartList.find(smartList => smartList.no === task.smartListNo);
+            //     return { ...task, smartLists: smartLists || null };
+            // });
 
             // 상태를 업데이트합니다.
             setTasks(tasksWithLists);
             setLists(data_list);
+            setSmartLists(data_smartList)
             const initialChecked = tasksWithLists.reduce((acc, task) => {
                 acc[task.no] = task.taskStatus === 'COMPLETED';
                 return acc;
@@ -57,7 +75,6 @@ const Layout = ({setUser, user}) => {
             instance.get('/auth/session')
                 .then(response => {
                     setUser(response.data.user);
-                    // console.log("response.data.user", response.data);
                 })
                 .catch(error => {
                     console.error('Session check failed:', error.response ? error.response.data : error.message);
@@ -81,9 +98,11 @@ const Layout = ({setUser, user}) => {
             const response = await instance.post('/tasks/task', {
                 ...newTask,
                 user: user, 
-                list: newTask.list ? newTask.list : { no: null } 
+                list: newTask.list ? newTask.list : { no: null } ,
+                smartList: newTask.smartList ? newTask.smartList : { no: null } 
             });
             setTasks((prevTasks) => [...prevTasks, response.data]);
+            console.log(" addTask ", response.data)
         } catch (error) {
             console.error('Error adding task:', error);
         }
@@ -201,11 +220,11 @@ const Layout = ({setUser, user}) => {
             console.error('Error updating task status:', error);
         }
       }
-      useEffect(() => {
-        console.log("layout taskId : ", tasks);
-        console.log("layout checked : ", checked);
-        console.log("layout newStatus : ", tasks.taskStatus);
-      }, [tasks]);
+    //   useEffect(() => {
+    //     console.log("layout taskId : ", tasks);
+    //     console.log("layout checked : ", checked);
+    //     console.log("layout newStatus : ", tasks.taskStatus);
+    //   }, [tasks]);
 
     const handleCancel = async (task) => {
         const newStatus = 'CANCELLED';
@@ -236,12 +255,14 @@ const Layout = ({setUser, user}) => {
             <MenuBar 
                 setUser={setUser} 
                 user={user}
+                lists={lists}
                 checked={checked} 
                 setChecked={setChecked}  
                 isCancelled={isCancelled}
                 setIsCancelled={setIsCancelled}
                 handleCancel={handleCancel}
                 handleCheckboxChange={handleCheckboxChange}
+                smartLists={smartLists}
                 />
             <div className="icon" onClick={(e) => { e.stopPropagation(); toggleSidebar(); }}
                 style={{ zIndex: 1001, }}>
@@ -283,6 +304,7 @@ const Layout = ({setUser, user}) => {
                         setIsCancelled={setIsCancelled}
                         handleCancel={handleCancel}
                         handleCheckboxChange={handleCheckboxChange}
+                        smartLists={smartLists}
                     />
                 </div>
             )}
@@ -318,6 +340,7 @@ const Layout = ({setUser, user}) => {
                             setIsCancelled={setIsCancelled}
                             handleCancel={handleCancel}
                             handleCheckboxChange={handleCheckboxChange}
+                            smartLists={smartLists}
                         />
                     </div>
                 )}
@@ -339,6 +362,8 @@ const Layout = ({setUser, user}) => {
                         setIsCancelled,
                         handleCancel,
                         handleCheckboxChange,
+                        smartLists,
+                        setSmartLists,
                     }} />
                 </main>
             </div>

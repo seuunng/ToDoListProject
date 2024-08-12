@@ -25,7 +25,7 @@ const ReadTaskPageContent = ({
   const [endDate, setEndDate] = useState(task.endDate ? new Date(task.endDate) : null);
   const [selectedButton, setSelectedButton] = useState(task.dateStatus || 'DATE');
   const [isRepeat, setIsRepeat] = useState(task.isRepeated || 'NOREPEAT');
-  const [isNotified, setIsNotified] = useState(task.isNotified || 'NOALRAM');
+  const [isNotified, setIsNotified] = useState(task.isNotified || 'NOALARM');
   const [checked, setChecked] = useState(task.taskStatus === 'COMPLETED');
   const [isCancelled, setIsCancelled] = useState(task.taskStatus === 'CANCELLED');
 
@@ -50,7 +50,7 @@ const ReadTaskPageContent = ({
     setEndDate(task.endDate ? new Date(task.endDate) : null);
     setSelectedButton(task.dateStatus || 'DATE');
     setIsRepeat(task.isRepeated || 'NOREPEAT');
-    setIsNotified(task.isNotified || 'NOALRAM');
+    setIsNotified(task.isNotified || 'NOALARM');
     setSelectedList(lists.find(list => list.no === task.listNo) || null);
   
     setChecked(task.taskStatus === 'COMPLETED');
@@ -117,13 +117,13 @@ const ReadTaskPageContent = ({
 
   const handleAlarmClick = async (option) => {
     const alarmMapping = {
-      "알림없음": "NOALRAM",
+      "알림없음": "NOALARM",
       "정각": "ONTIME",
       "5분전": "FIVEMINS",
       "30분전": "THIRTYMINS",
       "하루전": "DAYEARLY"
     };
-    const isNotified = alarmMapping[option] || "NOALRAM";
+    const isNotified = alarmMapping[option] || "NOALARM";
     setIsNotified(isNotified);
     const updatedTask = { ...task, isNotified: isNotified };
     await updateTask(updatedTask);

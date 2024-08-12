@@ -13,17 +13,30 @@ import { AiFillAppstore } from "react-icons/ai";
 import ModalModule from '../modules/modalModule';
 import axios from '../api/axios';
 
-const MenuBar = ({ setUser, user,
+const MenuBar = ({ setUser, user, lists, smartLists,
   checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange }) => {
   const [showAccountInfo, setShowAccountInfo] = useState(false);
   const [showSettingModal, setShowSettingModal] = useState(false);
 
-  const navigate = useNavigate();
-
-  const handleSubButtonClick = () => {
-    setShowAccountInfo(false);
-    navigate('/mainAccountInfo');
+  const getStoredItem = (key) => {
+     try {
+      const storedItem = localStorage.getItem(key);
+      return storedItem ? JSON.parse(storedItem) : null;
+    } catch (error) {
+      console.error(`Error parsing ${key} from localStorage`, error);
+      return null;
+    }
   };
+
+  const selectedList = getStoredItem('selectedList');
+  const defaultList = getStoredItem('defaultList');
+
+  // const navigate = useNavigate();
+
+  // const handleSubButtonClick = () => {
+  //   setShowAccountInfo(false);
+  //   navigate('/mainAccountInfo');
+  // };
 
   return (
     <div>
@@ -35,7 +48,7 @@ const MenuBar = ({ setUser, user,
           <Link
             to={{
               pathname: user ? "/mainBoard/basic" : '',
-              state: { checked, isCancelled }
+              state: { checked, isCancelled, selectedList: selectedList? selectedList.no : defaultList.no }
             }}
             className="item"
             // checked={checked}
@@ -83,6 +96,9 @@ const MenuBar = ({ setUser, user,
       />
       <Setting
         show={showSettingModal}
+        
+        lists={lists}
+        smartLists={smartLists}
         onHide={() => setShowSettingModal(false)}
       />
     </div>
