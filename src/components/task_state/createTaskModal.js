@@ -30,7 +30,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
   const [startDate, setStartDate] = useState(isValidDate(new Date(tasks.startDate)) ? new Date(tasks.startDate) : new Date());
   const [endDate, setEndDate] = useState(isValidDate(new Date(tasks.endDate)) ? new Date(tasks.endDate) : null);
   const [isRepeat, setIsRepeat] = useState(tasks?.isRepeated || 'NOREPEAT');
-  const [isNotified, setIsNotified] = useState(tasks?.isNotified || 'NOALRAM');
+  const [isNotified, setIsNotified] = useState(tasks?.isNotified || 'NOALARM');
   //Setting모달 설정값
   const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
   const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));

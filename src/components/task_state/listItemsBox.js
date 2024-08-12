@@ -5,38 +5,41 @@ import { Row, Col } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import SetList from '../task_list/setList';
 
-const ListItemsBox = ({ lists, toggleSidebar, deleteList, updateList,
-  checked,  setChecked,  isCancelled,  setIsCancelled,  handleCancel,  handleCheckboxChange }) => {
+const ListItemsBox = ({ lists, toggleSidebar, deleteList, updateList, isSmartList,
+  checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange }) => {
   if (!Array.isArray(lists)) {
     return null;
   }
-  // console.log('Rendering ListItemsBox with lists:', lists);
+  
+
   return (
     <div>
       {lists.map((list, index) => {
         if (!list) {
           return null;
         }
+        console.log("ListItemsBox isSmartList", isSmartList);
         return (
           <div key={index} className="list-item">
             <span className="list-content">
 
               <Row>
                 <Col style={{ padding: "0" }}>
-                  <Link 
-            to={{
-              pathname: `/basicBoard/${list?.no}`,
-              state: { checked, isCancelled }
-            }}
+                  <Link
+                    to={{
+                      pathname: `/basicBoard/${list?.no}`,
+                      state: { checked, isCancelled, isSmartList }
+                    }}
                     className="item"
                     style={{ textDecoration: "none" }}
                     onClick={() => {
                       toggleSidebar();
-                      setChecked(false);
-                      setIsCancelled(false);
-                      handleCheckboxChange();
-                      handleCancel();
-                    }}>
+                      // setChecked(false);
+                      // setIsCancelled(false);
+                      // handleCheckboxChange();
+                      // handleCancel();
+                    }}
+                  >
                     <Row style={{ marginBottom: "8px" }} >
                       <Col sm={2}>
                         {list.icon ? list.icon : <IoReorderThree />}

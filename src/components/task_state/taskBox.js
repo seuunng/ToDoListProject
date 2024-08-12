@@ -13,23 +13,25 @@ import { useTaskContext } from '../../contexts/taskContext';
 const TaskBoxContent = ({ 
   task = {},
   deleteTask, updateTask, lists, refreshTasks,
-  checked, setChecked, isCancelled, setIsCancelled,  
+  // checked, setChecked, isCancelled, setIsCancelled,  
+  handleCheckboxChange, handleCancel
  }) => {
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const getValidDate = (dateString) => {
     const date = new Date(dateString);
     return isNaN(date.getTime()) ? new Date() : date;
   }; 
+
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [taskTitle, setTaskTitle] = useState(task.title);
   const [startDate, setStartDate] = useState(getValidDate(task.startDate));
   const [endDate, setEndDate] = useState(task.endDate ? getValidDate(task.endDate) : null);
   const [selectedButton, setSelectedButton] = useState(task.selectedButton || 'DATE');
   const [isRepeat, setIsRepeat] = useState(task.isRepeated || 'NOREPEAT');
-  const [isNotified, setIsNotified] = useState(task.isNotified || 'NOALRAM');
+  const [isNotified, setIsNotified] = useState(task.isNotified || 'NOALARM');
+  const [checked, setChecked] = useState(false);
+  const [isCancelled, setIsCancelled] = useState(false);
+
   const { setIsTaskBox } = useTaskBox();
-  // const [checked, setChecked] = useState(false);
-  // const [isCancelled, setIsCancelled] = useState(false);
-  // const { checked, setChecked, isCancelled, setIsCancelled } = useTaskContext();
 
   const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
   const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
@@ -42,14 +44,13 @@ const TaskBoxContent = ({
   const initialAlarm = savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
 
   useEffect(() => {
-    console.log(task.title);
      if (task && task.title) {
       setTaskTitle(task.title);
       setStartDate(getValidDate(task.startDate));
       setEndDate(task.endDate ? getValidDate(task.endDate) : null);
       setSelectedButton(task.dateStatus || 'DATE');
       setIsRepeat(task.isRepeated || 'NOREPEAT');
-      setIsNotified(task.isNotified || 'NOALRAM');
+      setIsNotified(task.isNotified || 'NOALARM');
       setChecked(task.taskStatus === 'COMPLETED');
       setIsCancelled(task.taskStatus === 'CANCELLED');
     }
@@ -59,6 +60,14 @@ const TaskBoxContent = ({
     setIsTaskBox(true);
     return () => setIsTaskBox(false);
   }, [setIsTaskBox]);
+  useEffect(() => {
+    console.log("taskbox ", checked);
+  }, [task]);
+  useEffect(() => {
+    console.log("1 ", task.title);
+    console.log("1 ", task.taskStatus);
+    console.log("1 ", checked);
+  }, [task]);
 
   const handleTitleChange = async (e) => {
     const newTitle = e.target.value;
@@ -97,13 +106,13 @@ const TaskBoxContent = ({
 
   const handleAlarmClick = async (option) => {
     const alarmMapping = {
-      "알림없음": "NOALRAM",
+      "알림없음": "NOALARM",
       "정각": "ONTIME",
       "5분전": "FIVEMINS",
       "30분전": "THIRTYMINS",
       "하루전": "DAYEARLY"
     };
-    const isNotified = alarmMapping[option] || "NOALRAM";
+    const isNotified = alarmMapping[option] || "NOALARM";
     setIsNotified(isNotified);
     const updatedTasks = { ...task, isNotified: isNotified };
     await updateTask(updatedTasks);
@@ -112,7 +121,7 @@ const TaskBoxContent = ({
   return (
     <div>
       <Row xs="auto">
-        <Col sm={7}
+        <Col sm={8}
           style={{
             display: "flex",
             alignItems: "center"
@@ -124,7 +133,7 @@ const TaskBoxContent = ({
             isCancelled={isCancelled}
             setChecked={setChecked} 
             setIsCancelled={setIsCancelled}
-            onChange={() => setChecked(!checked)}
+            onChange={() => handleCheckboxChange(task.no)}
           /> &nbsp;
           <span className="task-title">
             <input
@@ -133,16 +142,18 @@ const TaskBoxContent = ({
               onChange={handleTitleChange}
               className="form-control"
               placeholder="Task Title"
-              style={{ border: "none" }}
+              style={{ border: "none", width: 260 }}
+              
             />
           </span>
         </Col>
-        <Col md={4} className='righted' style={{ padding: "0" }}>
+        <Col md={3} className='righted' style={{ padding: "0" }}>
           {task.isRepeated !== 'NOREPEAT' && (
             <span className="repeat col-2" style={{ width: 16 }}>
               <LuRepeat style={{ color: "grey" }} />
             </span>
           )}
+          &nbsp;
           {(initialAlarm !== 'NOALARM' || task.isNotified !== 'NOALARM') && (
             <span className="alram col-2" style={{ width: 16 }}>
               <FaRegBell style={{ color: "grey" }} />
@@ -169,7 +180,9 @@ const TaskBoxContent = ({
           <SetTask
             task={task}
             deleteTask={deleteTask}
-            handleCancel={() => setIsCancelled(true)}
+            isCancelled={isCancelled}
+            setIsCancelled={setIsCancelled}
+            handleCancel={() => handleCancel(task)}
           />
         </Col>
       </Row>

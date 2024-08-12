@@ -9,6 +9,7 @@ import { useOutletContext } from 'react-router-dom';
 const SideBar = ({ toggleSidebar, 
   tasks, addTask, updateTask, deleteTask, 
   lists, addList, updateList, deleteList,
+  smartLists,
   checked,  setChecked,  isCancelled,  setIsCancelled,  handleCancel,  handleCheckboxChange }) => {
   const [showCreateListModal, setShowCreateListModal] = useState(false);
   const [tasksByLists, setTasksByLists] = useState([]);
@@ -32,7 +33,7 @@ const SideBar = ({ toggleSidebar,
   const showCreateList = () => {
     setShowCreateListModal(true);
   };
-
+      
   return (
     <div>
       <div className="sideBar">
@@ -42,7 +43,19 @@ const SideBar = ({ toggleSidebar,
               <h6 className="item">Smart Lists</h6>
             </div>
             <div className="list">
-              {/* <ListItemsBox value="" toggleSidebar={toggleSidebar}/> */}
+              <ListItemsBox
+              lists={smartLists}
+              toggleSidebar={toggleSidebar}
+              deleteList ={deleteList }
+              updateList={updateList}
+              checked={checked} 
+              setChecked={setChecked}  
+              isCancelled={isCancelled}
+              setIsCancelled={setIsCancelled}
+              handleCancel={handleCancel}
+              handleCheckboxChange={handleCheckboxChange}
+              isSmartList={true} 
+            />
             </div>
           </div>
           <hr />
@@ -55,15 +68,16 @@ const SideBar = ({ toggleSidebar,
               <ListItemsBox  
               lists={lists}
               toggleSidebar={toggleSidebar}
-              deleteList ={deleteList }
+              deleteList ={deleteList}
               updateList={updateList}
               checked={checked} 
               setChecked={setChecked}  
               isCancelled={isCancelled}
               setIsCancelled={setIsCancelled}
               handleCancel={handleCancel}
-              handleCheckboxChange={handleCheckboxChange}
-              />
+              handleCheckboxChange={handleCheckboxChange} 
+              isSmartList={false} 
+            />
             </div>
           </div>
         </div>
