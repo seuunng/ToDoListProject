@@ -22,7 +22,7 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
 //     setSmartLists = () => {}, 
 // } = useOutletContext() || {};
 
-  const { selectedOptions, setSelectedOptions, switches, setSwitches } = useSettings();
+  const { selectedOptions, setSelectedOptions, switches, setSwitches } = useSettings(null);
   // const [show, setShow] = useState(false);
   // const settingModalRef = useRef(null);
   const [allSwitchesList, setAllSwitchesList] = useState(true);
@@ -99,8 +99,6 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
     localStorage.setItem('allSwitchesAlarm', JSON.stringify(allSwitchesAlarm));
     localStorage.setItem('selectedList', JSON.stringify(selectedList));
     localStorage.setItem('defaultList', JSON.stringify(defaultList));
-    console.log("'selectedList", selectedList);
-    console.log("defaultList", defaultList);
     onHide();
   }
 
@@ -261,7 +259,7 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
             </div>
             <div className="d-flex align-items-center line row">
               <Col>
-                <h5>다음 7일 할 일</h5>
+                <h5>다음주 할 일</h5>
               </Col>
               <Col className='righted'>
                 <SwitchBtn
@@ -279,7 +277,7 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
                 <SwitchBtn
                   checked={switches.completed}
                   disabled={!allSwitchesList}
-                  onChange={() => setSwitches({ ...switches, completedBox: !switches.completed })}
+                  onChange={() => setSwitches({ ...switches, completed: !switches.completed })}
                 />
               </Col>
             </div>
@@ -289,9 +287,9 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
               </Col>
               <Col className='righted'>
                 <SwitchBtn
-                  checked={switches.deletedBox}
+                  checked={switches.deleted}
                   disabled={!allSwitchesList}
-                  onChange={() => setSwitches({ ...switches, deletedBox: !switches.deleted })}
+                  onChange={() => setSwitches({ ...switches, deleted: !switches.deleted })}
                 />
               </Col>
             </div>

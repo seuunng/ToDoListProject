@@ -14,7 +14,17 @@ const SideBar = ({ toggleSidebar,
   const [showCreateListModal, setShowCreateListModal] = useState(false);
   const [tasksByLists, setTasksByLists] = useState([]);
   const [selectedList, setSelectedList] = useState(null);
-
+  const switches = JSON.parse(localStorage.getItem('switches'));
+ console.log("switchest : ",switches)
+ const filteredSmartLists = smartLists.filter(list => {
+  if (list.title === '오늘 할 일') return switches.today;
+  if (list.title === '내일 할 일') return switches.tomorrow;
+  if (list.title === '다음주 할 일') return switches.next7Days;
+  if (list.title === '기본함') return switches.defaultBox;
+  if (list.title === '완료한 할 일') return switches.completed;
+  if (list.title === '휴지통') return switches.deletedBox;
+  return false;
+});
   useEffect(() => {
     if (selectedList) {
       const fetchTasksByList = async () => {
@@ -44,7 +54,7 @@ const SideBar = ({ toggleSidebar,
             </div>
             <div className="list">
               <ListItemsBox
-              lists={smartLists}
+              lists={filteredSmartLists}
               toggleSidebar={toggleSidebar}
               deleteList ={deleteList }
               updateList={updateList}
