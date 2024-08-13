@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import '../../styles/basicStyle.css';
 import '../../styles/taskBoxForCal.css';
+import '../../styles/taskStatus.css';
 import ReadTaskModal from '../task_state/readTaskModal';
 import { LuRepeat } from "react-icons/lu";
 import { FaRegBell } from "react-icons/fa";
@@ -41,34 +42,14 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
       }
     };
   }, []);
-  // const handleCheckboxChange = (isChecked) => {
-  //   setChecked(isChecked);
-  // };
+  const taskStatusClassName = tasks.taskStatus === 'OVERDUE'
+  ? 'task-overdue'
+  : tasks.taskStatus === 'COMPLETED'
+    ? 'task-completed'
+    : tasks.taskStatus === 'CANCELLED'
+      ? 'task-cancelled'
+      : '';
 
-  // const handleCancel = async () => {
-  //   const newStatus = 'CANCELLED';
-  //   if (tasks && tasks.no) {
-  //     try {
-  //       const response = await instance.put(`/tasks/${tasks.no}/status`, {
-  //         status: newStatus,
-  //       }, {
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         }
-  //       });
-  //       if (response.status === 200) {
-  //         await refreshTasks();
-  //         setIsCancelled(newStatus === 'CANCELLED');
-  //       } else {
-  //         console.error('Failed to update task status');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error updating task status:', error);
-  //     }
-  //   } else {
-  //     console.error('Task object is missing or task.no is undefined');
-  //   }
-  // };
   return (
     <div className={`task-box ${className}`}  style={style}>
       <div ref={taskBoxRef} 
@@ -76,15 +57,15 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
         <div className="color-box row">
            {tasks.isRepeated!== 'NOREPEAT' && (
             <span className="taskBoxForCal-repeat col-2">
-              <LuRepeat />
+              <LuRepeat className={`task-box ${taskStatusClassName}`}/>
             </span>
           )}
           {showTitle && (
-            <span className="task-title col-8">{tasks.title}</span>
+            <span className={`task-title col-8" ${taskStatusClassName}`}>{tasks.title}</span>
           )}
           {(initialAlarm!=='NOALARM' || tasks.isNotified !== 'NOALARM')&& (
             <span className="taskBoxForCal-alram col-2">
-              <FaRegBell />
+              <FaRegBell className={`task-box ${taskStatusClassName}`}/>
             </span>
           )}
         </div>

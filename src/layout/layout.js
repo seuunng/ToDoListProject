@@ -11,6 +11,7 @@ import { BsCalendarWeek } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import { IoReorderThree } from "react-icons/io5";
+import { toast } from 'react-toastify';
 
 
 const Layout = ({ setUser, user }) => {
@@ -159,6 +160,15 @@ const Layout = ({ setUser, user }) => {
                     'Content-Type': 'application/json',
                 }
             });
+            toast.success(`메모가 삭제되었습니다.`, {
+                position: "top-right",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
             return response;
         } catch (error) {
             console.error('Error deleteList: ', error);
@@ -192,6 +202,15 @@ const Layout = ({ setUser, user }) => {
         try {
             await instance.delete(`/lists/list/${deletedList.no}`);
             setLists(lists.filter(list => list.no !== deletedList.no));
+            toast.success(`리스트가 삭제되었습니다.`, {
+                position: "top-right",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         } catch (error) {
             console.error('Error deleting list:', error);
         }

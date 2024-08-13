@@ -18,13 +18,23 @@
     margin-right: 8px;
     border-radius: 3px;
   }
-  
+  .custom-checkbox-icon.task-completed {
+    border: 2px solid lightgray ;
+    background-color: lightgray;
+  }
+  .custom-checkbox-icon.task-overdue {
+    border: 2px solid rgb(177, 70, 70);
+    background-color: rgb(255, 230, 230);
+  }
+  .custom-checkbox-icon.task-cancelled {
+    border: 2px solid lightgray ;
+    background-color: lightgray;
+  }
   .custom-checkbox-icon svg {
     width: 16px;
     height: 16px;
     color: gray;
   }
-  
   .hidden-checkbox:checked + .custom-checkbox-icon {
     background-color: #e0e0e0;
   }

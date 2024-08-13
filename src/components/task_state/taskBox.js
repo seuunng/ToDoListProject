@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/basicStyle.css';
+import '../../styles/taskStatus.css';
 import CheckBox from '../../modules/checkBoxModule'
 import { Row, Col } from 'react-bootstrap';
 import { LuRepeat } from "react-icons/lu";
@@ -9,16 +10,16 @@ import SetTask from './setTask';
 import { TaskBoxProvider, useTaskBox } from '../../contexts/taskBoxContext';
 import { useTaskContext } from '../../contexts/taskContext';
 
-const TaskBoxContent = ({ 
+const TaskBoxContent = ({
   task = {},
   deleteTask, updateTask, lists, refreshTasks,
   // checked, setChecked, isCancelled, setIsCancelled,  
   handleCheckboxChange, handleCancel
- }) => {
+}) => {
   const getValidDate = (dateString) => {
     const date = new Date(dateString);
     return isNaN(date.getTime()) ? new Date() : date;
-  }; 
+  };
 
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [taskTitle, setTaskTitle] = useState(task.title);
@@ -43,7 +44,7 @@ const TaskBoxContent = ({
   const initialAlarm = savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
 
   useEffect(() => {
-     if (task && task.title) {
+    if (task && task.title) {
       setTaskTitle(task.title);
       setStartDate(getValidDate(task.startDate));
       setEndDate(task.endDate ? getValidDate(task.endDate) : null);
@@ -119,8 +120,16 @@ const TaskBoxContent = ({
     await updateTask(updatedTasks);
   };
 
+  const taskStatusClassName = task.taskStatus === 'OVERDUE'
+    ? 'task-overdue'
+    : task.taskStatus === 'COMPLETED'
+      ? 'task-completed'
+      : task.taskStatus === 'CANCELLED'
+        ? 'task-cancelled'
+        : '';
+  
   return (
-    <div>
+    <div className={`task-box ${taskStatusClassName}`}>
       <Row xs="auto">
         <Col sm={8}
           style={{
@@ -132,32 +141,38 @@ const TaskBoxContent = ({
             task={task}
             checked={checked}
             isCancelled={isCancelled}
-            setChecked={setChecked} 
+            setChecked={setChecked}
             setIsCancelled={setIsCancelled}
             onChange={() => handleCheckboxChange(task.no)}
+            className={`task-box ${taskStatusClassName}`}
           /> &nbsp;
           <span className="task-title">
             <input
               type="text"
               value={taskTitle}
               onChange={handleTitleChange}
-              className="form-control"
-              placeholder="Task Title"
-              style={{ border: "none", width: 260 }}
-              
+              className={`form-control task-box ${taskStatusClassName}`}
+
+            placeholder="Task Title"
+            style={{ border: "none", width: 260 }}
+        
             />
           </span>
         </Col>
         <Col md={3} className='righted' style={{ padding: "0" }}>
           {task.isRepeated !== 'NOREPEAT' && (
-            <span className="repeat col-2" style={{ width: 16 }}>
-              <LuRepeat style={{ color: "grey" }} />
+            <span 
+            className={`repeat col-2 task-box ${taskStatusClassName}`}
+            style={{ width: 16 }}>
+              <LuRepeat style={{ color: "grey" }} className={`task-box ${taskStatusClassName}`}/>
             </span>
           )}
           &nbsp;
           {(initialAlarm !== 'NOALARM' || task.isNotified !== 'NOALARM') && (
-            <span className="alram col-2" style={{ width: 16 }}>
-              <FaRegBell style={{ color: "grey" }} />
+            <span  
+            className={`alram col-2 task-box ${taskStatusClassName}`}
+            style={{ width: 16 }}>
+              <FaRegBell style={{ color: "grey" }} className={`task-box ${taskStatusClassName}`}/>
             </span>
           )}
           <DatePickerModule
@@ -175,6 +190,7 @@ const TaskBoxContent = ({
             dateFormat={'MM/dd'}
             isTaskBox={true}
             lists={lists}
+            className={`task-box ${taskStatusClassName}`}
           />
         </Col>
         <Col md={1} style={{ padding: "0" }} className='centered'>
@@ -184,6 +200,7 @@ const TaskBoxContent = ({
             isCancelled={isCancelled}
             setIsCancelled={setIsCancelled}
             handleCancel={() => handleCancel(task)}
+            className={`task-box ${taskStatusClassName}`}
           />
         </Col>
       </Row>

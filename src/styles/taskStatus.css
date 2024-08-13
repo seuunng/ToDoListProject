@@ -1,0 +1,39 @@
+.task-completed {
+  color: lightgray;
+}
+.task-completed .custom-input {
+  color: lightgray;
+}
+.TaskBoxForCal .task-completed {
+  color: gray;
+  background-color: lightgray
+}
+
+.task-completed svg {
+  color: lightgray;
+}
+/* .task-overdue {
+  color: rgb(177, 70, 70) !important;
+}
+
+.task-overdue .custom-input {
+  color: rgb(177, 70, 70);
+}
+
+.task-overdue svg {
+  color: lightgray;
+} */
+
+.task-cancelled {
+  color: lightgray !important;
+}
+.task-cancelled .custom-input {
+  color: lightgray
+}
+.TaskBoxForCal .task-cancelled {
+  color: gray;
+  background-color: lightgray;
+}
+.task-cancelled svg {
+  color: lightgray;
+}
