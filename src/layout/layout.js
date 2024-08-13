@@ -4,6 +4,13 @@ import MenuBar from '../components/menuBar';
 import SideBar from '../components/sideBar';
 import { Outlet } from 'react-router-dom';
 import instance from '../api/axios';
+import { FaRegCalendarCheck } from "react-icons/fa";
+import { FiSunrise } from "react-icons/fi";
+import { FiInbox } from "react-icons/fi";
+import { BsCalendarWeek } from "react-icons/bs";
+import { FaCheck } from "react-icons/fa6";
+import { IoClose } from "react-icons/io5";
+import { IoReorderThree } from "react-icons/io5";
 
 
 const Layout = ({setUser, user}) => {
@@ -14,6 +21,7 @@ const Layout = ({setUser, user}) => {
     const [checked, setChecked] = useState(false);
     const [checkedTasks, setCheckedTasks] = useState({});
     const [isCancelled, setIsCancelled] = useState(false);
+    const [isSmartList, setIsSmartList] = useState(null);
     
     const fetchTableData = async () => {
         if (!user || !user.id) {
@@ -23,7 +31,7 @@ const Layout = ({setUser, user}) => {
         try {
             const response_taskData = await instance.get(`/tasks/task/${user.id}`);
             const data = Array.isArray(response_taskData.data) ? response_taskData.data : [];
-            console.log("response_taskData", response_taskData);
+            // console.log("response_taskData", response_taskData);
 
             const response_listData = await instance.get('/lists/list');
             const data_list = Array.isArray(response_listData.data) ? response_listData.data : [];
@@ -33,7 +41,31 @@ const Layout = ({setUser, user}) => {
             const response_smartListsData = await instance.get('/smartLists/list');
             const data_smartList = Array.isArray(response_smartListsData.data) ? response_smartListsData.data : [];
 
-            console.log("data_smartList", data_smartList);
+                   // 아이콘을 타이틀에 따라 설정하는 함수
+        const getSmartListIcon = (title) => {
+            switch (title) {
+                case '기본함':
+                    return <FiInbox />;
+                case '오늘 할 일':
+                    return <FaRegCalendarCheck />;
+                case '내일 할 일':
+                    return <FiSunrise />;
+                case '다음주 할 일':
+                    return <BsCalendarWeek />;
+                case '완료한 할 일':
+                    return <FaCheck />;
+                case '휴지통':
+                    return <IoClose />;
+                default:
+                    return <IoReorderThree />;
+            }
+        };
+
+        // 스마트리스트에 아이콘 추가
+        const smartListsWithIcons = data_smartList.map(smartList => ({
+            ...smartList,
+            icon: getSmartListIcon(smartList.title),
+        }));
 
             const tasksWithLists = data.map(task => {
                 if (!task.listNo) {
@@ -43,19 +75,12 @@ const Layout = ({setUser, user}) => {
                 const list = data_list.find(list => list.no === task.listNo);
                 return { ...task, list: list || null };
             });
-            // const tasksWithStLists = data.map(task => {
-            //     if (!task.smartListNo) {
-            //         console.warn(`Task with ID ${task.no} does not have a listNo property.`);
-            //         return { ...task, smartList: null };
-            //     }
-            //     const smartLists = data_smartList.find(smartList => smartList.no === task.smartListNo);
-            //     return { ...task, smartLists: smartLists || null };
-            // });
 
-            // 상태를 업데이트합니다.
             setTasks(tasksWithLists);
             setLists(data_list);
-            setSmartLists(data_smartList)
+            setSmartLists(smartListsWithIcons);
+            
+            console.log("data_smartList", smartLists);
             const initialChecked = tasksWithLists.reduce((acc, task) => {
                 acc[task.no] = task.taskStatus === 'COMPLETED';
                 return acc;
@@ -98,8 +123,8 @@ const Layout = ({setUser, user}) => {
             const response = await instance.post('/tasks/task', {
                 ...newTask,
                 user: user, 
-                list: newTask.list ? newTask.list : { no: null } ,
-                smartList: newTask.smartList ? newTask.smartList : { no: null } 
+                list: newTask.listNo ? newTask.listNo : { no: null } ,
+                smartList: newTask.smartListNo ? newTask.smartListNo : { no: null } 
             });
             setTasks((prevTasks) => [...prevTasks, response.data]);
             console.log(" addTask ", response.data)
@@ -364,6 +389,8 @@ const Layout = ({setUser, user}) => {
                         handleCheckboxChange,
                         smartLists,
                         setSmartLists,
+                        isSmartList, 
+                        setIsSmartList,
                     }} />
                 </main>
             </div>

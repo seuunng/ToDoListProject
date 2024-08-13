@@ -4,13 +4,19 @@ import { IoReorderThree } from "react-icons/io5";
 import { Row, Col } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import SetList from '../task_list/setList';
+import { FaRegCalendarCheck } from "react-icons/fa";
+import { FiSunrise } from "react-icons/fi";
+import { FiInbox } from "react-icons/fi";
+import { BsCalendarWeek } from "react-icons/bs";
+import { FaCheck } from "react-icons/fa6";
+import { IoClose } from "react-icons/io5";
 
-const ListItemsBox = ({ lists, toggleSidebar, deleteList, updateList, isSmartList,
+const ListItemsBox = ({ lists, toggleSidebar, deleteList, updateList, isSmartList, setIsSmartList, 
   checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange }) => {
+    
   if (!Array.isArray(lists)) {
     return null;
   }
-  
 
   return (
     <div>
@@ -18,7 +24,6 @@ const ListItemsBox = ({ lists, toggleSidebar, deleteList, updateList, isSmartLis
         if (!list) {
           return null;
         }
-        console.log("ListItemsBox isSmartList", isSmartList);
         return (
           <div key={index} className="list-item">
             <span className="list-content">
@@ -28,21 +33,17 @@ const ListItemsBox = ({ lists, toggleSidebar, deleteList, updateList, isSmartLis
                   <Link
                     to={{
                       pathname: `/basicBoard/${list?.no}`,
-                      state: { checked, isCancelled, isSmartList }
+                      state: { checked, isCancelled, isSmartList}
                     }}
                     className="item"
                     style={{ textDecoration: "none" }}
                     onClick={() => {
                       toggleSidebar();
-                      // setChecked(false);
-                      // setIsCancelled(false);
-                      // handleCheckboxChange();
-                      // handleCancel();
                     }}
                   >
                     <Row style={{ marginBottom: "8px" }} >
                       <Col sm={2}>
-                        {list.icon ? list.icon : <IoReorderThree />}
+                      {list.icon ? list.icon : <IoReorderThree />}
                       </Col>
                       <Col sm={7} style={{ padding: "0" }}>
                         {list.title}
@@ -63,12 +64,13 @@ const ListItemsBox = ({ lists, toggleSidebar, deleteList, updateList, isSmartLis
                   </Link>
                 </Col>
                 <Col md={1} style={{ padding: "0", color: "grey", display: "flex", justifyContent: "center" }}>
-                  <SetList
-                    list={list}
-                    updateList={updateList}
-                    deleteList={deleteList} />
+                  {isSmartList? '': 
+                    <SetList
+                      list={list}
+                      updateList={updateList}
+                      deleteList={deleteList} />
+                  }
                 </Col>
-
               </Row>
             </span>
           </div>

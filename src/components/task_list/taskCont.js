@@ -10,13 +10,6 @@ const TaskCont = ({
   lists, addList, updateList, deleteList, refreshTasks,
   checked,  setChecked,  isCancelled,  setIsCancelled,  handleCancel,  handleCheckboxChange
  }) => {
-  
-  useEffect(() => {
-    // if(tasks.length > 0){
-    //   console.log("3 ", tasks[0]?.taskStatus);
-      console.log("TaskCont ", checked);
-    // }
-  }, [tasks]);
 
   if (!Array.isArray(tasks)) {
     console.error("Tasks is not an array:", tasks);

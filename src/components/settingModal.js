@@ -64,11 +64,10 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
     if (savedSelectedList) {
       setSelectedList(savedSelectedList);
     }
-      const defaultList = smartLists.find(list => list.title === "기본함");
+    const defaultList = smartLists.find(list => list.title === "기본함");
       if (defaultList) {
         setDefaultList(defaultList);
     }
-    console.log("smart5Lists", smartLists, defaultList)
   }, [lists, smartLists]);
 
   const handleOptionSelected = (type, option) => {

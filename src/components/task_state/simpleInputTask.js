@@ -3,9 +3,12 @@ import '../../styles/basicStyle.css';
 import '../../styles/simpleInputTask.css';
 import { FaPlus } from "react-icons/fa";
 
-const SimpleInputTask = ({ addTask , lists, listTitle, refreshTasks }) => {
+const SimpleInputTask = ({ addTask, lists, listTitle, refreshTasks, listId, isSmartList }) => {
   const [newTask, setNewTask] = useState('');
 
+  const selectedList = JSON.parse(localStorage.getItem('selectedList'));
+  const defaultList = JSON.parse(localStorage.getItem('defaultList'));
+  
   const handleInputChange = (e) => {
     setNewTask(e.target.value);
   };
@@ -20,7 +23,7 @@ const SimpleInputTask = ({ addTask , lists, listTitle, refreshTasks }) => {
     if (newTask.trim()) {
 
       const today = new Date();
-      today.setHours(0, 0, 0, 0); 
+      today.setHours(0, 0, 0, 0);
 
       const task = {
         title: newTask,
@@ -30,26 +33,26 @@ const SimpleInputTask = ({ addTask , lists, listTitle, refreshTasks }) => {
         startDate: today.toISOString(),
         endDate: '',
         priority: 'MEDIUM',
-        list: { no: lists.no }
+        listNo: isSmartList ? selectedList.no : listId,
       };
-      await addTask(task); 
+      await addTask(task);
       setNewTask('');
-      refreshTasks(); 
+      refreshTasks();
     }
   };
   return (
     <div className="simple-input-task">
-    <div className="input-container">
-      <input 
-        type="text" 
-        className="custom-input-simpleInputTask" 
-        placeholder={`"${listTitle}" 에 할일을 추가하세요!`}
-        value={newTask}
-        onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
-      />
+      <div className="input-container">
+        <input
+          type="text"
+          className="custom-input-simpleInputTask"
+          placeholder={`"${isSmartList ? selectedList.title : listTitle}" 에 할일을 추가하세요!`}
+          value={newTask}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+        />
+      </div>
     </div>
-  </div>
   );
 };
 

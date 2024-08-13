@@ -9,33 +9,58 @@ import instance from '../../api/axios';
 import { useParams, useOutletContext, useLocation } from 'react-router-dom';
 
 const BasicBoard = () => {
-  const location = useLocation();
-  // const { isSmartList } = location.state || {}; 
+
   const { 
     tasks, addTask, updateTask, deleteTask, 
     lists, addList, updateList, deleteList, 
     smartLists, setSmartLists,
     checked,  setChecked,  isCancelled,  setIsCancelled,  
-    handleCancel,  handleCheckboxChange, isSmartList, 
+    handleCancel,  handleCheckboxChange, setIsSmartList , isSmartList
    } = useOutletContext();
+
   const [tasksByLists, setTasksByLists] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const { listId } = useParams();
   const [listTitle, setListTitle] = useState('');
+  const [listIcon, setListIcon] = useState('');
   const [selectedList, setSelectedList] = useState(null);
-
-  // console.log("BasicBoard isSmartList ", isSmartList);
-  // console.log("BasicBoard", checked, isCancelled);
 
   const fetchListAndTasks = async () => {
     try {
-      const endpoint = isSmartList 
-      ? `/tasks/bySmartList?listId=${listId}` 
-      : `/tasks/byList?listId=${listId}`;
+      let endpoint;
+  
+      if (isSmartList) {
+        switch (listTitle) {
+          case '기본함':
+            endpoint = '/tasks/default';
+            break;
+          case '오늘 할 일':
+            endpoint = '/tasks/today';
+            break;
+          case '내일 할 일':
+            endpoint = '/tasks/tomorrow';
+            break;
+          case '다음주 할 일':
+            endpoint = '/tasks/next7Days';
+            break;
+          case '완료한 할 일':
+            endpoint = '/tasks/completed';
+            break;
+          case '휴지통':
+            endpoint = '/tasks/deleted';
+            break;
+          default:
+            console.error('Unknown smart list title:', listTitle);
+            return;
+        }
+      } else {
+        endpoint = `/tasks/byList?listId=${listId}`;
+      }
+  
       const response_tasks = await instance.get(endpoint);
       setTasksByLists(response_tasks.data);
     } catch (error) {
-      console.error('Error tasks by list:', error);
+      console.error('Error fetching tasks by list:', error);
     }
   };
 
@@ -45,10 +70,14 @@ const BasicBoard = () => {
       const smartList = smartLists.find(smartList => smartList.no === parseInt(listId));
       if (list) {
         setListTitle(list.title);
+        setListIcon(list.icon);
         setSelectedList(list);
+        setIsSmartList(false);
       } else if (smartList) {
         setListTitle(smartList.title);
+        setListIcon(smartList.icon);
         setSelectedList(smartList);
+        setIsSmartList(true);
       }
       fetchListAndTasks();
     }
@@ -58,14 +87,9 @@ const BasicBoard = () => {
     setSelectedTask(task);
   };
 
-  // useEffect(() => {
-  //   // console.log("2 ", tasks.taskStatus);
-  //   console.log("basicboard ", checked);
-  // }, [tasks]);
-
   return (
     <div className="BasicBoard">
-      <h4 className="list-title">{listTitle}</h4>
+      <h4 className="list-title">{listIcon} {listTitle}</h4>
       <Row className="BasicBoardRow">
         <Col >
           <div className="task-table">
@@ -73,7 +97,10 @@ const BasicBoard = () => {
               addTask={addTask}
               lists={selectedList}
               listTitle={selectedList ? selectedList.title : ''} 
-              refreshTasks={fetchListAndTasks} />
+              refreshTasks={fetchListAndTasks}
+              listId={listId}
+              isSmartList={isSmartList}
+            />
           </div>
           <TaskCont
             tasks={tasksByLists}

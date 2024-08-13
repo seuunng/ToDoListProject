@@ -41,7 +41,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
       "하루전": "DAYEARLY"
   };
   const initialAlarm =savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
-  
+
   // console.log("4 initialAlarm", initialAlarm);  
 
   const getStoredItem = (key) => {
