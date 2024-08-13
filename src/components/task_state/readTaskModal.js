@@ -3,8 +3,6 @@ import '../../styles/basicStyle.css';
 import '../../styles/readTaskModal.css';
 import { Modal, Button } from 'react-bootstrap';
 import { format, isValid } from 'date-fns';
-// import DatePicker from 'react-datepicker';
-// import 'react-datepicker/dist/react-datepicker.css';
 import DatePickerModule from '../../modules/datePickerModule';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -13,7 +11,6 @@ import Checkbox from '../../modules/checkBoxModule';
 import { PiLineVerticalThin } from "react-icons/pi";
 import SetTask from './setTask';
 import SelectedList from '../task_list/selectedList.js';
-import instance from '../../api/axios';
 
 const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
   lists, addList, updateList, deleteList, refreshTasks,
@@ -35,7 +32,7 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
   const [taskDescription, setTaskDescription] = useState(tasks.content);
   const [startDate, setStartDate] = useState(new Date(tasks.startDate));
   const [endDate, setEndDate] = useState(tasks.endDate ? new Date(tasks.endDate) : null);
-  const [selectedButton, setSelectedButton] = useState(tasks.dateStatus || 'DATE');
+  const [selectedButton, setSelectedButton] = useState(tasks.selectedButton  || 'DATE');
   const [isRepeat, setIsRepeat] = useState(tasks.isRepeated || 'NOREPEAT');
   const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALARM');
   const [selectedList, setSelectedList] = useState(null);
@@ -78,11 +75,11 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
     setStartDate(startDate);
     setEndDate(endDate);
     await updateTask({ ...tasks, startDate, endDate });
-    // await refreshTasks(); 
+    await refreshTasks(); 
   };
   const handleSelectedButtonChange = (button) => {
-    setSelectedButton(button);
-    updateTask({ ...tasks, dateStatus: button.toUpperCase() });
+    // setSelectedButton(button);
+    // updateTask({ ...tasks, dateStatus: button.toUpperCase() });
   }
   const handleRepeatClick = (option) => {
     const repeatMapping = {

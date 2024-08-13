@@ -58,20 +58,10 @@ const ReadTaskPageContent = ({
   }, [task, lists, setChecked, setIsCancelled]);
 
   // useEffect(() => {
-  //   setIsTaskBox(false);
-  //   return () => setIsTaskBox(false);
-  // }, [setIsTaskBox]);
-
-  useEffect(() => {
-    console.log("2 ", task.title);
-    console.log("2 ", task.taskStatus);
-    console.log("2 ", checked);
-  }, [task, checked]);
-
-  useEffect(() => {
-    console.log("Checked state has changed:", checked);
-    // 상태가 변경된 후에 필요한 작업을 여기에 추가
-  }, [checked]);
+  //   console.log("2 ", task.title);
+  //   console.log("2 ", task.taskStatus);
+  //   console.log("2 ", checked);
+  // }, [task, checked]);
 
   const handleTitleChange = async (e) => {
     const newTitle = e.target.value;

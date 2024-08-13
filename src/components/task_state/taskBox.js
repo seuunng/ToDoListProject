@@ -7,7 +7,6 @@ import { FaRegBell } from "react-icons/fa";
 import DatePickerModule from '../../modules/datePickerModule';
 import SetTask from './setTask';
 import { TaskBoxProvider, useTaskBox } from '../../contexts/taskBoxContext';
-import instance from '../../api/axios';
 import { useTaskContext } from '../../contexts/taskContext';
 
 const TaskBoxContent = ({ 
@@ -60,14 +59,16 @@ const TaskBoxContent = ({
     setIsTaskBox(true);
     return () => setIsTaskBox(false);
   }, [setIsTaskBox]);
-  useEffect(() => {
-    console.log("taskbox ", checked);
-  }, [task]);
-  useEffect(() => {
-    console.log("1 ", task.title);
-    console.log("1 ", task.taskStatus);
-    console.log("1 ", checked);
-  }, [task]);
+
+  // useEffect(() => {
+  //   console.log("taskbox ", checked);
+  // }, [task]);
+
+  // useEffect(() => {
+  //   console.log("1 ", task.title);
+  //   console.log("1 ", task.taskStatus);
+  //   console.log("1 ", checked);
+  // }, [task]);
 
   const handleTitleChange = async (e) => {
     const newTitle = e.target.value;

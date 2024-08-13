@@ -20,10 +20,10 @@ const Checkbox = ({ task, children, onChange,
     }
   }, [task]);
   
-  useEffect(() => {
-    // 상태가 변경될 때마다 로그를 출력하여 상태 변경을 확인
-    console.log("Checkbox state updated: ", { checked, isCancelled });
-  }, [checked, isCancelled]);
+  // useEffect(() => {
+  //   // 상태가 변경될 때마다 로그를 출력하여 상태 변경을 확인
+  //   console.log("Checkbox state updated: ", { checked, isCancelled });
+  // }, [checked, isCancelled]);
 
   return (
     <label className="custom-checkbox">

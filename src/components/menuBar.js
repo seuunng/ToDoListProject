@@ -14,7 +14,8 @@ import ModalModule from '../modules/modalModule';
 import axios from '../api/axios';
 
 const MenuBar = ({ setUser, user, lists, smartLists,
-  checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange }) => {
+  checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange,
+  isSmartList, setIsSmartList }) => {
   const [showAccountInfo, setShowAccountInfo] = useState(false);
   const [showSettingModal, setShowSettingModal] = useState(false);
 
@@ -27,7 +28,6 @@ const MenuBar = ({ setUser, user, lists, smartLists,
       return null;
     }
   };
-
   const selectedList = getStoredItem('selectedList');
   const defaultList = getStoredItem('defaultList');
 
@@ -45,14 +45,14 @@ const MenuBar = ({ setUser, user, lists, smartLists,
           <div className="item" onClick={() => setShowAccountInfo(true)}>
             {user ? <FontAwesomeIcon icon={faCat} /> : <AiFillAppstore />}
           </div>
+
+          {/* 베이직보드로 이동 */}
           <Link
             to={{
-              pathname: user ? "/mainBoard/basic" : '',
+              pathname: user ? `/basicBoard/${selectedList?.no}`:'',
               state: { checked, isCancelled, selectedList: selectedList? selectedList.no : defaultList.no }
             }}
             className="item"
-            // checked={checked}
-            // isCancelled={isCancelled}
             onClick={() => {
               setChecked(false);
               setIsCancelled(false);
@@ -61,6 +61,8 @@ const MenuBar = ({ setUser, user, lists, smartLists,
             }}>
             <FontAwesomeIcon icon={faSquareCheck} />
           </Link>
+
+          {/* 먼슬리보드로 이동 */}
           <Link 
             to={{
               pathname: user ? "/monthlyBoard" : '',
@@ -68,12 +70,6 @@ const MenuBar = ({ setUser, user, lists, smartLists,
             }}
             className="item"
             checked={checked}
-            // // setChecked={setChecked}  
-            // isCancelled={isCancelled}
-            // setIsCancelled={setIsCancelled}
-            // handleCancel={handleCancel}
-            // handleCheckboxChange={handleCheckboxChange}
-            
             onClick={() => {
               console.log('Calling setChecked:', typeof setChecked);
               setChecked(false);

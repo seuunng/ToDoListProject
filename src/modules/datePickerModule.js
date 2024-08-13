@@ -55,10 +55,6 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
                 alarmTime: alarmMappingToKorean[initialAlarm] || "알림없음",
             }));
         }
-        // console.log("1 ", isNotified)
-        // console.log("2 ", initialAlarm)
-        // console.log("3 ", selectedOptions.alarmTime)
-        // console.log("4 ", alarmChanged)
     }, [alarmChanged]);
 
     useEffect(() => {
@@ -94,16 +90,8 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
 
     //날짜 입력 형식 선택 (날짜||기간)
     const handleButtonClick = (buttonType) => {
-        // if (buttonType === 'DATE') {
-        //     setDateRange([null, null]);
-        // }else{}
         setSelectedButton(buttonType);
-        // handleDateChange(buttonType);
     };
-
-    useEffect(()=>{
-        console.log("SelectedButton : ", selectedButton)
-    },[selectedButton]);
 
     //날짜 변경 기능
     const handleDateChange = (update) => {
