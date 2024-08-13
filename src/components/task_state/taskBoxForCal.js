@@ -7,7 +7,7 @@ import { FaRegBell } from "react-icons/fa";
 import instance from '../../api/axios';
 
 const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className, 
-  lists, addList, updateList, deleteList, showTitle=true, style,
+  lists, addList, updateList, deleteList, showTitle=true, style, refreshTasks,
   checked,  setChecked,  isCancelled,  setIsCancelled,  handleCancel,  handleCheckboxChange }) => {
   const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
   const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
@@ -105,7 +105,7 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
         setIsCancelled={setIsCancelled}
         handleCancel={handleCancel}
         handleCheckboxChange={handleCheckboxChange}
-        // refreshTasks={refreshTasks}
+        refreshTasks={refreshTasks}
         // checked={checked}
         // onChange={handleCheckboxChange}
         // setIsCancelled={setIsCancelled}

@@ -10,13 +10,13 @@ import { useParams, useOutletContext, useLocation } from 'react-router-dom';
 
 const BasicBoard = () => {
 
-  const { 
-    tasks, addTask, updateTask, deleteTask, 
-    lists, addList, updateList, deleteList, 
+  const {
+    tasks, addTask, updateTask, deleteTask,
+    lists, addList, updateList, deleteList,
     smartLists, setSmartLists,
-    checked,  setChecked,  isCancelled,  setIsCancelled,  
-    handleCancel,  handleCheckboxChange, setIsSmartList , isSmartList
-   } = useOutletContext();
+    checked, setChecked, isCancelled, setIsCancelled,
+    handleCancel, handleCheckboxChange, setIsSmartList, isSmartList
+  } = useOutletContext();
 
   const [tasksByLists, setTasksByLists] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -25,13 +25,17 @@ const BasicBoard = () => {
   const [listIcon, setListIcon] = useState('');
   const [selectedList, setSelectedList] = useState(null);
 
+  useEffect(() => {
+    fetchListAndTasks()
+  }, [selectedList])
+
   const fetchListAndTasks = async () => {
     try {
       let endpoint;
-  
+
       if (isSmartList) {
         switch (listTitle) {
-          case '기본함':
+          case '모든 할 일':
             endpoint = '/tasks/default';
             break;
           case '오늘 할 일':
@@ -46,19 +50,26 @@ const BasicBoard = () => {
           case '완료한 할 일':
             endpoint = '/tasks/completed';
             break;
-          case '휴지통':
+          case '취소한 할 일':
             endpoint = '/tasks/deleted';
             break;
           default:
             console.error('Unknown smart list title:', listTitle);
             return;
         }
-      } else {
+      }
+      else {
         endpoint = `/tasks/byList?listId=${listId}`;
       }
-  
+
       const response_tasks = await instance.get(endpoint);
-      setTasksByLists(response_tasks.data);
+      // 'DELETED' 상태의 태스크들을 제외하고 리스트에 표시
+      const filteredTasks = listTitle === '취소한 할 일'
+      ? response_tasks.data.filter(task => task.taskStatus === 'CANCELLED')
+      : response_tasks.data.filter(task => task.taskStatus !== 'DELETED' && task.taskStatus !== 'CANCELLED');
+
+    setTasksByLists(filteredTasks);
+
     } catch (error) {
       console.error('Error fetching tasks by list:', error);
     }
@@ -68,6 +79,7 @@ const BasicBoard = () => {
     if (listId) {
       const list = lists.find(list => list.no === parseInt(listId));
       const smartList = smartLists.find(smartList => smartList.no === parseInt(listId));
+
       if (list) {
         setListTitle(list.title);
         setListIcon(list.icon);
@@ -85,6 +97,7 @@ const BasicBoard = () => {
 
   const handleTaskClick = (task) => {
     setSelectedTask(task);
+    fetchListAndTasks()
   };
 
   return (
@@ -96,7 +109,7 @@ const BasicBoard = () => {
             <SimpleInputTask
               addTask={addTask}
               lists={selectedList}
-              listTitle={selectedList ? selectedList.title : ''} 
+              listTitle={selectedList ? selectedList.title : ''}
               refreshTasks={fetchListAndTasks}
               listId={listId}
               isSmartList={isSmartList}
@@ -109,8 +122,8 @@ const BasicBoard = () => {
             onTaskClick={handleTaskClick}
             lists={lists}
             refreshTasks={fetchListAndTasks}
-            checked={checked} 
-            setChecked={setChecked}  
+            checked={checked}
+            setChecked={setChecked}
             isCancelled={isCancelled}
             setIsCancelled={setIsCancelled}
             handleCancel={handleCancel}
@@ -126,8 +139,8 @@ const BasicBoard = () => {
               onTaskClick={handleTaskClick}
               lists={lists}
               refreshTasks={fetchListAndTasks}
-              checked={checked} 
-              setChecked={setChecked}  
+              checked={checked}
+              setChecked={setChecked}
               isCancelled={isCancelled}
               setIsCancelled={setIsCancelled}
               handleCancel={handleCancel}

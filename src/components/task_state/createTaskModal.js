@@ -56,7 +56,8 @@ const CreateTaskModal = forwardRef((props, ref) => {
 
  const selectedList_localSrotage = getStoredItem('selectedList');
  const defaultList = getStoredItem('defaultList');
-
+ const [selectedList, setSelectedList] = useState(selectedList_localSrotage||defaultList);
+  
   const [show, setShow] = useState(false);
   const [newTask, setNewTask] = useState({
     title: '',
@@ -66,9 +67,8 @@ const CreateTaskModal = forwardRef((props, ref) => {
     isNotified: 'NOALARM',
     isRepeated: 'NOREPEAT',
     dateStatus: 'DATE',
-    list: null,
+    list: selectedList.no,
   });
-  const [selectedList, setSelectedList] = useState(selectedList_localSrotage||defaultList);
   // const { selectedOptions, switches } = useSettings();
   // console.log(" CreateTaskModal lists", lists)
 
@@ -87,8 +87,9 @@ const CreateTaskModal = forwardRef((props, ref) => {
   useEffect(() => {
     setNewTask(prevState => ({
       ...prevState,
-      list: selectedList,
+      listNo: selectedList.no,
     }));
+    console.log(selectedList.no)
   }, [selectedList]);
   
   useEffect(() => {
@@ -108,7 +109,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
       isNotified: isNotified,
       isRepeated: 'NOREPEAT',
       dateStatus: 'DATE',
-      list: selectedList,
+      listNo: selectedList.no,
     });
     // setStartDate(date)
     setShow(true);
@@ -186,7 +187,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
         isRepeated: 'NOREPEAT',
         dateStatus: 'DATE',
         endDate: '',
-        list: null,
+        listNo: selectedList.no,
 
       });
       handleClose();
@@ -216,15 +217,6 @@ const CreateTaskModal = forwardRef((props, ref) => {
       dateStatus: button.toUpperCase()
     }));
   }
-
-
-
-  // const handleSaveSettings = (settings) => {
-  //   console.log("Saved settings:", settings);
-  //   // 저장된 설정을 처리하는 로직 추가
-  // };
-
-
 
   return (
     <Modal show={show} onHide={handleClose} centered>
