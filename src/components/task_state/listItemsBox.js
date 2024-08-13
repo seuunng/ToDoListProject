@@ -13,11 +13,7 @@ import { IoClose } from "react-icons/io5";
 
 const ListItemsBox = ({ lists, toggleSidebar, deleteList, updateList, isSmartList, setIsSmartList, 
   checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange }) => {
-    
-  if (!Array.isArray(lists)) {
-    return null;
-  }
-
+  
   return (
     <div>
       {lists.map((list, index) => {
@@ -41,7 +37,7 @@ const ListItemsBox = ({ lists, toggleSidebar, deleteList, updateList, isSmartLis
                       toggleSidebar();
                     }}
                   >
-                    <Row style={{ marginBottom: "8px" }} >
+                    <Row style={{ marginBottom: "8px" }}  >
                       <Col sm={2}>
                       {list.icon ? list.icon : <IoReorderThree />}
                       </Col>

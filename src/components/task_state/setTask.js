@@ -85,7 +85,7 @@ const SetTask = ({ task, deleteTask, handleCancel, isCancelled, setIsCancelled }
         <Dropdown.Item eventKey="3"><FaRegStickyNote /> Open as sticky note</Dropdown.Item>
         <Dropdown.Item eventKey="4"><MdLocalPrintshop /> Print</Dropdown.Item>
         <Dropdown.Item eventKey="5"
-          onClick={() => deleteTask(task)}><RiDeleteBin6Line /> Delete</Dropdown.Item>
+          onClick={() => deleteTask(task.no)}><RiDeleteBin6Line /> Delete</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );

@@ -64,10 +64,6 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
     if (savedSelectedList) {
       setSelectedList(savedSelectedList);
     }
-    const defaultList = smartLists.find(list => list.title === "기본함");
-      if (defaultList) {
-        setDefaultList(defaultList);
-    }
   }, [lists, smartLists]);
 
   const handleOptionSelected = (type, option) => {
@@ -97,12 +93,8 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
     localStorage.setItem('allSwitchesList', JSON.stringify(allSwitchesList));
     localStorage.setItem('allSwitchesAlarm', JSON.stringify(allSwitchesAlarm));
     localStorage.setItem('selectedList', JSON.stringify(selectedList));
-    localStorage.setItem('defaultList', JSON.stringify(defaultList));
     onHide();
   }
-
-  const combinedLists = defaultList ? [defaultList, ...lists] : [...lists];
-
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header>
@@ -199,7 +191,7 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
             </Col>
             <Col className='righted'>
               <SelectedList
-                lists={combinedLists}
+                lists={lists}
                 selectedList={selectedList}
                 setSelectedList={setSelectedList}
                 updateTask={()=>{}}
@@ -222,7 +214,7 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
             <hr />
             <div className="d-flex align-items-center line row">
               <Col>
-                <h5>기본함</h5>
+                <h5>모든 할 일</h5>
               </Col>
               <Col className='righted'>
                 <SwitchBtn
@@ -282,7 +274,7 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
             </div>
             <div className="d-flex align-items-center line row">
               <Col>
-                <h5>휴지통</h5>
+                <h5>취소한 할 일</h5>
               </Col>
               <Col className='righted'>
                 <SwitchBtn

@@ -41,6 +41,10 @@ const MonthlyBoard = () => {
     setDaysOfWeek(daysOfWeek);
   }, [savedSeletedFirstDay.week]);
 
+  // useEffect(() => {
+    
+  // }, []);
+
   const getDate = (week, day) => {
     const firstDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
     const firstDayOffset = (firstDayOfMonth.getDay() + 7 - firstDayOfWeek) % 7;
@@ -81,6 +85,7 @@ const MonthlyBoard = () => {
 
   const filterTasksForPeriod = (date) => {
     return tasks.filter(task => {
+      if (task.taskStatus === 'DELETED') return false;
       const taskStartDate = new Date(task.startDate);
       return task.endDate == null
         ? (
@@ -94,26 +99,6 @@ const MonthlyBoard = () => {
         );
     });
   };
-
-  // const filterTasksForDate = (date) => {
-  //   return tasks.filter(task => {
-  //     const taskDate = new Date(task.startDate);
-  //     // if (tasks.dateStatus === 'DATE') {
-  //     return (
-  //       taskDate.getDate() === date.getDate() &&
-  //       taskDate.getMonth() === date.getMonth() &&
-  //       taskDate.getFullYear() === date.getFullYear()
-  //     );
-  //     // }
-  //   });
-  // };
-  // const getFilteredTasks = (date) => {
-  //   if (selectedButton === 'date') {
-  //     return filterTasksForDate(date);
-  //   } else {
-  //     return filterTasksForPeriod(date);
-  //   }
-  // };
 
   const isTaskEndDate = (task, date) => {
     if (!task.endDate) return false;

@@ -75,7 +75,7 @@ const ReadTaskModal = forwardRef(({ tasks, updateTask, deleteTask,
     setStartDate(startDate);
     setEndDate(endDate);
     await updateTask({ ...tasks, startDate, endDate });
-    await refreshTasks(); 
+    // await refreshTasks(); 
   };
   const handleSelectedButtonChange = (button) => {
     // setSelectedButton(button);

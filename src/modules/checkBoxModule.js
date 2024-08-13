@@ -24,10 +24,17 @@ const Checkbox = ({ task, children, onChange,
   //   // 상태가 변경될 때마다 로그를 출력하여 상태 변경을 확인
   //   console.log("Checkbox state updated: ", { checked, isCancelled });
   // }, [checked, isCancelled]);
+  const taskStatusClassName = task.taskStatus === 'OVERDUE'
+  ? 'task-overdue'
+  : task.taskStatus === 'COMPLETED'
+    ? 'task-completed'
+    : task.taskStatus === 'CANCELLED'
+      ? 'task-cancelled'
+      : '';
 
   return (
     <label className="custom-checkbox">
-      <span className="custom-checkbox-icon"
+      <span className={`custom-checkbox-icon ${taskStatusClassName}`}
         onClick={onChange} >
         {isCancelled ? <IoClose /> : (checked ? <FaCheck /> : null)}
       </span>

@@ -11,9 +11,10 @@ import { BsCalendarWeek } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import { IoReorderThree } from "react-icons/io5";
+import { toast } from 'react-toastify';
 
 
-const Layout = ({setUser, user}) => {
+const Layout = ({ setUser, user }) => {
     const [sidebarVisible, setSidebarVisible] = useState(false);
     const [tasks, setTasks] = useState([]);
     const [lists, setLists] = useState([]);
@@ -22,7 +23,7 @@ const Layout = ({setUser, user}) => {
     const [checkedTasks, setCheckedTasks] = useState({});
     const [isCancelled, setIsCancelled] = useState(false);
     const [isSmartList, setIsSmartList] = useState(null);
-    
+
     const fetchTableData = async () => {
         if (!user || !user.id) {
             console.error('User ID is not available');
@@ -41,31 +42,31 @@ const Layout = ({setUser, user}) => {
             const response_smartListsData = await instance.get('/smartLists/list');
             const data_smartList = Array.isArray(response_smartListsData.data) ? response_smartListsData.data : [];
 
-                   // 아이콘을 타이틀에 따라 설정하는 함수
-        const getSmartListIcon = (title) => {
-            switch (title) {
-                case '기본함':
-                    return <FiInbox />;
-                case '오늘 할 일':
-                    return <FaRegCalendarCheck />;
-                case '내일 할 일':
-                    return <FiSunrise />;
-                case '다음주 할 일':
-                    return <BsCalendarWeek />;
-                case '완료한 할 일':
-                    return <FaCheck />;
-                case '휴지통':
-                    return <IoClose />;
-                default:
-                    return <IoReorderThree />;
-            }
-        };
+            // 아이콘을 타이틀에 따라 설정하는 함수
+            const getSmartListIcon = (title) => {
+                switch (title) {
+                    case '모든 할 일':
+                        return <FiInbox />;
+                    case '오늘 할 일':
+                        return <FaRegCalendarCheck />;
+                    case '내일 할 일':
+                        return <FiSunrise />;
+                    case '다음주 할 일':
+                        return <BsCalendarWeek />;
+                    case '완료한 할 일':
+                        return <FaCheck />;
+                    case '취소한 할 일':
+                        return <IoClose />;
+                    default:
+                        return <IoReorderThree />;
+                }
+            };
 
-        // 스마트리스트에 아이콘 추가
-        const smartListsWithIcons = data_smartList.map(smartList => ({
-            ...smartList,
-            icon: getSmartListIcon(smartList.title),
-        }));
+            // 스마트리스트에 아이콘 추가
+            const smartListsWithIcons = data_smartList.map(smartList => ({
+                ...smartList,
+                icon: getSmartListIcon(smartList.title),
+            }));
 
             const tasksWithLists = data.map(task => {
                 if (!task.listNo) {
@@ -79,12 +80,12 @@ const Layout = ({setUser, user}) => {
             setTasks(tasksWithLists);
             setLists(data_list);
             setSmartLists(smartListsWithIcons);
-            
-            console.log("data_smartList", smartLists);
+
             const initialChecked = tasksWithLists.reduce((acc, task) => {
                 acc[task.no] = task.taskStatus === 'COMPLETED';
                 return acc;
             }, {});
+
             setCheckedTasks(initialChecked);
         } catch (error) {
             console.error('Error getting data:', error);
@@ -117,14 +118,13 @@ const Layout = ({setUser, user}) => {
     const refreshTasks = async () => {
         await fetchTableData();
     };
-    
+
     const addTask = async (newTask) => {
         try {
             const response = await instance.post('/tasks/task', {
                 ...newTask,
-                user: user, 
-                list: newTask.listNo ? newTask.listNo : { no: null } ,
-                smartList: newTask.smartListNo ? newTask.smartListNo : { no: null } 
+                user: user,
+                list: newTask.listNo ? newTask.listNo : { no: null }
             });
             setTasks((prevTasks) => [...prevTasks, response.data]);
             console.log(" addTask ", response.data)
@@ -145,12 +145,34 @@ const Layout = ({setUser, user}) => {
         }
     };
 
-    const deleteTask = async (deletedTask) => {
+    const deleteTask = async (taskId) => {
+        // try {
+        //     await instance.delete(`/tasks/task/${deletedTask.no}`);
+        //     setTasks(tasks.filter(task => task.no !== deletedTask.no));
+        // } catch (error) {
+        //     console.error('Error deleting task:', error);
+        // }
         try {
-            await instance.delete(`/tasks/task/${deletedTask.no}`);
-            setTasks(tasks.filter(task => task.no !== deletedTask.no));
+            const response = await instance.put(`/tasks/${taskId}/status`, {
+                status: "DELETED",
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            toast.success(`메모가 삭제되었습니다.`, {
+                position: "top-right",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            return response;
         } catch (error) {
-            console.error('Error deleting task:', error);
+            console.error('Error deleteList: ', error);
+            throw error;
         }
     };
 
@@ -180,6 +202,15 @@ const Layout = ({setUser, user}) => {
         try {
             await instance.delete(`/lists/list/${deletedList.no}`);
             setLists(lists.filter(list => list.no !== deletedList.no));
+            toast.success(`리스트가 삭제되었습니다.`, {
+                position: "top-right",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         } catch (error) {
             console.error('Error deleting list:', error);
         }
@@ -197,19 +228,19 @@ const Layout = ({setUser, user}) => {
 
     const updateTaskStatus = async (taskId, newStatus) => {
         try {
-          const response = await instance.put(`/tasks/${taskId}/status`, {
-            status: newStatus,
-          }, {
-            headers: {
-              'Content-Type': 'application/json',
-            }
-          });
-          return response;
+            const response = await instance.put(`/tasks/${taskId}/status`, {
+                status: newStatus,
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            return response;
         } catch (error) {
-          console.error('Error updateTaskStatus:', error);
-          throw error; 
+            console.error('Error updateTaskStatus:', error);
+            throw error;
         }
-      }
+    }
 
     const handleCheckboxChange = async (taskId) => {
         let newStatus;
@@ -222,8 +253,8 @@ const Layout = ({setUser, user}) => {
         }
         const today = new Date();
         const taskDueDate = new Date(task.startDate);
-    
-        if (checkedTasks[taskId]) { 
+
+        if (checkedTasks[taskId]) {
             // 이미 완료된 상태에서 클릭한 경우
             if (taskDueDate < today) {
                 newStatus = 'OVERDUE';
@@ -244,7 +275,7 @@ const Layout = ({setUser, user}) => {
         } catch (error) {
             console.error('Error updating task status:', error);
         }
-      }
+    }
     //   useEffect(() => {
     //     console.log("layout taskId : ", tasks);
     //     console.log("layout checked : ", checked);
@@ -254,49 +285,49 @@ const Layout = ({setUser, user}) => {
     const handleCancel = async (task) => {
         const newStatus = 'CANCELLED';
         if (task && task.no) {
-          try {
-            const response = await instance.put(`/tasks/${task.no}/status`, {
-              status: newStatus,
-            }, {
-              headers: {
-                'Content-Type': 'application/json',
-              }
-            });
-            if (response.status === 200) {
-              await refreshTasks();
-              setIsCancelled(newStatus === 'CANCELLED');
-            } else {
-              console.error('Failed to update task status');
+            try {
+                const response = await instance.put(`/tasks/${task.no}/status`, {
+                    status: newStatus,
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                if (response.status === 200) {
+                    await refreshTasks();
+                    setIsCancelled(newStatus === 'CANCELLED');
+                } else {
+                    console.error('Failed to update task status');
+                }
+            } catch (error) {
+                console.error('Error updating task status:', error);
             }
-          } catch (error) {
-            console.error('Error updating task status:', error);
-          }
         } else {
-          console.error('Task object is missing or task.no is undefined');
+            console.error('Task object is missing or task.no is undefined');
         }
-      };
+    };
     return (
         <div onClick={hideSidebar}>
-            <MenuBar 
-                setUser={setUser} 
+            <MenuBar
+                setUser={setUser}
                 user={user}
                 lists={lists}
-                checked={checked} 
-                setChecked={setChecked}  
+                checked={checked}
+                setChecked={setChecked}
                 isCancelled={isCancelled}
                 setIsCancelled={setIsCancelled}
                 handleCancel={handleCancel}
                 handleCheckboxChange={handleCheckboxChange}
                 smartLists={smartLists}
-                />
+            />
             <div className="icon" onClick={(e) => { e.stopPropagation(); toggleSidebar(); }}
                 style={{ zIndex: 1001, }}>
-                    { user ? 
-                <i
-                    className="fa-solid fa-bars"
-                    style={{ color: '#000000' }}
-                    alt="Toggle Sidebar"></i>
-                    :''}
+                {user ?
+                    <i
+                        className="fa-solid fa-bars"
+                        style={{ color: '#000000' }}
+                        alt="Toggle Sidebar"></i>
+                    : ''}
             </div>
             {sidebarVisible && (
                 <div
@@ -323,8 +354,8 @@ const Layout = ({setUser, user}) => {
                         deleteList={deleteList}
                         user={user}
                         setUser={setUser}
-                        checked={checked} 
-                        setChecked={setChecked}  
+                        checked={checked}
+                        setChecked={setChecked}
                         isCancelled={isCancelled}
                         setIsCancelled={setIsCancelled}
                         handleCancel={handleCancel}
@@ -359,8 +390,8 @@ const Layout = ({setUser, user}) => {
                             deleteList={deleteList}
                             user={user}
                             setUser={setUser}
-                            checked={checked} 
-                            setChecked={setChecked}  
+                            checked={checked}
+                            setChecked={setChecked}
                             isCancelled={isCancelled}
                             setIsCancelled={setIsCancelled}
                             handleCancel={handleCancel}
@@ -389,7 +420,7 @@ const Layout = ({setUser, user}) => {
                         handleCheckboxChange,
                         smartLists,
                         setSmartLists,
-                        isSmartList, 
+                        isSmartList,
                         setIsSmartList,
                     }} />
                 </main>

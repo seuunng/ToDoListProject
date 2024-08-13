@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import '../../styles/basicStyle.css';
 import '../../styles/taskCont.css';
 import TaskBox from '../task_state/taskBox';
-// import ReadTaskPage from '../../views/readTaskPage';
-import { Row, Col } from 'react-bootstrap';
 
 const TaskCont = ({ 
   tasks = [], updateTask, deleteTask, onTaskClick, 
@@ -15,6 +13,23 @@ const TaskCont = ({
     console.error("Tasks is not an array:", tasks);
     return null;
   }
+  const statusPriority = {
+    'OVERDUE': 1,
+    'PENDING': 2,
+    'COMPLETED': 3
+  };
+
+  // tasks 배열 정렬
+  const sortedTasks = tasks.sort((a, b) => {
+    // Status 우선순위 비교
+    const statusOrder = statusPriority[a.taskStatus] - statusPriority[b.taskStatus];
+    if (statusOrder !== 0) return statusOrder;
+
+    // Status가 같다면 날짜순 정렬 (최신순)
+    const dateA = new Date(a.startDate);
+    const dateB = new Date(b.startDate);
+    return dateA - dateB ; // 최신 날짜가 먼저 나오도록 내림차순
+  });
 
   return (
     <div className="TaskContTable">

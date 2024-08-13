@@ -19,9 +19,9 @@ const SideBar = ({ toggleSidebar,
     if (list.title === '오늘 할 일') return switches.today;
     if (list.title === '내일 할 일') return switches.tomorrow;
     if (list.title === '다음주 할 일') return switches.next7Days;
-    if (list.title === '기본함') return switches.defaultBox;
+    if (list.title === '모든 할 일') return switches.defaultBox;
     if (list.title === '완료한 할 일') return switches.completed;
-    if (list.title === '휴지통') return switches.deleted;
+    if (list.title === '취소한 할 일') return switches.deleted;
     return false;
   });
 
