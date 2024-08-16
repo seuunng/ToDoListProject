@@ -40,13 +40,16 @@ const Lists = React.forwardRef(
   },
 );
 
-const SelectedList = ({ lists, selectedList, setSelectedList, tasks, updateTask  }) => {
+const SelectedList = ({ lists, selectedList, 
+  setSelectedList, tasks, updateTask,
+  }) => {
   if (!lists || !Array.isArray(lists)) {
     return null; // 또는 적절한 오류 처리
   }
+  const filteredLists = lists.filter(list => !list.isDeleted);
   const handleSelect = (list) => {
     setSelectedList(list);
-    updateTask({ ...tasks, list: { no: list.no } });
+    // updateTask({ ...tasks, list: { no: list.no } });
   };
   return (
     <Dropdown>
@@ -61,7 +64,7 @@ const SelectedList = ({ lists, selectedList, setSelectedList, tasks, updateTask 
         )}
       </Dropdown.Toggle>
       <Dropdown.Menu as={Lists}>
-        {lists.map((list, index) => (
+        {filteredLists.map((list, index) => (
           <Dropdown.Item key={index} onClick={() => handleSelect(list)}>
             {list.icon ? list.icon : <IoReorderThree />} {list.title}
           </Dropdown.Item>

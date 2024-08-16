@@ -256,26 +256,27 @@ const Layout = ({ setUser, user }) => {
     const handleCheckboxChange = async (taskId) => {
         let newStatus;
         const task = tasks.find(task => task.no === taskId);
-        // console.log("handleCheckboxChange 실행 ", task);
 
         if (!task) {
             console.error('Task not found');
             return;
         }
+        
         const today = new Date();
-        const taskDueDate = new Date(task.startDate);
+        today.setHours(0, 0, 0, 0);
+        const taskStartDate = new Date(task.startDate);
 
         if (checkedTasks[taskId]) {
-            // 이미 완료된 상태에서 클릭한 경우
-            if (taskDueDate < today) {
-                newStatus = 'OVERDUE';
+            if (taskStartDate.getTime() < today.getTime()) {
+                newStatus = 'OVERDUE'; // 과거 날짜이면 OVERDUE
             } else {
-                newStatus = 'PENDING';
+                newStatus = 'PENDING'; // 오늘 또는 미래 날짜이면 PENDING
             }
         } else {
             // 완료되지 않은 상태에서 클릭한 경우
             newStatus = 'COMPLETED';
-        }
+        };
+
         setCheckedTasks(prevChecked => ({ ...prevChecked, [taskId]: !prevChecked[taskId] }));
         setChecked(newStatus === 'COMPLETED');
         setIsCancelled(newStatus === 'CANCELLED');
@@ -287,15 +288,9 @@ const Layout = ({ setUser, user }) => {
             console.error('Error updating task status:', error);
         }
     }
-    //   useEffect(() => {
-    //     console.log("layout taskId : ", tasks);
-    //     console.log("layout checked : ", checked);
-    //     console.log("layout newStatus : ", tasks.taskStatus);
-    //   }, [tasks]);
 
     const handleCancel = async (task) => {
         const newStatus = 'CANCELLED';
-        console.log(" handleCancel : ", task)
         if (task && task.no) {
             try {
                 const response = await instance.put(`/tasks/${task.no}/status`, {
@@ -318,6 +313,42 @@ const Layout = ({ setUser, user }) => {
             console.error('Task object is missing or task.no is undefined');
         }
     };
+
+    const handleReopen = async (task) => {
+        let newStatus;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const taskStartDate = new Date(task.startDate);
+        if (taskStartDate.getTime() < today.getTime()) {
+            newStatus = 'OVERDUE'; // 과거 날짜이면 OVERDUE
+        } else {
+            newStatus = 'PENDING'; // 오늘 또는 미래 날짜이면 PENDING
+        }
+
+        if (task && task.no) {
+            try {
+                const response = await instance.put(`/tasks/${task.no}/status`, {
+                    status: newStatus,
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                if (response.status === 200) {
+                    await refreshTasks();
+                    setIsCancelled(newStatus === 'CANCELLED');
+                } else {
+                    console.error('Failed to update task status');
+                }
+            } catch (error) {
+                console.error('Error updating task status:', error);
+            }
+        } else {
+            console.error('Task object is missing or task.no is undefined');
+        }
+    };
+
     return (
         <div onClick={hideSidebar}>
             <MenuBar
@@ -331,6 +362,7 @@ const Layout = ({ setUser, user }) => {
                 handleCancel={handleCancel}
                 handleCheckboxChange={handleCheckboxChange}
                 smartLists={smartLists}
+                handleReopen={handleReopen}
             />
             <div className="icon" onClick={(e) => { e.stopPropagation(); toggleSidebar(); }}
                 style={{ zIndex: 1001, }}>
@@ -373,6 +405,7 @@ const Layout = ({ setUser, user }) => {
                         handleCancel={handleCancel}
                         handleCheckboxChange={handleCheckboxChange}
                         smartLists={smartLists}
+                        handleReopen={handleReopen}
                     />
                 </div>
             )}
@@ -409,6 +442,7 @@ const Layout = ({ setUser, user }) => {
                             handleCancel={handleCancel}
                             handleCheckboxChange={handleCheckboxChange}
                             smartLists={smartLists}
+                            handleReopen={handleReopen}
                         />
                     </div>
                 )}
@@ -434,6 +468,7 @@ const Layout = ({ setUser, user }) => {
                         setSmartLists,
                         isSmartList,
                         setIsSmartList,
+                        handleReopen
                     }} />
                 </main>
             </div>

@@ -13,7 +13,7 @@ const TaskBoxContent = ({
   task = {},
   deleteTask, updateTask, lists, refreshTasks,
   // checked, setChecked, isCancelled, setIsCancelled,  
-  handleCheckboxChange, handleCancel
+  handleCheckboxChange, handleCancel, handleReopen
 }) => {
   const getValidDate = (dateString) => {
     const date = new Date(dateString);
@@ -61,6 +61,7 @@ const TaskBoxContent = ({
         [task.no]: task.isTimeSet || false,
       }));
     }
+   
   }, [task, setChecked, setIsCancelled]);
 
   useEffect(() => {
@@ -198,7 +199,7 @@ const TaskBoxContent = ({
             </span>
           )}
           &nbsp;
-          {(initialAlarm !== 'NOALARM' || task.isNotified !== 'NOALARM') && (
+          {(task.isNotified !== 'NOALARM') && (
             <span
               className={`alram col-2 task-box ${taskStatusClassName}`}
               style={{ width: 16 }}>
@@ -231,6 +232,7 @@ const TaskBoxContent = ({
             setIsCancelled={setIsCancelled}
             handleCancel={() => handleCancel(task)}
             className={`task-box ${taskStatusClassName}`}
+            onReopen={() => handleReopen(task)}
           />
         </Col>
       </Row>

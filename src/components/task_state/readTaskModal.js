@@ -17,7 +17,7 @@ const ReadTaskModal = forwardRef(({
   updateTask, deleteTask,
   lists, addList, updateList, deleteList, refreshTasks,
   checked, setChecked, isCancelled, setIsCancelled,
-  handleCancel, handleCheckboxChange
+  handleCancel, handleCheckboxChange, handleReopen
 }, ref) => {
   const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
   const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
@@ -137,7 +137,7 @@ const ReadTaskModal = forwardRef(({
 
   const handleAlarmClick = (option) => {
     const alarmMapping = {
-      "알림없음": "NOALRAM",
+      "알림없음": "NOALARM",
       "정각": "ONTIME",
       "5분전": "FIVEMINS",
       "30분전": "THIRTYMINS",
@@ -232,13 +232,17 @@ const ReadTaskModal = forwardRef(({
               setSelectedList={setSelectedList}
               tasks={tasks}
               updateTask={updateTask}
+              onChange={() => handleCheckboxChange(tasks.no)}
             />
           </div>
           <div className="setting-icon col righted">
             <SetTask
               task={tasks}
               deleteTask={deleteTask}
-              handleCancel={handleCancel}
+              onReopen={() => handleReopen(tasks)}
+              isCancelled={isCancelled}
+              setIsCancelled={setIsCancelled}
+              handleCancel={() => handleCancel(tasks)}
             />
           </div>
         </div>

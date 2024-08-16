@@ -18,9 +18,6 @@ const SetTaskToggle = React.forwardRef(({ children, onClick }, ref) => (
       onClick(e);
     }}
     style={{
-      // display: 'inline-flex',
-      // alignItems: 'center',
-      // justifyContent: 'center',
       cursor: 'pointer',
       color: 'black'
     }}
@@ -53,8 +50,21 @@ const CustomMenu = React.forwardRef(
   },
 );
 
-const SetTask = ({ task, deleteTask, handleCancel, isCancelled, setIsCancelled }) => {
+const SetTask = ({ task, deleteTask, handleCancel, isCancelled, setIsCancelled, onReopen, }) => {
   const [isPinned, setIsPinned] = useState(false);
+  const [checked, setChecked] = useState(false);
+
+  const handleDoReopen = () => {
+    if (isCancelled) {
+      setIsCancelled(false);
+      setChecked(false);
+    } else {
+      setChecked(!checked);
+    }
+    if (onReopen) {
+      onReopen(); // 부모 컴포넌트의 상태도 업데이트합니다.
+    }
+  };
 
   const togglePin = () => setIsPinned(!isPinned);
   return (
@@ -73,7 +83,7 @@ const SetTask = ({ task, deleteTask, handleCancel, isCancelled, setIsCancelled }
           </Dropdown.Item>
         )}
         {isCancelled ? (
-          <Dropdown.Item eventKey="2" onClick={isCancelled}>
+          <Dropdown.Item eventKey="2" onClick={handleDoReopen}>
             <AiOutlineRollback /> Reopen
           </Dropdown.Item>
         ) : (
