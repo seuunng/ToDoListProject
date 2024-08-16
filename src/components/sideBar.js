@@ -28,7 +28,7 @@ const SideBar = ({ toggleSidebar,
   const showCreateList = () => {
     setShowCreateListModal(true);
   };
-
+  const filteredLists = lists.filter(list => !list.isDeleted);
   return (
     <div>
       <div className="sideBar">
@@ -62,7 +62,7 @@ const SideBar = ({ toggleSidebar,
             </div>
             <div className="list">
               <ListItemsBox
-                lists={lists}
+                lists={filteredLists}
                 toggleSidebar={toggleSidebar}
                 deleteList={deleteList}
                 updateList={updateList}

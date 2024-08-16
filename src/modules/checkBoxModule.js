@@ -19,11 +19,17 @@ const Checkbox = ({ task, children, onChange,
       setIsCancelled(isTaskCancelled);
     }
   }, [task]);
-  
-  // useEffect(() => {
-  //   // 상태가 변경될 때마다 로그를 출력하여 상태 변경을 확인
-  //   console.log("Checkbox state updated: ", { checked, isCancelled });
-  // }, [checked, isCancelled]);
+
+  const handleCheckboxClick = () => {
+    if (isCancelled) {
+      setIsCancelled(false);
+      setChecked(false);
+    } else {
+      setChecked(!checked);
+    }
+    onChange(); // 부모 컴포넌트의 상태도 업데이트합니다.
+  };
+
   const taskStatusClassName = task.taskStatus === 'OVERDUE'
   ? 'task-overdue'
   : task.taskStatus === 'COMPLETED'
@@ -35,7 +41,7 @@ const Checkbox = ({ task, children, onChange,
   return (
     <label className="custom-checkbox">
       <span className={`custom-checkbox-icon ${taskStatusClassName}`}
-        onClick={onChange} >
+        onClick={handleCheckboxClick} >
         {isCancelled ? <IoClose /> : (checked ? <FaCheck /> : null)}
       </span>
       {children}

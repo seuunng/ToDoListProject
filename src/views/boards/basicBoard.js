@@ -97,7 +97,7 @@ const BasicBoard = () => {
 
   const handleTaskClick = (task) => {
     setSelectedTask(task);
-    fetchListAndTasks()
+    // fetchListAndTasks()
   };
 
   return (

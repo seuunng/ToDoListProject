@@ -53,7 +53,7 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
   return (
     <div className={`task-box ${className}`}  style={style}>
       <div ref={taskBoxRef} 
-        className="TaskBoxForCal">
+        className={`TaskBoxForCal ${taskStatusClassName}`}>
         <div className="color-box row">
            {tasks.isRepeated!== 'NOREPEAT' && (
             <span className="taskBoxForCal-repeat col-2">
@@ -61,7 +61,7 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
             </span>
           )}
           {showTitle && (
-            <span className={`task-title col-8" ${taskStatusClassName}`}>{tasks.title}</span>
+            <span className={`task-title col-8 ${taskStatusClassName}`}>{tasks.title}</span>
           )}
           {(initialAlarm!=='NOALARM' || tasks.isNotified !== 'NOALARM')&& (
             <span className="taskBoxForCal-alram col-2">
