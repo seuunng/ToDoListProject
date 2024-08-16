@@ -14,7 +14,7 @@ const ReadTaskPageContent = ({
   task,
   updateTask, deleteTask, lists, refreshTasks, onTaskClick,
   // checked,  setChecked,  isCancelled,  setIsCancelled,
-  handleCancel, handleCheckboxChange
+  handleCancel, handleCheckboxChange, handleReopen
 }) => {
   const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
   const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
@@ -108,7 +108,6 @@ const ReadTaskPageContent = ({
   useEffect(() => {
       console.log("1 selectedButton:", selectedButton);
       console.log("1-1task.dateStatus:", task.dateStatus);
-      // console.log("1-2 Selected button has changed to:", button.toUpperCase());
   }, [selectedButton]);
 
   const handleSelectedButtonChange = async (button) => {
@@ -160,6 +159,14 @@ const ReadTaskPageContent = ({
       isTimeSet: value,
     });
   };
+
+  const taskStatusClassName = task.taskStatus === 'OVERDUE'
+    ? 'task-overdue'
+    : task.taskStatus === 'COMPLETED'
+      ? 'task-completed'
+      : task.taskStatus === 'CANCELLED'
+        ? 'task-cancelled'
+        : '';
 
   return (
     <div className="readTaskPage">
@@ -224,7 +231,11 @@ const ReadTaskPageContent = ({
             <SetTask
               task={task}
               deleteTask={deleteTask}
-              handleCancel={handleCancel}
+              className={`task-box ${taskStatusClassName}`}
+              onReopen={() => handleReopen(task)}
+              isCancelled={isCancelled}
+              setIsCancelled={setIsCancelled}
+              handleCancel={() => handleCancel(task)}
             />
           </div>
         </div>

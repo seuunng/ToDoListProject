@@ -9,7 +9,7 @@ import instance from '../../api/axios';
 
 const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className, 
   lists, addList, updateList, deleteList, showTitle=true, style, refreshTasks,
-  checked,  setChecked,  isCancelled,  setIsCancelled,  handleCancel,  handleCheckboxChange }) => {
+  checked,  setChecked,  isCancelled,  setIsCancelled,  handleCancel,  handleCheckboxChange,handleReopen }) => {
   const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
   const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
   const alarmMapping = {
@@ -20,10 +20,21 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
   };
   const initialAlarm =savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
   
+  const [isRepeat, setIsRepeat] = useState(tasks.isRepeated || 'NOREPEAT');
+  const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALARM');
+  const [taskTitle, setTaskTitle] = useState(tasks.title);
+
   const readTaskModalRef = useRef(null);
   const taskBoxRef = useRef(null);
   const listNo = tasks.list ? tasks.list.no : null;
-  
+  useEffect(() => {
+    if (tasks && tasks.title) {
+      setTaskTitle(tasks.title);
+      setIsRepeat(tasks.isRepeated || 'NOREPEAT');
+      setIsNotified(tasks.isNotified || 'NOALARM');
+    }
+  }, []);
+
   useEffect(() => {
     const readMemo = (e) => {
       if (readTaskModalRef.current) {
@@ -35,13 +46,14 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
     if (current) {
       current.addEventListener('click', readMemo);
     }
-
     return () => {
       if (current) {
         current.removeEventListener('click', readMemo);
       }
     };
+    
   }, []);
+  
   const taskStatusClassName = tasks.taskStatus === 'OVERDUE'
   ? 'task-overdue'
   : tasks.taskStatus === 'COMPLETED'
@@ -63,7 +75,7 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
           {showTitle && (
             <span className={`task-title col-8 ${taskStatusClassName}`}>{tasks.title}</span>
           )}
-          {(initialAlarm!=='NOALARM' || tasks.isNotified !== 'NOALARM')&& (
+          {(tasks.isNotified !== 'NOALARM')&& (
             <span className="taskBoxForCal-alram col-2">
               <FaRegBell className={`task-box ${taskStatusClassName}`}/>
             </span>
@@ -87,11 +99,7 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
         handleCancel={handleCancel}
         handleCheckboxChange={handleCheckboxChange}
         refreshTasks={refreshTasks}
-        // checked={checked}
-        // onChange={handleCheckboxChange}
-        // setIsCancelled={setIsCancelled}
-        // isCancelled={isCancelled}
-        // handleCancel={handleCancel}
+        handleReopen={handleReopen}
       />
     </div>
   );

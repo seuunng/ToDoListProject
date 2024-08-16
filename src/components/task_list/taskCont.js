@@ -6,7 +6,7 @@ import TaskBox from '../task_state/taskBox';
 const TaskCont = ({ 
   tasks = [], updateTask, deleteTask, onTaskClick, 
   lists, addList, updateList, deleteList, refreshTasks,
-  checked,  setChecked,  isCancelled,  setIsCancelled,  handleCancel,  handleCheckboxChange
+  checked,  setChecked,  isCancelled,  setIsCancelled,  handleCancel,  handleCheckboxChange, handleReopen
  }) => {
 
   if (!Array.isArray(tasks)) {
@@ -53,6 +53,7 @@ const TaskCont = ({
                   setIsCancelled={setIsCancelled}
                   handleCancel={handleCancel}
                   handleCheckboxChange={handleCheckboxChange}
+                  handleReopen={handleReopen}
                 />
               </td>
             </tr>

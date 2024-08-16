@@ -46,7 +46,7 @@ const SelectedList = ({ lists, selectedList, setSelectedList, tasks, updateTask 
   }
   const handleSelect = (list) => {
     setSelectedList(list);
-    updateTask({ ...tasks, list: { no: list.no } });
+    // updateTask({ ...tasks, list: { no: list.no } });
   };
   return (
     <Dropdown>

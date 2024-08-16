@@ -12,7 +12,7 @@ import { useParams, useOutletContext } from 'react-router-dom';
 const MonthlyBoard = () => {
   const {
     tasks, addTask, updateTask, deleteTask, lists, addList, updateList, deleteList, user, setUser,
-    checked,  setChecked,  isCancelled,  setIsCancelled,  handleCancel,  handleCheckboxChange
+    checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange, handleReopen
   } = useOutletContext();
 
   const [startDate, setStartDate] = useState(new Date());
@@ -24,10 +24,10 @@ const MonthlyBoard = () => {
   const todayRef = useRef(null);
   const weeks = [1, 2, 3, 4, 5];
   const days = [1, 2, 3, 4, 5, 6, 7];
-  
+
   // Setting모달 설정값
   const savedSeletedFirstDay = JSON.parse(localStorage.getItem('selectedOptions')) || { week: '일요일' };
- 
+
   useEffect(() => {
     if (todayRef.current) {
       todayRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -37,12 +37,12 @@ const MonthlyBoard = () => {
   useEffect(() => {
     const firstDay = savedSeletedFirstDay.week === '월요일' ? 1 : 0; // 1 for Monday, 0 for Sunday
     setFirstDayOfWeek(firstDay);
-    const daysOfWeek = firstDay === 1 ? ['월', '화', '수', '목', '금', '토', '일'] : ['일', '월', '화', '수', '목', '금', '토'];  
+    const daysOfWeek = firstDay === 1 ? ['월', '화', '수', '목', '금', '토', '일'] : ['일', '월', '화', '수', '목', '금', '토'];
     setDaysOfWeek(daysOfWeek);
   }, [savedSeletedFirstDay.week]);
 
   // useEffect(() => {
-    
+
   // }, []);
 
   const getDate = (week, day) => {
@@ -63,7 +63,7 @@ const MonthlyBoard = () => {
     if (event.target !== event.currentTarget) {
       return;
     }
-    setStartDate(date); 
+    setStartDate(date);
     createMemo(date);
   };
 
@@ -96,6 +96,7 @@ const MonthlyBoard = () => {
           taskStartDate.getFullYear() === date.getFullYear()
         )
         : (
+          //여긴가 첫날 시간없이렌더링
           date >= taskStartDate &&
           date <= new Date(task.endDate)
         );
@@ -117,7 +118,9 @@ const MonthlyBoard = () => {
       return 'transparent';
     }
     const list = lists.find(list => list.no === task.list.no);
+    // console.log( task.title,  task.list.no,  list.color)
     return list ? list.color : 'transparent';
+
   };
 
   const addListToTasks = (tasks, lists) => {
@@ -168,7 +171,7 @@ const MonthlyBoard = () => {
               <tr key={week}>
                 {days.map((day) => {
                   const date = getDate(week, day);
-                  const todayClass = isToday(date) ? 'today-cell' : 'date-cell'; //오늘날짜 음영
+                  const todayClass = isToday(date) ? 'today-cell' : 'date-cell'; 
                   const dayTasksForPeriod = filterTasksForPeriod(date);
                   // const dayTasksForDate = filterTasksForDate(date);
                   const dayTasks = addListToTasks(dayTasksForPeriod, lists);
@@ -192,13 +195,13 @@ const MonthlyBoard = () => {
                                 deleteList={deleteList}
                                 style={{ backgroundColor: getTaskListColor(task) }}
                                 refreshTasks={tasks}
-                                checked={checked} 
-                                setChecked={setChecked}  
+                                checked={checked}
+                                setChecked={setChecked}
                                 isCancelled={isCancelled}
                                 setIsCancelled={setIsCancelled}
                                 handleCancel={handleCancel}
                                 handleCheckboxChange={handleCheckboxChange}
-                              // showTitle={!isTaskEndDate(task, date)}
+                                handleReopen={handleReopen}
                               />
                             ) : null
                           ))}

@@ -15,7 +15,7 @@ const BasicBoard = () => {
     lists, addList, updateList, deleteList,
     smartLists, setSmartLists,
     checked, setChecked, isCancelled, setIsCancelled,
-    handleCancel, handleCheckboxChange, setIsSmartList, isSmartList
+    handleCancel, handleCheckboxChange, setIsSmartList, isSmartList, handleReopen
   } = useOutletContext();
 
   const [tasksByLists, setTasksByLists] = useState([]);
@@ -128,6 +128,7 @@ const BasicBoard = () => {
             setIsCancelled={setIsCancelled}
             handleCancel={handleCancel}
             handleCheckboxChange={handleCheckboxChange}
+            handleReopen={handleReopen}
           />
         </Col>
         <Col className="ReadTaskPage">
@@ -145,6 +146,7 @@ const BasicBoard = () => {
               setIsCancelled={setIsCancelled}
               handleCancel={handleCancel}
               handleCheckboxChange={handleCheckboxChange}
+              handleReopen={handleReopen}
             />
           )}
         </Col>
