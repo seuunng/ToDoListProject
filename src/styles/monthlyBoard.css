@@ -132,3 +132,13 @@
   transform: translateX(-50%);
   /* 중앙 정렬 */
 }
+
+.task-cell{
+    overflow-y: auto; /* 수직 스크롤 활성화 */
+    overflow-x: hidden;
+}
+
+.task-cell::-webkit-scrollbar {
+  width: 1px; /* 스크롤바 너비 */
+  /* margin-top: 5px; */
+}

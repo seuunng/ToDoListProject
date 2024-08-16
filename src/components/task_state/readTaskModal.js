@@ -137,7 +137,7 @@ const ReadTaskModal = forwardRef(({
 
   const handleAlarmClick = (option) => {
     const alarmMapping = {
-      "알림없음": "NOALRAM",
+      "알림없음": "NOALARM",
       "정각": "ONTIME",
       "5분전": "FIVEMINS",
       "30분전": "THIRTYMINS",

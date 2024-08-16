@@ -85,21 +85,37 @@ const MonthlyBoard = () => {
   };
 
   const filterTasksForPeriod = (date) => {
+    // return tasks.filter(task => {
+    //   if (task.taskStatus === 'CANCELLED') return false;
+    //   if (task.taskStatus === 'DELETED') return false;
+    //   const taskStartDate = new Date(task.startDate);
+    //   return task.endDate == null
+    //     ? (
+    //       taskStartDate.getDate() === date.getDate() &&
+    //       taskStartDate.getMonth() === date.getMonth() &&
+    //       taskStartDate.getFullYear() === date.getFullYear()
+    //     )
+    //     : (
+    //       //여긴가 첫날 시간없이렌더링
+    //       date >= taskStartDate &&
+    //       date <= new Date(task.endDate)
+    //     );
+    // });
     return tasks.filter(task => {
-      if (task.taskStatus === 'CANCELLED') return false;
-      if (task.taskStatus === 'DELETED') return false;
+      if (task.taskStatus === 'CANCELLED' || task.taskStatus === 'DELETED') return false;
+  
       const taskStartDate = new Date(task.startDate);
-      return task.endDate == null
-        ? (
-          taskStartDate.getDate() === date.getDate() &&
-          taskStartDate.getMonth() === date.getMonth() &&
-          taskStartDate.getFullYear() === date.getFullYear()
-        )
-        : (
-          //여긴가 첫날 시간없이렌더링
-          date >= taskStartDate &&
-          date <= new Date(task.endDate)
-        );
+      const taskEndDate = task.endDate ? new Date(task.endDate) : null;
+  
+      // 시간을 00:00:00으로 초기화하여 날짜 비교만 수행하도록 설정
+      taskStartDate.setHours(0, 0, 0, 0);
+      if (taskEndDate) {
+        taskEndDate.setHours(0, 0, 0, 0);
+      }
+  
+      return taskEndDate == null
+        ? date.getTime() === taskStartDate.getTime()
+        : date.getTime() >= taskStartDate.getTime() && date.getTime() <= taskEndDate.getTime();
     });
   };
 

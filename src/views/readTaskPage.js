@@ -28,6 +28,7 @@ const ReadTaskPageContent = ({
 
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [taskTitle, setTaskTitle] = useState(task.title);
+  const [taskStatus, setTaskStatus] = useState();
   const [taskContent, setTaskContent] = useState(task.content);
   const [startDate, setStartDate] = useState(new Date(task.startDate));
   const [endDate, setEndDate] = useState(task.endDate ? new Date(task.endDate) : null);
@@ -41,36 +42,84 @@ const ReadTaskPageContent = ({
   const [isCancelled, setIsCancelled] = useState(task.taskStatus === 'CANCELLED');
 
   useEffect(() => {
-    setTaskTitle(task.title);
-    setTaskContent(task.content);
-    setStartDate(new Date(task.startDate));
-    setEndDate(task.endDate ? new Date(task.endDate) : null);
-    setSelectedButton(task.dateStatus || 'DATE');
-    setIsRepeat(task.isRepeated || 'NOREPEAT');
-    setIsNotified(task.isNotified || initialAlarm);
-    setSelectedList(lists.find(list => list.no === task.listNo) || null);
+    if (task && task.title) {
+      setTaskTitle(task.title);
+      setTaskContent(task.content);
+      setStartDate(new Date(task.startDate));
+      setEndDate(task.endDate ? new Date(task.endDate) : null);
+      setSelectedButton(task.dateStatus || 'DATE');
+      setIsRepeat(task.isRepeated || 'NOREPEAT');
+      setIsNotified(task.isNotified || initialAlarm);
+      setSelectedList(lists.find(list => list.no === task.listNo) || null);
 
-    setChecked(task.taskStatus === 'COMPLETED');
-    setIsCancelled(task.taskStatus === 'CANCELLED');
+      setChecked(task.taskStatus === 'COMPLETED');
+      setIsCancelled(task.taskStatus === 'CANCELLED');
 
-    setTimeSetMap((prevMap) => ({
-      ...prevMap,
-      [task.no]: task.isTimeSet || false, // Task별로 isTimeSet 상태를 초기화
-    }));
+      setTimeSetMap((prevMap) => ({
+        ...prevMap,
+        [task.no]: task.isTimeSet || false,
+      }));
+    }
   }, [task, lists, setChecked, setIsCancelled]);
+
+  const handleDatePickerClose = async () => {
+    try {
+      const updatedTask = {
+        ...task,
+        startDate,
+        endDate,
+        taskStatus,
+        dateStatus: selectedButton,
+        isNotified: isNotified,
+        isTimeSet: timeSetMap[task.no]
+
+      };
+      await updateTask(updatedTask);
+      await refreshTasks();
+    } catch (error) {
+      console.error("Error updating task:", error);
+    }
+  };
+
+  const handleSelectedListChange = (selectedList) => {
+    setSelectedList(selectedList);
+    if (selectedList && selectedList.no) {
+      updateTask({ ...task, listNo: selectedList.no });
+      // refreshTasks();
+    }
+  };
+
 
   const handleTitleChange = async (e) => {
     const newTitle = e.target.value;
     setTaskTitle(newTitle);
-    await updateTask({ ...task, title: newTitle });
-    await refreshTasks();
+  };
+
+  const handleTitleKeyPress = async (e) => {
+    if (e.key === 'Enter') {
+      try {
+        await updateTask({ ...task, title: taskTitle });
+        await refreshTasks();
+      } catch (error) {
+        console.error("Error updating task:", error);
+      }
+    }
   };
 
   const handleContentChange = async (e) => {
     const newContent = e.target.value;
     setTaskContent(newContent);
-    await updateTask({ ...task, content: newContent });
-    await refreshTasks();
+  };
+
+  const handleContentKeyPress = async (e) => {
+    if (e.key === 'Enter') {
+      try {
+        await updateTask({ ...task, content: taskContent });
+        await refreshTasks();
+      } catch (error) {
+        console.error("Error updating task:", error);
+      }
+    }
   };
 
   const handleDateChange = async (startDate, endDate) => {
@@ -100,23 +149,12 @@ const ReadTaskPageContent = ({
         updatedStatus = 'PENDING'; // 그 외의 경우는 PENDING
       }
     }
-    const updatedTask = { ...task, startDate, endDate, taskStatus: updatedStatus };
-    await updateTask(updatedTask);
-    await refreshTasks();
+    setTaskStatus(updatedStatus);
   };
 
-  useEffect(() => {
-      console.log("1 selectedButton:", selectedButton);
-      console.log("1-1task.dateStatus:", task.dateStatus);
-  }, [selectedButton]);
-
   const handleSelectedButtonChange = async (button) => {
-    if (button!== task.dateStatus) {
-      console.log("2 button:", button);
-      console.log("2-1 task.dateStatus:", task.dateStatus);
-    setSelectedButton(button);
-    await updateTask({ ...task, dateStatus: button.toUpperCase() });
-    await refreshTasks();
+    if (button !== task.dateStatus) {
+      setSelectedButton(button);
     }
   };
 
@@ -133,7 +171,7 @@ const ReadTaskPageContent = ({
     updateTask(updatedTask);
   };
 
-  const handleAlarmClick = async (option) => {
+  const handleAlarmClick = (option) => {
     const alarmMapping = {
       "알림없음": "NOALARM",
       "정각": "ONTIME",
@@ -143,21 +181,14 @@ const ReadTaskPageContent = ({
     };
     const isNotified = alarmMapping[option] || "NOALARM";
     setIsNotified(isNotified);
-    const updatedTask = { ...task, isNotified: isNotified };
-    await updateTask(updatedTask);
     // await refreshTasks();
   };
-
 
   const handleTimeSetChange = (task, value) => {
     setTimeSetMap((prevMap) => ({
       ...prevMap,
       [task.no]: value,
     }));
-    updateTask({
-      ...task,
-      isTimeSet: value,
-    });
   };
 
   const taskStatusClassName = task.taskStatus === 'OVERDUE'
@@ -186,6 +217,7 @@ const ReadTaskPageContent = ({
           startDate={startDate}
           endDate={endDate}
           onDateChange={handleDateChange}
+          onCalendarClose={handleDatePickerClose}
           onRepeatClick={handleRepeatClick}
           onAlarmClick={handleAlarmClick}
           selectedButton={selectedButton}
@@ -203,6 +235,7 @@ const ReadTaskPageContent = ({
           type="text"
           value={taskTitle}
           onChange={handleTitleChange}
+          onKeyDown={handleTitleKeyPress}
           className="form-control"
           placeholder="Task Title"
           style={{ border: "none" }}
@@ -212,6 +245,7 @@ const ReadTaskPageContent = ({
         <textarea
           value={taskContent}
           onChange={handleContentChange}
+          onKeyDown={handleContentKeyPress}
           className="form-control-readTask"
           placeholder="설명"
           style={{ border: "none" }}
@@ -222,7 +256,7 @@ const ReadTaskPageContent = ({
             <SelectedList
               lists={lists}
               selectedList={selectedList}
-              setSelectedList={setSelectedList}
+              setSelectedList={handleSelectedListChange}
               tasks={task}
               updateTask={updateTask}
             />

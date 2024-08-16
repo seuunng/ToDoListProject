@@ -8,10 +8,10 @@ import DropdownBtn from './dropdownModule';
 import { IoMdTime } from "react-icons/io";
 import { TaskBoxContext } from '../contexts/taskBoxContext';
 
-const DatePickerModule = ({ startDate, endDate, onDateChange,
+const DatePickerModule = ({ show, startDate, endDate, onDateChange,
     onRepeatClick, initialRepeat, onAlarmClick, initialAlarm, isNotified,
     dateFormat, selectedButton, setSelectedButton, onHide, onSave,
-    isTimeSet, setIsTimeSet }) => {
+    isTimeSet, setIsTimeSet, onCalendarClose}) => {
 
     const [dateRange, setDateRange] = useState([startDate, endDate]);
     const [timeValue, setTimeValue] = useState('');
@@ -111,6 +111,15 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
             setIsTimeSet(true);
         } 
     }, []);
+
+    // const handleKeyDown = (e) => {
+    //     if (e.key === 'Enter') {
+    //       // onKeyDown이 prop으로 전달된 경우 실행
+    //       if (onKeyDown) {
+    //         onKeyDown(e);
+    //       }
+    //     }
+    //   };
 
     const CustomInput = forwardRef(({ value, onClick, className }, ref) => (
         <button className={className} onClick={onClick} ref={ref}
@@ -256,15 +265,14 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
     );
 
     return (
-        <div className="custom-date-picker">
-
+        <div className="custom-date-picker" >
             <DatePicker
                 selected={dateRange[0]}
                 onChange={handleDateChange}
                 startDate={dateRange[0]}
                 endDate={dateRange[1]}
                 selectsRange={selectedButton === 'PERIOD'}
-
+                onCalendarClose={onCalendarClose} 
                 showPopperArrow={false}
                 calendarContainer={MyContainer}
                 popperPlacement="bottom-start"

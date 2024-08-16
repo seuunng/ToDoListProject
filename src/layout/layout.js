@@ -256,12 +256,12 @@ const Layout = ({ setUser, user }) => {
     const handleCheckboxChange = async (taskId) => {
         let newStatus;
         const task = tasks.find(task => task.no === taskId);
-        // console.log("handleCheckboxChange 실행 ", task);
 
         if (!task) {
             console.error('Task not found');
             return;
         }
+        
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const taskStartDate = new Date(task.startDate);
@@ -348,7 +348,7 @@ const Layout = ({ setUser, user }) => {
             console.error('Task object is missing or task.no is undefined');
         }
     };
-    
+
     return (
         <div onClick={hideSidebar}>
             <MenuBar
