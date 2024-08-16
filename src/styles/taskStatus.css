@@ -4,13 +4,18 @@
 .task-completed .custom-input {
   color: lightgray;
 }
-.TaskBoxForCal .task-completed {
-  color: gray;
+.TaskBoxForCal.task-completed {
   background-color: lightgray
 }
 
+.TaskBoxForCal.task-completed .task-title{
+  color: gray;
+}
 .task-completed svg {
   color: lightgray;
+}
+.TaskBoxForCal.task-completed svg{
+  color: gray;
 }
 /* .task-overdue {
   color: rgb(177, 70, 70) !important;
@@ -25,15 +30,27 @@
 } */
 
 .task-cancelled {
-  color: lightgray !important;
+  color: lightgray;
 }
 .task-cancelled .custom-input {
   color: lightgray
 }
-.TaskBoxForCal .task-cancelled {
-  color: gray;
+.TaskBoxForCal.task-cancelled{
   background-color: lightgray;
 }
+.TaskBoxForCal.task-cancelled .task-title{
+  color: gray;
+}
+.TaskBoxForCal.task-cancelled  svg{
+  color: gray;
+}
+/* 
+.TaskBoxForCal.task-cancelled .taskBoxForCal-alram{
+  background-color: lightgray; */
+/* } */
+/* .task-title .task-cancelled{
+  color: gray; */
+/* } */
 .task-cancelled svg {
   color: lightgray;
 }

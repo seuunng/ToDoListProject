@@ -63,6 +63,7 @@ const MonthlyBoard = () => {
     if (event.target !== event.currentTarget) {
       return;
     }
+    setStartDate(date); 
     createMemo(date);
   };
 
@@ -85,6 +86,7 @@ const MonthlyBoard = () => {
 
   const filterTasksForPeriod = (date) => {
     return tasks.filter(task => {
+      if (task.taskStatus === 'CANCELLED') return false;
       if (task.taskStatus === 'DELETED') return false;
       const taskStartDate = new Date(task.startDate);
       return task.endDate == null

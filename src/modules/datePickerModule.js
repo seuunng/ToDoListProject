@@ -10,17 +10,17 @@ import { TaskBoxContext } from '../contexts/taskBoxContext';
 
 const DatePickerModule = ({ startDate, endDate, onDateChange,
     onRepeatClick, initialRepeat, onAlarmClick, initialAlarm, isNotified,
-    dateFormat, selectedButton, setSelectedButton, onHide, onSave }) => {
+    dateFormat, selectedButton, setSelectedButton, onHide, onSave,
+    isTimeSet, setIsTimeSet }) => {
 
     const [dateRange, setDateRange] = useState([startDate, endDate]);
     const [timeValue, setTimeValue] = useState('');
-    const [isTimeSet, setIsTimeSet] = useState(false); 
-    
+
     const dropdownOptionsAlarmTime = ["알림없음", "정각", "5분전", "30분전", "하루전"];
     const dropdownOptionsRepeat = ["반복없음", "매일", "매주", "매달", "매년"];
     const savedSeleted = JSON.parse(localStorage.getItem('selectedOptions'));
     const [dateFormatTimeInput, setDateFormatTimeInput] = useState(savedSeleted.time === "24시간" ? "yyyy/MM/dd H:mm" : "yyyy/MM/dd h:mm aa");
-    const { isTaskBox } = useContext(TaskBoxContext); 
+    const { isTaskBox } = useContext(TaskBoxContext);
 
     const repeatMappingToKorean = {
         "NOREPEAT": "반복없음",
@@ -29,6 +29,7 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         "MONTHLY": "매달",
         "YEARLY": "매년"
     };
+
     const alarmMappingToKorean = {
         "NOALARM": "알림없음",
         "ONTIME": "정각",
@@ -38,24 +39,15 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
     };
 
     const [selectedOptions, setSelectedOptions] = useState({
-        alarmTime: alarmMappingToKorean[initialAlarm] || "알림없음",
+        alarmTime: alarmMappingToKorean[isNotified] || initialAlarm,
         repeat: repeatMappingToKorean[initialRepeat] || "반복없음",
     });
 
     useEffect(() => {
         setDateRange([startDate, endDate]);
-      }, [startDate, endDate]);
+    }, [startDate, endDate]);
 
     const [alarmChanged, setAlarmChanged] = useState(false);
-
-    useEffect(() => {
-        if (!alarmChanged) {
-            setSelectedOptions((prevOptions) => ({
-                ...prevOptions,
-                alarmTime: alarmMappingToKorean[initialAlarm] || "알림없음",
-            }));
-        }
-    }, [alarmChanged]);
 
     useEffect(() => {
         if (alarmChanged) {
@@ -67,11 +59,11 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
     }, [isNotified, alarmChanged]);
 
     useEffect(() => {
-            setSelectedOptions((prevOptions) => ({
-              ...prevOptions,
-              repeat: repeatMappingToKorean[initialRepeat] || "반복없음",
-            }));
-        }, [ initialRepeat,]);
+        setSelectedOptions((prevOptions) => ({
+            ...prevOptions,
+            repeat: repeatMappingToKorean[initialRepeat] || "반복없음",
+        }));
+    }, [initialRepeat,]);
 
     useEffect(() => {
         if (dateRange[0]) {
@@ -88,12 +80,11 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         setDateFormatTimeInput(savedSeleted.time === "24시간" ? "yyyy/MM/dd H:mm" : "yyyy/MM/dd h:mm aa");
     }, [savedSeleted.time]);
 
-    //날짜 입력 형식 선택 (날짜||기간)
     const handleButtonClick = (buttonType) => {
         setSelectedButton(buttonType);
     };
 
-    //날짜 변경 기능
+    
     const handleDateChange = (update) => {
         setDateRange(update);
         if (selectedButton === 'PERIOD') {
@@ -112,9 +103,14 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
         if (type === 'alarmTime') {
             setAlarmChanged(true);
             onAlarmClick(option);
-            console.log("alarmTime option : ", option)
         }
     };
+
+    useEffect(() => {
+        if (timeValue) {
+            setIsTimeSet(true);
+        } 
+    }, []);
 
     const CustomInput = forwardRef(({ value, onClick, className }, ref) => (
         <button className={className} onClick={onClick} ref={ref}
@@ -134,8 +130,6 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
     ),
     );
 
-
-    // 날짜||기간 선택 버튼 
     const MyContainer = ({ className, children }) => {
         return (
             <div >
@@ -203,13 +197,12 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
             <Col>
                 <input
                     type="time"
-                    value={isTimeSet? timeValue:''}
+                    value={isTimeSet ? timeValue : ''}
                     onChange={e => {
                         const newValue = e.target.value;
                         onChange(newValue);
                         setTimeValue(newValue);
-                        setIsTimeSet(!!newValue); 
-
+                        setIsTimeSet(true);
                         if (newValue) {
                             const [hours, minutes] = newValue.split(':');
                             const newDate = new Date(dateRange[0]);
@@ -238,7 +231,7 @@ const DatePickerModule = ({ startDate, endDate, onDateChange,
                 <Button
                     onClick={() => {
                         setTimeValue('');
-                        setIsTimeSet(false); 
+                        setIsTimeSet(false);
                         const newDate = new Date(dateRange[0]);
                         newDate.setHours(0);
                         newDate.setMinutes(0);

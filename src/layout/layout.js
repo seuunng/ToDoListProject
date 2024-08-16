@@ -37,8 +37,6 @@ const Layout = ({ setUser, user }) => {
             const response_listData = await instance.get('/lists/list');
             const data_list = Array.isArray(response_listData.data) ? response_listData.data : [];
 
-            console.log("data_list", data_list);
-
             const response_smartListsData = await instance.get('/smartLists/list');
             const data_smartList = Array.isArray(response_smartListsData.data) ? response_smartListsData.data : [];
 
@@ -127,7 +125,6 @@ const Layout = ({ setUser, user }) => {
                 list: newTask.listNo ? newTask.listNo : { no: null }
             });
             setTasks((prevTasks) => [...prevTasks, response.data]);
-            console.log(" addTask ", response.data)
         } catch (error) {
             console.error('Error adding task:', error);
         }
@@ -140,6 +137,7 @@ const Layout = ({ setUser, user }) => {
                 task.no === updatedTask.no ? response.data : task
             );
             setTasks(updatedTasks);
+            await refreshTasks();
         } catch (error) {
             console.error('Error updating task:', error);
         }
@@ -169,6 +167,7 @@ const Layout = ({ setUser, user }) => {
                 draggable: true,
                 progress: undefined,
             });
+            await refreshTasks();
             return response;
         } catch (error) {
             console.error('Error deleteList: ', error);
@@ -200,8 +199,19 @@ const Layout = ({ setUser, user }) => {
 
     const deleteList = async (deletedList) => {
         try {
-            await instance.delete(`/lists/list/${deletedList.no}`);
-            setLists(lists.filter(list => list.no !== deletedList.no));
+            const response = await instance.put(`/lists/list/${deletedList.no}`, {
+                title: deletedList.title,
+                icon: deletedList.icon,
+                color: deletedList.color,
+                isDeleted: true
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            const updatedLists = lists.filter(list => list.no !== deletedList.no);
+            // 상태 업데이트로 컴포넌트가 다시 렌더링되도록 함
+            setLists(updatedLists);
             toast.success(`리스트가 삭제되었습니다.`, {
                 position: "top-right",
                 autoClose: 4000,
@@ -212,7 +222,7 @@ const Layout = ({ setUser, user }) => {
                 progress: undefined,
             });
         } catch (error) {
-            console.error('Error deleting list:', error);
+            console.error('Error updating list:', error);
         }
     };
 
@@ -235,6 +245,7 @@ const Layout = ({ setUser, user }) => {
                     'Content-Type': 'application/json',
                 }
             });
+            await refreshTasks();
             return response;
         } catch (error) {
             console.error('Error updateTaskStatus:', error);
@@ -284,6 +295,7 @@ const Layout = ({ setUser, user }) => {
 
     const handleCancel = async (task) => {
         const newStatus = 'CANCELLED';
+        console.log(" handleCancel : ", task)
         if (task && task.no) {
             try {
                 const response = await instance.put(`/tasks/${task.no}/status`, {

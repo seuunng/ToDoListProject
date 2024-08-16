@@ -57,7 +57,6 @@ const SetTask = ({ task, deleteTask, handleCancel, isCancelled, setIsCancelled }
   const [isPinned, setIsPinned] = useState(false);
 
   const togglePin = () => setIsPinned(!isPinned);
-
   return (
     <Dropdown>
       <Dropdown.Toggle as={SetTaskToggle} id="dropdown-custom-components">
@@ -78,7 +77,7 @@ const SetTask = ({ task, deleteTask, handleCancel, isCancelled, setIsCancelled }
             <AiOutlineRollback /> Reopen
           </Dropdown.Item>
         ) : (
-          <Dropdown.Item eventKey="2" onClick={handleCancel}>
+          <Dropdown.Item eventKey="2" onClick={() => handleCancel(task)}>
             <MdCancelPresentation /> Won't Do
           </Dropdown.Item>
         )}

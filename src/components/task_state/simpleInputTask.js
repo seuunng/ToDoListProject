@@ -33,6 +33,7 @@ const SimpleInputTask = ({ addTask, lists, listTitle, refreshTasks, listId, isSm
         startDate: today.toISOString(),
         endDate: '',
         priority: 'MEDIUM',
+        taskStatus: 'PENDING',
         listNo: isSmartList ? selectedList.no : listId,
       };
       await addTask(task);
