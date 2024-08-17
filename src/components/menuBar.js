@@ -34,6 +34,8 @@ const MenuBar = ({ setUser, user, lists, smartLists,
 
   const selectedListNo = selectedList?.no || defaultList?.no || '';
 
+  console.log(defaultList);
+  
   return (
     <div>
       {user ?

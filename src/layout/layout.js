@@ -255,12 +255,12 @@ const Layout = ({ setUser, user }) => {
 
     const handleCheckboxChange = async (taskId) => {
         let newStatus;
-        const task = tasks.find(task => task.no === taskId);
-
         if (!task) {
             console.error('Task not found');
             return;
         }
+        const task = tasks.find(task => task.no === taskId);
+
         
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -290,6 +290,10 @@ const Layout = ({ setUser, user }) => {
     }
 
     const handleCancel = async (task) => {
+        if (!task || !task.no) {
+            console.error('Task object is missing or task.no is undefined');
+            return; // 작업을 중단하고 함수 실행을 멈춤
+        }
         const newStatus = 'CANCELLED';
         if (task && task.no) {
             try {
