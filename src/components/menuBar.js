@@ -31,6 +31,13 @@ const MenuBar = ({ setUser, user, lists, smartLists,
   const selectedList = getStoredItem('selectedList');
   const defaultList = getStoredItem('defaultList');
 
+  const selectedListNo = selectedList?.no || defaultList?.no || '';
+
+  if (!selectedListNo) {
+    console.error("No valid list found for navigation.");
+    // 여기에서 에러를 핸들링할 수 있습니다. 예를 들어, 기본 페이지로 리다이렉트하거나 사용자에게 경고 메시지를 표시합니다.
+  }
+
   return (
     <div>
       {user ?
@@ -47,6 +54,10 @@ const MenuBar = ({ setUser, user, lists, smartLists,
             }}
             className="item"
             onClick={() => {
+              if (!selectedListNo) {
+                console.error("No list selected for navigation.");
+                return; // 더 이상 진행하지 않도록 return
+              }
               setChecked(false);
               setIsCancelled(false);
               handleCheckboxChange();
