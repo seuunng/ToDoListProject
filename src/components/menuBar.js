@@ -34,8 +34,8 @@ const MenuBar = ({ setUser, user, lists, smartLists,
 
   const selectedListNo = selectedList?.no || defaultList?.no || '';
 
-  console.log(defaultList);
-  
+  console.log(defaultList, selectedListNo, selectedList, );
+
   return (
     <div>
       {user ?
@@ -47,7 +47,7 @@ const MenuBar = ({ setUser, user, lists, smartLists,
           {/* 베이직보드로 이동 */}
           <Link
             to={{
-              pathname: user && selectedListNo ? `/basicBoard/${selectedListNo}` : '',
+              pathname: user ? `/basicBoard/${selectedListNo}` : '',
               state: { checked, isCancelled, selectedList: selectedList?.no || defaultList?.no || '' }
             }}
             className="item"

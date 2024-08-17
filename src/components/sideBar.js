@@ -13,15 +13,22 @@ const SideBar = ({ toggleSidebar,
   checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange }) => {
 
   const [showCreateListModal, setShowCreateListModal] = useState(false);
-  const switches = JSON.parse(localStorage.getItem('switches'));
+  const switches = JSON.parse(localStorage.getItem('switches')) || {
+    today: false,
+    tomorrow: false,
+    next7Days: false,
+    defaultBox: false,
+    completed: false,
+    deleted: false
+};
 
   const filteredSmartLists = smartLists.filter(list => {
-    if (list.title === '오늘 할 일') return switches.today;
-    if (list.title === '내일 할 일') return switches.tomorrow;
-    if (list.title === '다음주 할 일') return switches.next7Days;
-    if (list.title === '모든 할 일') return switches.defaultBox;
-    if (list.title === '완료한 할 일') return switches.completed;
-    if (list.title === '취소한 할 일') return switches.deleted;
+    if (list.title === '오늘 할 일') return switches.today ?? false;
+    if (list.title === '내일 할 일') return switches.tomorrow ?? false;
+    if (list.title === '다음주 할 일') return switches.next7Days ?? false;
+    if (list.title === '모든 할 일') return switches.defaultBox ?? false;
+    if (list.title === '완료한 할 일') return switches.completed ?? false;
+    if (list.title === '취소한 할 일') return switches.deleted ?? false;
     return false;
   });
 
