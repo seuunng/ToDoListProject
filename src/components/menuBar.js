@@ -34,15 +34,6 @@ const MenuBar = ({ setUser, user, lists, smartLists,
 
   const selectedListNo = selectedList?.no || defaultList?.no || '';
 
-   const handleNavigationError = () => {
-    if (!selectedListNo) {
-      alert("No valid list selected. Please select a list before proceeding.");
-      console.error("No valid list found for navigation.");
-      return true; // 오류가 있었음을 나타내기 위해 true를 반환
-    }
-    return false; // 오류가 없음을 나타내기 위해 false를 반환
-  };
-
   return (
     <div>
       {user ?
@@ -59,10 +50,6 @@ const MenuBar = ({ setUser, user, lists, smartLists,
             }}
             className="item"
             onClick={(e) => {
-              if (handleNavigationError()) {
-                e.preventDefault(); // 네비게이션을 막음
-                return;
-              }
               setChecked(false);
               setIsCancelled(false);
               handleCheckboxChange();

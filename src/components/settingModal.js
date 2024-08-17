@@ -30,13 +30,20 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
   const [selectedList, setSelectedList] = useState(true);
   const [defaultList, setDefaultList] = useState(null);
 
-
-
   const dropdownOptionsWeek = ["월요일", "일요일"];
   const dropdownOptionsTime = ["12시간", "24시간"];
   const dropdownOptionsAlarmTime = ["정각", "5분전", "30분전", "하루전"];
   const dropdownOptionsAlarmMethod = ["이메일", "카톡알림", "팝업"];
   const dropdownOptionsAlarmSound = ["벨소리", "진동", "무음"];
+
+  useEffect(() => {
+    if (lists && lists.length > 0) {
+      const defaultList = lists.find(list => list.title === "기본함");
+      if (defaultList) {
+        setDefaultList(defaultList);
+      }
+    }
+  }, [lists]);
 
   useEffect(() => {
     // 로컬 스토리지에서 설정 값 불러오기
@@ -45,6 +52,7 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
     const savedSelectedList = JSON.parse(localStorage.getItem('selectedList'));
     const savedAllSwitchesList = JSON.parse(localStorage.getItem('allSwitchesList'));
     const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
+    const savedDefaultList = JSON.parse(localStorage.getItem('defaultList'));
    
     if (savedOptions) {
       setSelectedOptions(savedOptions);
@@ -61,8 +69,8 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
     if (savedSelectedList !== null) {
       setSelectedList(savedSelectedList);
     }
-    if (savedSelectedList) {
-      setSelectedList(savedSelectedList);
+    if (savedDefaultList) {
+      setDefaultList(savedDefaultList); // 기본 리스트 설정
     }
   }, [lists, smartLists]);
 
@@ -93,6 +101,7 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
     localStorage.setItem('allSwitchesList', JSON.stringify(allSwitchesList));
     localStorage.setItem('allSwitchesAlarm', JSON.stringify(allSwitchesAlarm));
     localStorage.setItem('selectedList', JSON.stringify(selectedList));
+    localStorage.setItem('defaultList', JSON.stringify(defaultList)); 
     onHide();
   }
   return (
