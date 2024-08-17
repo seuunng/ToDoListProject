@@ -7,7 +7,6 @@ import CreateList from './task_list/createListModal';
 import { useOutletContext } from 'react-router-dom';
 
 const SideBar = ({ toggleSidebar,
-  tasks, addTask, updateTask, deleteTask,
   lists, addList, updateList, deleteList,
   smartLists, isSmartList, setIsSmartList,
   checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange }) => {
@@ -31,11 +30,13 @@ const SideBar = ({ toggleSidebar,
     if (list.title === '취소한 할 일') return switches.deleted ?? false;
     return false;
   });
+  console.log("filteredSmartLists", filteredSmartLists)
+  const filteredLists = lists.filter(list => !list.isDeleted);
+  console.log("filteredLists", filteredLists)
 
   const showCreateList = () => {
     setShowCreateListModal(true);
   };
-  const filteredLists = lists.filter(list => !list.isDeleted);
   return (
     <div>
       <div className="sideBar">
