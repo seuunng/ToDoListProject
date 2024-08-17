@@ -61,7 +61,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
     isNotified: initialAlarm,
     isRepeated: 'NOREPEAT',
     dateStatus: 'DATE',
-    listNo: selectedList.no  || '',
+    listNo: selectedList?.no  || '',
   });
 
   const initializeTaskState = () => {
@@ -96,7 +96,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
         dateStatus: 'DATE',
         startDate: date,
         endDate: null,
-        listNo: selectedList_localSrotage.no || '',
+        listNo: selectedList_localSrotage?.no || '',
       }));
       // setStartDate(date);
     }
@@ -115,7 +115,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
   useEffect(() => {
     setNewTask(prevState => ({
       ...prevState,
-      listNo: selectedList.no,
+      listNo: selectedList?.no || '',
     }));
   }, [selectedList]);
 
@@ -130,7 +130,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
       isNotified: isNotified,
       isRepeated: 'NOREPEAT',
       dateStatus: 'DATE',
-      listNo: selectedList_localSrotage.no || '',
+      listNo: selectedList_localSrotage?.no || '',
       isTimeSet: false,
     });
     // setStartDate(date)
@@ -222,7 +222,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
         endDate: endDate ? endDate.toISOString() : null,
         priority: 'MEDIUM',
         taskStatus: taskStatus,
-        listNo: selectedList.no || '',
+        listNo: selectedList?.no || '',
         isTimeSet: timeSetMap[tasks.no] || false,
         dateStatus: selectedButton
       };
@@ -236,7 +236,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
         isNotified: initialAlarm,
         isRepeated: 'NOREPEAT',
         dateStatus: 'DATE',
-        listNo: selectedList.no || '',
+        listNo: selectedList?.no || '',
     });
       // refreshTasks();
     }
