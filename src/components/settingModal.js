@@ -42,8 +42,9 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
       if (defaultList) {
         setDefaultList(defaultList);
       }
+      console.log("SettingModal", defaultList)
     }
-  }, [lists]);
+  }, []);
 
   useEffect(() => {
     // 로컬 스토리지에서 설정 값 불러오기
