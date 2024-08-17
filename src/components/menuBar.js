@@ -42,8 +42,8 @@ const MenuBar = ({ setUser, user, lists, smartLists,
           {/* 베이직보드로 이동 */}
           <Link
             to={{
-              pathname: user ? `/basicBoard/${selectedList?.no}`:'',
-              state: { checked, isCancelled, selectedList: selectedList? selectedList.no : defaultList.no?.no || ''  }
+              pathname: user ? `/basicBoard/${selectedList?.no || defaultList?.no || ''}` : '',
+              state: { checked, isCancelled, selectedList: selectedList?.no || defaultList?.no || '' }
             }}
             className="item"
             onClick={() => {
