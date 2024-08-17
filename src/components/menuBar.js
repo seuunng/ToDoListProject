@@ -31,13 +31,6 @@ const MenuBar = ({ setUser, user, lists, smartLists,
   const selectedList = getStoredItem('selectedList');
   const defaultList = getStoredItem('defaultList');
 
-  // const navigate = useNavigate();
-
-  // const handleSubButtonClick = () => {
-  //   setShowAccountInfo(false);
-  //   navigate('/mainAccountInfo');
-  // };
-
   return (
     <div>
       {user ?
@@ -50,7 +43,7 @@ const MenuBar = ({ setUser, user, lists, smartLists,
           <Link
             to={{
               pathname: user ? `/basicBoard/${selectedList?.no}`:'',
-              state: { checked, isCancelled, selectedList: selectedList? selectedList.no : defaultList.no }
+              state: { checked, isCancelled, selectedList: selectedList? selectedList.no : defaultList.no?.no || ''  }
             }}
             className="item"
             onClick={() => {
