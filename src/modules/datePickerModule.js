@@ -18,8 +18,8 @@ const DatePickerModule = ({ show, startDate, endDate, onDateChange,
 
     const dropdownOptionsAlarmTime = ["알림없음", "정각", "5분전", "30분전", "하루전"];
     const dropdownOptionsRepeat = ["반복없음", "매일", "매주", "매달", "매년"];
-    const savedSeleted = JSON.parse(localStorage.getItem('selectedOptions'));
-    const [dateFormatTimeInput, setDateFormatTimeInput] = useState(savedSeleted.time === "24시간" ? "yyyy/MM/dd H:mm" : "yyyy/MM/dd h:mm aa");
+    const savedSeleted = JSON.parse(localStorage.getItem('selectedOptions')) || {};
+    const [dateFormatTimeInput, setDateFormatTimeInput] = useState(savedSeleted?.time === "24시간" ? "yyyy/MM/dd H:mm" : "yyyy/MM/dd h:mm aa");
     const { isTaskBox } = useContext(TaskBoxContext);
 
     const repeatMappingToKorean = {
@@ -77,7 +77,7 @@ const DatePickerModule = ({ show, startDate, endDate, onDateChange,
     }, [dateRange]);
 
     useEffect(() => {
-        setDateFormatTimeInput(savedSeleted.time === "24시간" ? "yyyy/MM/dd H:mm" : "yyyy/MM/dd h:mm aa");
+        setDateFormatTimeInput(savedSeleted?.time === "24시간" ? "yyyy/MM/dd H:mm" : "yyyy/MM/dd h:mm aa");
     }, [savedSeleted.time]);
 
     const handleButtonClick = (buttonType) => {
