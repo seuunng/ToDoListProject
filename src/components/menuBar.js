@@ -16,6 +16,7 @@ import axios from '../api/axios';
 const MenuBar = ({ setUser, user, lists, smartLists,
   checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange,
   isSmartList, setIsSmartList }) => {
+
   const [showAccountInfo, setShowAccountInfo] = useState(false);
   const [showSettingModal, setShowSettingModal] = useState(false);
 
@@ -33,10 +34,14 @@ const MenuBar = ({ setUser, user, lists, smartLists,
 
   const selectedListNo = selectedList?.no || defaultList?.no || '';
 
-  if (!selectedListNo) {
-    console.error("No valid list found for navigation.");
-    // 여기에서 에러를 핸들링할 수 있습니다. 예를 들어, 기본 페이지로 리다이렉트하거나 사용자에게 경고 메시지를 표시합니다.
-  }
+   const handleNavigationError = () => {
+    if (!selectedListNo) {
+      alert("No valid list selected. Please select a list before proceeding.");
+      console.error("No valid list found for navigation.");
+      return true; // 오류가 있었음을 나타내기 위해 true를 반환
+    }
+    return false; // 오류가 없음을 나타내기 위해 false를 반환
+  };
 
   return (
     <div>
@@ -49,14 +54,14 @@ const MenuBar = ({ setUser, user, lists, smartLists,
           {/* 베이직보드로 이동 */}
           <Link
             to={{
-              pathname: user ? `/basicBoard/${selectedList?.no || defaultList?.no || ''}` : '',
+              pathname: user && selectedListNo ? `/basicBoard/${selectedListNo}` : '',
               state: { checked, isCancelled, selectedList: selectedList?.no || defaultList?.no || '' }
             }}
             className="item"
-            onClick={() => {
-              if (!selectedListNo) {
-                console.error("No list selected for navigation.");
-                return; // 더 이상 진행하지 않도록 return
+            onClick={(e) => {
+              if (handleNavigationError()) {
+                e.preventDefault(); // 네비게이션을 막음
+                return;
               }
               setChecked(false);
               setIsCancelled(false);
