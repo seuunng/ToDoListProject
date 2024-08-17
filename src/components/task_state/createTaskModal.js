@@ -73,7 +73,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
         dateStatus: tasks.dateStatus || 'DATE',
         isRepeated: tasks.isRepeated || 'NOREPEAT',
         isNotified: tasks.isNotified || initialAlarm ,
-        listNo: selectedList_localSrotage.no || '',
+        listNo: selectedList_localSrotage?.no || '',
         dateStatus: 'DATE',
       }));
       setTimeSetMap((prevMap) => ({
