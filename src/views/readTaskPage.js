@@ -89,7 +89,6 @@ const ReadTaskPageContent = ({
     }
   };
 
-
   const handleTitleChange = async (e) => {
     const newTitle = e.target.value;
     setTaskTitle(newTitle);

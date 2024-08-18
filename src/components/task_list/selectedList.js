@@ -49,7 +49,7 @@ const SelectedList = ({ lists, selectedList,
   const filteredLists = lists.filter(list => !list.isDeleted);
   const handleSelect = (list) => {
     setSelectedList(list);
-    // updateTask({ ...tasks, list: { no: list.no } });
+    updateTask({ ...tasks, list: { no: list.no } });
   };
   return (
     <Dropdown>

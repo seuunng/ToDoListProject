@@ -61,7 +61,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
     isNotified: initialAlarm,
     isRepeated: 'NOREPEAT',
     dateStatus: 'DATE',
-    listNo: selectedList?.no  || '',
+    listNo: selectedList?.no || '',
   });
 
   const initializeTaskState = () => {
@@ -72,9 +72,8 @@ const CreateTaskModal = forwardRef((props, ref) => {
         endDate: null,
         dateStatus: tasks.dateStatus || 'DATE',
         isRepeated: tasks.isRepeated || 'NOREPEAT',
-        isNotified: tasks.isNotified || initialAlarm ,
+        isNotified: tasks.isNotified || initialAlarm,
         listNo: selectedList_localSrotage?.no || '',
-        dateStatus: 'DATE',
       }));
       setTimeSetMap((prevMap) => ({
         ...prevMap,
@@ -100,17 +99,17 @@ const CreateTaskModal = forwardRef((props, ref) => {
       }));
       // setStartDate(date);
     }
-    
+
   }, [show]);
 
   useEffect(() => {
-  if (tasks.no && timeSetMap[tasks.no] !== (tasks.isTimeSet || false)) {
-    setTimeSetMap((prevMap) => ({
-      ...prevMap,
-      [tasks.no]: tasks.isTimeSet || false,
-    }));
-  }
-}, [tasks, timeSetMap, tasks.no]);
+    if (tasks.no && timeSetMap[tasks.no] !== (tasks.isTimeSet || false)) {
+      setTimeSetMap((prevMap) => ({
+        ...prevMap,
+        [tasks.no]: tasks.isTimeSet || false,
+      }));
+    }
+  }, [tasks, timeSetMap, tasks.no]);
 
   useEffect(() => {
     setNewTask(prevState => ({
@@ -121,7 +120,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
 
   //모달 열릴때 모달 데이터
   const handleShow = () => {
-    setSelectedList(selectedList_localSrotage || defaultList); 
+    setSelectedList(selectedList_localSrotage || defaultList);
     setNewTask({
       title: '',
       content: '',
@@ -148,6 +147,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
       endDate: end
     }));
   };
+
   const handleSelectedButtonChange = (button) => {
     setSelectedButton(button);
     setNewTask({ ...tasks, dateStatus: button.toUpperCase() });
@@ -163,8 +163,8 @@ const CreateTaskModal = forwardRef((props, ref) => {
     setNewTask({
       ...tasks,
       isTimeSet: value,
-  });
-    
+    });
+
   };
   //반복 선택 변경
   const handleRepeatClick = (option) => {
@@ -208,14 +208,14 @@ const CreateTaskModal = forwardRef((props, ref) => {
 
       let taskStatus;
       if (startDate.toISOString() < today.toISOString()) {
-          taskStatus = 'OVERDUE'; // 과거 날짜이면 OVERDUE
+        taskStatus = 'OVERDUE'; // 과거 날짜이면 OVERDUE
       } else {
-          taskStatus = 'PENDING'; // 오늘 또는 미래 날짜이면 PENDING
+        taskStatus = 'PENDING'; // 오늘 또는 미래 날짜이면 PENDING
       }
-      
+
       const task = {
         title: newTask.title,
-        content: '',
+        content: newTask.content,
         isNotified: isNotified,
         isRepeated: isRepeat,
         startDate: startDate.toISOString(),
@@ -227,7 +227,9 @@ const CreateTaskModal = forwardRef((props, ref) => {
         dateStatus: selectedButton
       };
 
+      console.log("task", task)
       await addTask(task);
+
       setNewTask({  // 상태를 초기화합니다.
         title: '',
         content: '',
@@ -237,11 +239,11 @@ const CreateTaskModal = forwardRef((props, ref) => {
         isRepeated: 'NOREPEAT',
         dateStatus: 'DATE',
         listNo: selectedList?.no || '',
-    });
+      });
       // refreshTasks();
     }
     handleClose();
-}
+  }
 
   useImperativeHandle(ref, () => ({
     showModal: handleShow,

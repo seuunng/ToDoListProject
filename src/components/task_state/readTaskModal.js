@@ -118,6 +118,9 @@ const ReadTaskModal = forwardRef(({
 
   const handleSelectedButtonChange = (button) => {
     setSelectedButton(button);
+    
+    console.log("selectedList", selectedList)
+
     updateTask({ ...tasks, dateStatus: button.toUpperCase() });
   }
 
@@ -188,7 +191,6 @@ const ReadTaskModal = forwardRef(({
             onRepeatClick={handleRepeatClick}
             onAlarmClick={handleAlarmClick}
             selectedButton={selectedButton}
-            setSelectedButton={handleSelectedButtonChange}
             initialRepeat={isRepeat}
             initialAlarm={initialAlarm}
             isNotified={isNotified}
@@ -232,6 +234,7 @@ const ReadTaskModal = forwardRef(({
               setSelectedList={setSelectedList}
               tasks={tasks}
               updateTask={updateTask}
+              setSelectedButton={handleSelectedButtonChange}
               onChange={() => handleCheckboxChange(tasks.no)}
             />
           </div>
