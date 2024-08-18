@@ -107,13 +107,13 @@ const TaskBoxContent = ({
     const updatedTask = { ...task, startDate, endDate, taskStatus: updatedStatus };
 
     await updateTask(updatedTask);
-    await refreshTasks();
+    // await refreshTasks();
   };
 
   const handleSelectedButtonChange = async (button) => {
     setSelectedButton(button);
     await updateTask({ ...task, dateStatus: button.toUpperCase() });
-    await refreshTasks();
+    // await refreshTasks();
   };
 
   const handleRepeatClick = (option) => {
@@ -140,7 +140,7 @@ const TaskBoxContent = ({
     const isNotified = alarmMapping[option] || "NOALARM";
     setIsNotified(isNotified);
     const updatedTasks = { ...task, isNotified: isNotified };
-    await updateTask(updatedTasks);
+    // await updateTask(updatedTasks);
   };
 
   const taskStatusClassName = task.taskStatus === 'OVERDUE'
@@ -163,7 +163,7 @@ const TaskBoxContent = ({
   };
 
   return (
-    <div className={`task-box ${taskStatusClassName}`}>
+    <div className={`${taskStatusClassName}`} style={{ position: 'relative', zIndex: 1 }}>
       <Row xs="auto">
         <Col sm={8}
           style={{

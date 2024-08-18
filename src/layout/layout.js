@@ -255,11 +255,11 @@ const Layout = ({ setUser, user }) => {
 
     const handleCheckboxChange = async (taskId) => {
         let newStatus;
+        const task = tasks.find(task => task.no === taskId);
         if (!task) {
-            console.error('Task not found');
+            console.warn('Task not found');
             return;
         }
-        const task = tasks.find(task => task.no === taskId);
 
         
         const today = new Date();
@@ -281,6 +281,9 @@ const Layout = ({ setUser, user }) => {
         setChecked(newStatus === 'COMPLETED');
         setIsCancelled(newStatus === 'CANCELLED');
 
+        console.log("checked : ", checked);
+        console.log("task.taskStatus : ", task.taskStatus);
+        
         try {
             await updateTaskStatus(taskId, newStatus);
             await refreshTasks(); // 상태 변경 후 테스크를 새로고침
@@ -291,7 +294,7 @@ const Layout = ({ setUser, user }) => {
 
     const handleCancel = async (task) => {
         if (!task || !task.no) {
-            console.error('Task object is missing or task.no is undefined');
+            console.warn('Task object is missing or task.no is undefined');
             return; // 작업을 중단하고 함수 실행을 멈춤
         }
         const newStatus = 'CANCELLED';

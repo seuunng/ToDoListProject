@@ -12,8 +12,8 @@ const BasicBoard = () => {
 
   const {
     tasks, addTask, updateTask, deleteTask,
-    lists, addList, updateList, deleteList,
-    smartLists, setSmartLists,
+    lists,
+    smartLists,
     checked, setChecked, isCancelled, setIsCancelled,
     handleCancel, handleCheckboxChange, setIsSmartList, isSmartList, handleReopen
   } = useOutletContext();
@@ -79,6 +79,9 @@ const BasicBoard = () => {
     if (listId) {
       const list = lists.find(list => list.no === parseInt(listId));
       const smartList = smartLists.find(smartList => smartList.no === parseInt(listId));
+      
+      // console.log("list", list)
+      // console.log("smartList", smartList)
 
       if (list) {
         setListTitle(list.title);
@@ -120,7 +123,7 @@ const BasicBoard = () => {
             updateTask={updateTask}
             deleteTask={deleteTask}
             onTaskClick={handleTaskClick}
-            lists={lists}
+            lists={selectedList}
             refreshTasks={fetchListAndTasks}
             checked={checked}
             setChecked={setChecked}

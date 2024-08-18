@@ -15,7 +15,7 @@ import axios from '../api/axios';
 
 const MenuBar = ({ setUser, user, lists, smartLists,
   checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange,
-  isSmartList, setIsSmartList }) => {
+  }) => {
 
   const [showAccountInfo, setShowAccountInfo] = useState(false);
   const [showSettingModal, setShowSettingModal] = useState(false);
@@ -34,7 +34,7 @@ const MenuBar = ({ setUser, user, lists, smartLists,
 
   const selectedListNo = selectedList?.no || defaultList?.no || '';
 
-  console.log(defaultList, selectedListNo, selectedList, );
+  // console.log(defaultList, selectedListNo, selectedList, );
 
   return (
     <div>

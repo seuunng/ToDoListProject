@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,  useEffect, useRef } from 'react';
 import '../../styles/basicStyle.css';
 import { LuPin, LuPinOff } from "react-icons/lu";
 import { MdCancelPresentation } from "react-icons/md";
@@ -15,22 +15,23 @@ const SetTaskToggle = React.forwardRef(({ children, onClick }, ref) => (
     ref={ref}
     onClick={(e) => {
       e.preventDefault();
-      onClick(e);
+      e.stopPropagation(); 
+      setTimeout(() => onClick(e), 10);
     }}
     style={{
       cursor: 'pointer',
-      color: 'black'
+      color: 'black',
+      zIndex: 1,  // 아이콘의 z-index를 낮게 설정
+      position: 'relative',
     }}
   >
     {children}
   </a>
 ));
 
-// forwardRef again here!
-// Dropdown needs access to the DOM of the Menu to measure it
 const CustomMenu = React.forwardRef(
   ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
-    const [value, setValue] = useState('');
+    // const [value, setValue] = useState('');
 
     return (
       <div
@@ -40,10 +41,11 @@ const CustomMenu = React.forwardRef(
         aria-labelledby={labeledBy}
       >
         <ul className="list-unstyled">
-          {React.Children.toArray(children).filter(
+          {/* {React.Children.toArray(children).filter(
             (child) =>
               !value || child.props.children.toLowerCase().startsWith(value),
-          )}
+          )} */}
+          {React.Children.toArray(children)}
         </ul>
       </div>
     );
@@ -53,6 +55,13 @@ const CustomMenu = React.forwardRef(
 const SetTask = ({ task, deleteTask, handleCancel, isCancelled, setIsCancelled, onReopen, }) => {
   const [isPinned, setIsPinned] = useState(false);
   const [checked, setChecked] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (dropdownRef.current) {
+      dropdownRef.current.forceUpdate(); // Dropdown의 위치를 강제 재계산
+    }
+  }, []);
 
   const handleDoReopen = () => {
     if (isCancelled) {
@@ -70,9 +79,24 @@ const SetTask = ({ task, deleteTask, handleCancel, isCancelled, setIsCancelled, 
   return (
     <Dropdown>
       <Dropdown.Toggle as={SetTaskToggle} id="dropdown-custom-components">
-        <BsThreeDots />
+        <BsThreeDots style={{ zIndex: 1 }} />
       </Dropdown.Toggle>
-      <Dropdown.Menu as={CustomMenu}>
+      <Dropdown.Menu as={CustomMenu} popperConfig={{ strategy: 'absolute',
+        modifiers: [
+          {
+            name: 'offset',
+            options: {
+              offset: [0, 10], // 수직 오프셋을 조정하여 버튼 바로 아래에 드롭다운 표시
+            },
+          },
+          {
+            name: 'preventOverflow',
+            options: {
+              boundary: 'viewport', // 뷰포트 내부에 드롭다운 표시
+            },
+          },
+        ],
+       }} style={{ zIndex: 1000, position: 'absolute' }}>
         {isPinned ? (
           <Dropdown.Item eventKey="1" onClick={togglePin}>
             <LuPinOff /> Unpin

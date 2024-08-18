@@ -83,10 +83,10 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
     const newState = !allSwitchesList;
     setAllSwitchesList(newState);
     setSwitches({
+      defaultBox: newState,
       today: newState,
       tomorrow: newState,
       next7Days: newState,
-      defaultBox: newState,
       completed: newState,
       deleted: newState,
     });
