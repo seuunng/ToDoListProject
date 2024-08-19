@@ -92,12 +92,14 @@ const SetTask = ({ task, deleteTask, handleCancel, isCancelled, setIsCancelled, 
           {
             name: 'preventOverflow',
             options: {
-              boundary: 'viewport', // 뷰포트 내부에 드롭다운 표시
+              boundary: 'viewport',
             },
           },
         ],
        }} style={{ zIndex: 1000, position: 'absolute' }}>
-        {isPinned ? (
+
+        {/* 메모상단 고정 기능: 추후 구현 예정 */}
+        {/* {isPinned ? (
           <Dropdown.Item eventKey="1" onClick={togglePin}>
             <LuPinOff /> Unpin
           </Dropdown.Item>
@@ -105,7 +107,8 @@ const SetTask = ({ task, deleteTask, handleCancel, isCancelled, setIsCancelled, 
           <Dropdown.Item eventKey="1" onClick={togglePin}>
             <LuPin /> Pin
           </Dropdown.Item>
-        )}
+        )} */}
+
         {isCancelled ? (
           <Dropdown.Item eventKey="2" onClick={handleDoReopen}>
             <AiOutlineRollback /> Reopen
@@ -115,8 +118,12 @@ const SetTask = ({ task, deleteTask, handleCancel, isCancelled, setIsCancelled, 
             <MdCancelPresentation /> Won't Do
           </Dropdown.Item>
         )}
-        <Dropdown.Item eventKey="3"><FaRegStickyNote /> Open as sticky note</Dropdown.Item>
-        <Dropdown.Item eventKey="4"><MdLocalPrintshop /> Print</Dropdown.Item>
+
+        {/* 바탕화면 메모 보이기: 추후 구현 예정 */}
+        {/* <Dropdown.Item eventKey="3"><FaRegStickyNote /> Open as sticky note</Dropdown.Item> */}
+        {/* 메모 출력 기능: 추후 구현 예정 */}
+        {/* <Dropdown.Item eventKey="4"><MdLocalPrintshop /> Print</Dropdown.Item> */}
+        
         <Dropdown.Item eventKey="5"
           onClick={() => deleteTask(task.no)}><RiDeleteBin6Line /> Delete</Dropdown.Item>
       </Dropdown.Menu>

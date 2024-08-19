@@ -283,7 +283,9 @@ const DatePickerModule = ({ show, startDate, endDate, onDateChange,
                 showTimeInput
                 customTimeInput={<CustomTimeInput value={timeValue} onChange={setTimeValue} />}
             >
-                <div>
+                {/* 메모 반복및 알림 기능: 추후구현 예정 */}
+                
+                {/* <div>
                     <div className="d-flex align-items-center line row">
                         <Col>
                             <h6>반복 설정</h6>
@@ -308,7 +310,7 @@ const DatePickerModule = ({ show, startDate, endDate, onDateChange,
                             />
                         </Col>
                     </div>
-                </div>
+                </div> */}
             </DatePicker>
         </div>
     );

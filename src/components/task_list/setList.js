@@ -79,7 +79,9 @@ const SetList = ({ list, deleteList, updateList }) => {
           <BsThreeDots />
         </Dropdown.Toggle>
         <Dropdown.Menu as={CustomMenu}>
-          {isPinned ? (
+
+        {/* 특정리스트 상단고정 기능: 추후 구현 예정 */}
+          {/* {isPinned ? (
             <Dropdown.Item eventKey="1" onClick={togglePin}>
               <LuPinOff /> Unpin
             </Dropdown.Item>
@@ -87,7 +89,8 @@ const SetList = ({ list, deleteList, updateList }) => {
             <Dropdown.Item eventKey="1" onClick={togglePin}>
               <LuPin /> Pin
             </Dropdown.Item>
-          )}
+          )} */}
+          
           <Dropdown.Item eventKey="2" onClick={editListModalOpen}><MdEditNote /> Edit</Dropdown.Item>
           <Dropdown.Item eventKey="3" onClick={removeList}>
             <RiDeleteBin6Line /> Delete

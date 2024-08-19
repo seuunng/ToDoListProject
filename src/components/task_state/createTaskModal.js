@@ -226,8 +226,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
         isTimeSet: timeSetMap[tasks.no] || false,
         dateStatus: selectedButton
       };
-
-      console.log("task", task)
+      
       await addTask(task);
 
       setNewTask({  // 상태를 초기화합니다.

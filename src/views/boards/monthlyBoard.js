@@ -85,38 +85,24 @@ const MonthlyBoard = () => {
   };
 
   const filterTasksForPeriod = (date) => {
-    // return tasks.filter(task => {
-    //   if (task.taskStatus === 'CANCELLED') return false;
-    //   if (task.taskStatus === 'DELETED') return false;
-    //   const taskStartDate = new Date(task.startDate);
-    //   return task.endDate == null
-    //     ? (
-    //       taskStartDate.getDate() === date.getDate() &&
-    //       taskStartDate.getMonth() === date.getMonth() &&
-    //       taskStartDate.getFullYear() === date.getFullYear()
-    //     )
-    //     : (
-    //       //여긴가 첫날 시간없이렌더링
-    //       date >= taskStartDate &&
-    //       date <= new Date(task.endDate)
-    //     );
-    // });
-    return tasks.filter(task => {
+    const filteredTasks = tasks.filter(task => {
       if (task.taskStatus === 'CANCELLED' || task.taskStatus === 'DELETED') return false;
-  
+
       const taskStartDate = new Date(task.startDate);
       const taskEndDate = task.endDate ? new Date(task.endDate) : null;
-  
-      // 시간을 00:00:00으로 초기화하여 날짜 비교만 수행하도록 설정
+
       taskStartDate.setHours(0, 0, 0, 0);
       if (taskEndDate) {
         taskEndDate.setHours(0, 0, 0, 0);
       }
-  
+
       return taskEndDate == null
         ? date.getTime() === taskStartDate.getTime()
         : date.getTime() >= taskStartDate.getTime() && date.getTime() <= taskEndDate.getTime();
     });
+
+
+    return [...filteredTasks];
   };
 
   const isTaskEndDate = (task, date) => {
@@ -139,6 +125,33 @@ const MonthlyBoard = () => {
 
   };
 
+  // 메모 반복생성 기능
+
+  // const generateRecurringTasks = (task, date) => {
+  //   const recurringTasks = [];
+  //   let nextDate = new Date(task.startDate);
+
+  //   if (task.isRepeated === 'DAILY') {
+  //     nextDate.setDate(nextDate.getDate() + 1);
+  //   } else if (task.isRepeated === 'WEEKLY') {
+  //     nextDate.setDate(nextDate.getDate() + 7);
+  //   } else if (task.isRepeated === 'MONTHLY') {
+  //     nextDate.setMonth(nextDate.getMonth() + 1);
+  //   } else if (task.isRepeated === 'YEARLY') {
+  //     nextDate.setFullYear(nextDate.getFullYear() + 1);
+  //   }
+
+  //   if (nextDate > new Date()) {
+  //     const newTask = {
+  //       ...task,
+  //       startDate: new Date(nextDate),
+  //     };
+  //     recurringTasks.push(newTask);
+  //   }
+
+  //   return recurringTasks;
+  // };
+
   const addListToTasks = (tasks, lists) => {
     return tasks.map(task => {
       const list = lists.find(list => list.no === task.listNo); // task.listNo는 task가 속한 리스트의 ID입니다.
@@ -148,10 +161,6 @@ const MonthlyBoard = () => {
       };
     });
   };
-
-  // const tasksWithLists = addListToTasks(tasks, lists);
-  // console.log("tasksWithLists ", tasksWithLists )
-  // const userEmail = user?.email || '';
 
   return (
     <div className="monthly-board-container">
@@ -187,7 +196,7 @@ const MonthlyBoard = () => {
               <tr key={week}>
                 {days.map((day) => {
                   const date = getDate(week, day);
-                  const todayClass = isToday(date) ? 'today-cell' : 'date-cell'; 
+                  const todayClass = isToday(date) ? 'today-cell' : 'date-cell';
                   const dayTasksForPeriod = filterTasksForPeriod(date);
                   // const dayTasksForDate = filterTasksForDate(date);
                   const dayTasks = addListToTasks(dayTasksForPeriod, lists);

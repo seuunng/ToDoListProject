@@ -61,7 +61,7 @@ const TaskBoxContent = ({
         [task.no]: task.isTimeSet || false,
       }));
     }
-   
+
   }, [task, setChecked, setIsCancelled]);
 
   useEffect(() => {
@@ -191,7 +191,9 @@ const TaskBoxContent = ({
           </span>
         </Col>
         <Col md={3} className='righted' style={{ padding: "0" }}>
-          {task.isRepeated !== 'NOREPEAT' && (
+
+          {/* 메모 반복 및 알림 여부 아이콘 표시 기능: 추후구현 예정 */}
+          {/* {task.isRepeated !== 'NOREPEAT' && (
             <span
               className={`repeat col-2 task-box ${taskStatusClassName}`}
               style={{ width: 16 }}>
@@ -205,7 +207,8 @@ const TaskBoxContent = ({
               style={{ width: 16 }}>
               <FaRegBell style={{ color: "grey" }} className={`task-box ${taskStatusClassName}`} />
             </span>
-          )}
+          )} */}
+
           <DatePickerModule
             show={setShowDatePicker}
             startDate={startDate}

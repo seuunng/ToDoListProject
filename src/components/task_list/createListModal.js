@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import EmojiPicker from 'emoji-picker-react';
 import Form from 'react-bootstrap/Form';
@@ -53,11 +53,11 @@ const CreateList = ({ show, onHide, lists, count, addList, updateList, isEditMod
     }
   };
   const colorOptions = ['lightPink', 'lightGreen', 'lightBlue'];
-  
+
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header>
-      <Modal.Title>{isEditMode ? 'Edit List' : 'Add List'}</Modal.Title>
+        <Modal.Title>{isEditMode ? 'Edit List' : 'Add List'}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="modal-body">
@@ -70,7 +70,7 @@ const CreateList = ({ show, onHide, lists, count, addList, updateList, isEditMod
               aria-describedby="basic-addon1"
               placeholder="Name"
               value={newList}
-              onChange={(e) => setNewList(e.target.value)} 
+              onChange={(e) => setNewList(e.target.value)}
             />
           </InputGroup>
           {showEmojiPicker && (
@@ -115,10 +115,13 @@ const CreateList = ({ show, onHide, lists, count, addList, updateList, isEditMod
             </div>
           </div>
           <div className="d-flex align-items-center isSmartList item">
-            <div className="checkbox box" style={{ color: "black" }}>
+
+            {/* 스마트 목록에 렌더링여부 선택 기능: 추후 구현 예정 */}
+            {/* <div className="checkbox box" style={{ color: "black" }}>
               <input type="checkbox" />&emsp;
               스마트 목록에서 안보이게하고 싶어요
-            </div>
+            </div> */}
+            
           </div>
         </div>
       </Modal.Body>

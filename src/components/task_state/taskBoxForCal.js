@@ -7,19 +7,19 @@ import { LuRepeat } from "react-icons/lu";
 import { FaRegBell } from "react-icons/fa";
 import instance from '../../api/axios';
 
-const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className, 
-  lists, addList, updateList, deleteList, showTitle=true, style, refreshTasks,
-  checked,  setChecked,  isCancelled,  setIsCancelled,  handleCancel,  handleCheckboxChange,handleReopen }) => {
+const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
+  lists, addList, updateList, deleteList, showTitle = true, style, refreshTasks,
+  checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange, handleReopen }) => {
   const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
   const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
   const alarmMapping = {
-      "정각": "ONTIME",
-      "5분전": "FIVEMINS",
-      "30분전": "THIRTYMINS",
-      "하루전": "DAYEARLY"
+    "정각": "ONTIME",
+    "5분전": "FIVEMINS",
+    "30분전": "THIRTYMINS",
+    "하루전": "DAYEARLY"
   };
-  const initialAlarm =savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
-  
+  const initialAlarm = savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
+
   const [isRepeat, setIsRepeat] = useState(tasks.isRepeated || 'NOREPEAT');
   const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALARM');
   const [taskTitle, setTaskTitle] = useState(tasks.title);
@@ -41,7 +41,7 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
         readTaskModalRef.current.openModal();
       }
     };
-    
+
     const current = taskBoxRef.current;
     if (current) {
       current.addEventListener('click', readMemo);
@@ -51,49 +51,52 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
         current.removeEventListener('click', readMemo);
       }
     };
-    
+
   }, []);
-  
+
   const taskStatusClassName = tasks.taskStatus === 'OVERDUE'
-  ? 'task-overdue'
-  : tasks.taskStatus === 'COMPLETED'
-    ? 'task-completed'
-    : tasks.taskStatus === 'CANCELLED'
-      ? 'task-cancelled'
-      : '';
+    ? 'task-overdue'
+    : tasks.taskStatus === 'COMPLETED'
+      ? 'task-completed'
+      : tasks.taskStatus === 'CANCELLED'
+        ? 'task-cancelled'
+        : '';
 
   return (
-    <div className={`task-box ${className}`}  style={style}>
-      <div ref={taskBoxRef} 
+    <div className={`task-box ${className}`} style={style}>
+      <div ref={taskBoxRef}
         className={`TaskBoxForCal ${taskStatusClassName}`}>
-        <div className="color-box row">
+
+        {/* 메모 반복 및 알림 설정여부 아이콘: 추후 구현 예정 */}
+        {/* <div className="color-box row">
            {tasks.isRepeated!== 'NOREPEAT' && (
             <span className="taskBoxForCal-repeat col-2">
               <LuRepeat className={`task-box ${taskStatusClassName}`}/>
             </span>
-          )}
-          {showTitle && (
-            <span className={`task-title col-8 ${taskStatusClassName}`}>{tasks.title}</span>
-          )}
+          )} */}
+        {showTitle && (
+          <span className={`task-title col-8 ${taskStatusClassName}`}>{tasks.title}</span>
+        )}
+        {/* 
           {(tasks.isNotified !== 'NOALARM')&& (
             <span className="taskBoxForCal-alram col-2">
               <FaRegBell className={`task-box ${taskStatusClassName}`}/>
             </span>
           )}
-        </div>
+        </div> */}
       </div>
       <ReadTaskModal
         ref={readTaskModalRef}
-        tasks={tasks} 
+        tasks={tasks}
         updateTask={updateTask}
         deleteTask={deleteTask}
-        lists={lists} 
-        addList={addList} 
+        lists={lists}
+        addList={addList}
         updateList={updateList}
         deleteList={deleteList}
         task={tasks}
-        checked={checked} 
-        setChecked={setChecked}  
+        checked={checked}
+        setChecked={setChecked}
         isCancelled={isCancelled}
         setIsCancelled={setIsCancelled}
         handleCancel={handleCancel}

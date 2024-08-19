@@ -7,13 +7,13 @@ import axios from '../api/axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const AcountInfoModal = ({ onHide , user = {}, setUser, show }) => {
+const AcountInfoModal = ({ onHide, user = {}, setUser, show }) => {
   const defaultUser = {
     email: '',
     nickname: '',
     created_at: ''
   };
-  
+
   const safeUser = user || defaultUser;
   const [isEditing, setIsEditing] = useState({
     email: false,
@@ -34,14 +34,14 @@ const AcountInfoModal = ({ onHide , user = {}, setUser, show }) => {
 
   const navigate = useNavigate();
 
-  const handleUpdateSimplePW = () => {
-    onHide();
-    navigate('/updateSimplePW');
-  };
+  // const handleUpdateSimplePW = () => {
+  //   onHide();
+  //   navigate('/updateSimplePW');
+  // };
 
   const handleUpdatePW = () => {
     onHide();
-    navigate('/findPW');
+    navigate('/updatePW');
   };
 
   const handleLogout = async () => {
@@ -58,7 +58,7 @@ const AcountInfoModal = ({ onHide , user = {}, setUser, show }) => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-    });
+      });
       navigate('/mainAccountInfo');
     } catch (error) {
       console.error('Logout failed:', error);
@@ -95,37 +95,37 @@ const AcountInfoModal = ({ onHide , user = {}, setUser, show }) => {
   if (!user) {
     return null; // 또는 적절한 fallback UI를 반환
   }
-  
+
   return (
     <Modal show={show} onHide={onHide} centered>
-    <Modal.Header>
-      <Modal.Title>Account Info</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-    <div className="acountInfo container">
-      <div>
-        <div className="d-flex align-items-center line row" style={{margin: '12px'}}>
-          <Col>
-            <h5>이메일</h5>
-          </Col>
-          <Col className='righted'>
-            <div onDoubleClick={() => handleDoubleClick('email')}>
-              {!isEditing.email ? editableEmail : (
-                <input
-                  value={editableEmail}
-                  onChange={(e) => setEditableEmail(e.target.value)}
-                  onBlur={() => handleBlur('email')} />
-              )}
+      <Modal.Header>
+        <Modal.Title>Account Info</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div className="acountInfo container">
+          <div>
+            <div className="d-flex align-items-center line row" style={{ margin: '12px' }}>
+              <Col>
+                <h5>이메일</h5>
+              </Col>
+              <Col className='righted'>
+                <div onDoubleClick={() => handleDoubleClick('email')}>
+                  {!isEditing.email ? editableEmail : (
+                    <input
+                      value={editableEmail}
+                      onChange={(e) => setEditableEmail(e.target.value)}
+                      onBlur={() => handleBlur('email')} />
+                  )}
+                </div>
+              </Col>
             </div>
-          </Col>
-        </div>
-        <div className="d-flex align-items-center line row" style={{margin: '12px'}}>
-          <Col>
-            <h5>닉네임</h5>
-          </Col>
-          <Col className='righted'>  
-            <div onDoubleClick={() => handleDoubleClick('nickname')}>
-              {!isEditing.nickname ? editableNickname : (
+            <div className="d-flex align-items-center line row" style={{ margin: '12px' }}>
+              <Col>
+                <h5>닉네임</h5>
+              </Col>
+              <Col className='righted'>
+                <div onDoubleClick={() => handleDoubleClick('nickname')}>
+                  {!isEditing.nickname ? editableNickname : (
                     <input
                       value={editableNickname}
                       onChange={(e) => setEditableNickname(e.target.value)}
@@ -133,15 +133,15 @@ const AcountInfoModal = ({ onHide , user = {}, setUser, show }) => {
                     />
                   )}
                 </div>
-          </Col>
-        </div>
-        <div className="d-flex align-items-center line row" style={{margin: '12px'}}>
-          <Col>
-            <h5>가입일</h5>
-          </Col>  
-          <Col className='righted'>
-            <div onDoubleClick={() => handleDoubleClick('created_at')}>
-            {!isEditing.created_at ? userCreatedAtFormatted : (
+              </Col>
+            </div>
+            <div className="d-flex align-items-center line row" style={{ margin: '12px' }}>
+              <Col>
+                <h5>가입일</h5>
+              </Col>
+              <Col className='righted'>
+                <div onDoubleClick={() => handleDoubleClick('created_at')}>
+                  {!isEditing.created_at ? userCreatedAtFormatted : (
                     <input
                       value={userCreatedAtFormatted}
                       onChange={(e) => setEditableCreatedAt(e.target.value)}
@@ -149,33 +149,35 @@ const AcountInfoModal = ({ onHide , user = {}, setUser, show }) => {
                     />
                   )}
                 </div>
-          </Col>
-        </div>
-        <div className="d-flex align-items-center line row" style={{margin: '12px'}}>
+              </Col>
+            </div>
+            {/* 간편로그인 기능: 추후 구현 예정 */}
+            {/* <div className="d-flex align-items-center line row" style={{margin: '12px'}}>
           <Col>
             <h5>간편로그인설정</h5>
           </Col>  
           <Col className='righted'>
           <Button variant="light" onClick={handleUpdateSimplePW}>설정</Button>
           </Col> 
+        </div> */}
+
+            <div className="d-flex align-items-center line row" style={{ margin: '12px' }}>
+              <Col>
+                <h5>비밀번호 변경</h5>
+              </Col>
+              <Col className='righted'>
+                <Button variant="light" onClick={handleUpdatePW}>변경</Button>
+              </Col>
+            </div>
+          </div>
         </div>
-        <div className="d-flex align-items-center line row" style={{margin: '12px'}}>
-          <Col>
-            <h5>비밀번호 변경</h5>
-          </Col>
-          <Col className='righted'>
-            <Button variant="light" onClick={handleUpdatePW}>변경</Button>
-          </Col>
-        </div>
-      </div>
-    </div>
-    </Modal.Body>
+      </Modal.Body>
       <Modal.Footer>
         <Button onClick={handleLogout} variant="outline-dark">
-        로그아웃
+          로그아웃
         </Button>
         <Button onClick={savedSetting}>
-        확인
+          확인
         </Button>
       </Modal.Footer>
     </Modal>
