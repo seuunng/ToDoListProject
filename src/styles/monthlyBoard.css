@@ -142,3 +142,29 @@
   width: 1px; /* 스크롤바 너비 */
   /* margin-top: 5px; */
 }
+
+.days_of_the_week {
+  text-align: center;
+  background-color: #f0f0f0; /* 배경 색상 */
+  /* box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); 음영 효과 */
+}
+
+.outside-month {
+  background-color: #fafafa; /* 음영 색상 */
+  color: #dfdfdf; /* 텍스트 색상도 흐리게 */
+}
+.day-cell{
+  overflow: visible;
+}
+.task-cell{
+  overflow: visible;
+}
+.task-box{
+  position: relative; 
+  overflow: visible;
+}
+.TaskBoxForCal {
+  position: relative;
+  width: calc(100% + 20px);
+}
+

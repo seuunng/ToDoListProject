@@ -1,5 +1,6 @@
 .TaskBoxForCal {
     /* background-color: lightblue; */
+    position: relative;
     width: 100%; 
     display: flex;
     align-items: center;
@@ -7,10 +8,17 @@
     box-sizing: border-box;
     margin-bottom: 1px;
   }
+  .TaskBoxForCal.false-Task {
+    width: calc(100% + 10px); /* 너비를 현재 너비보다 10px 더 크게 설정 */
+    transform: translateX(-10px); /* 현재 위치에서 왼쪽으로 10px 이동 */
+    z-index: 1;
+    margin-left: -10px;
+  }
+
   .color-box{
     position: relative;
     width: 100%;
-    border-radius: 4px; /* 둥근 모서리 */
+    border-radius: 4px; 
     font-size: 14px; 
     margin-left:0px;
     margin-right:0px;
@@ -23,4 +31,9 @@
   }
   .task-box.task-end-date {
     margin-left: -10px;
+    border: black;
   }
+  .TaskBoxForCal:not(:first-child) .task-title {
+    display: none; /* 첫 번째 박스를 제외하고 숨김 */
+  }
+  

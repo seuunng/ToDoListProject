@@ -41,15 +41,15 @@ const MonthlyBoard = () => {
     setDaysOfWeek(daysOfWeek);
   }, [savedSeletedFirstDay.week]);
 
-  // useEffect(() => {
-
-  // }, []);
-
   const getDate = (week, day) => {
     const firstDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
     const firstDayOffset = (firstDayOfMonth.getDay() + 7 - firstDayOfWeek) % 7;
     const dayOffset = (week - 1) * 7 + (day - 1) - firstDayOffset;
-    return new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1 + dayOffset);
+    const date = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1 + dayOffset);
+
+    // if (isNaN(date.getTime())) return undefined; // 날짜가 유효하지 않으면 undefined 반환
+
+    return date;
   };
 
   const createMemo = (date) => {
@@ -72,6 +72,7 @@ const MonthlyBoard = () => {
   };
 
   const isToday = (date) => {
+    if (!date) return false;
     const today = new Date();
     return (
       date.getDate() === today.getDate() &&
@@ -105,15 +106,10 @@ const MonthlyBoard = () => {
     return [...filteredTasks];
   };
 
-  const isTaskEndDate = (task, date) => {
-    if (!task.endDate) return false;
-    const taskEndDate = new Date(task.endDate);
-    return (
-      date.getDate() === taskEndDate.getDate() &&
-      date.getMonth() === taskEndDate.getMonth() &&
-      date.getFullYear() === taskEndDate.getFullYear()
-    );
-  };
+  // const showdate=date.getDate().toString();
+  // const TaskStartDate = new Date(tasks.startDate);
+  // const dateForStart = TaskStartDate.getDate();
+  // const isTaskEndDate = dateForStart === parseInt(showdate);
 
   const getTaskListColor = (task) => {
     if (!task || !task.list || !lists) {
@@ -124,33 +120,6 @@ const MonthlyBoard = () => {
     return list ? list.color : 'transparent';
 
   };
-
-  // 메모 반복생성 기능
-
-  // const generateRecurringTasks = (task, date) => {
-  //   const recurringTasks = [];
-  //   let nextDate = new Date(task.startDate);
-
-  //   if (task.isRepeated === 'DAILY') {
-  //     nextDate.setDate(nextDate.getDate() + 1);
-  //   } else if (task.isRepeated === 'WEEKLY') {
-  //     nextDate.setDate(nextDate.getDate() + 7);
-  //   } else if (task.isRepeated === 'MONTHLY') {
-  //     nextDate.setMonth(nextDate.getMonth() + 1);
-  //   } else if (task.isRepeated === 'YEARLY') {
-  //     nextDate.setFullYear(nextDate.getFullYear() + 1);
-  //   }
-
-  //   if (nextDate > new Date()) {
-  //     const newTask = {
-  //       ...task,
-  //       startDate: new Date(nextDate),
-  //     };
-  //     recurringTasks.push(newTask);
-  //   }
-
-  //   return recurringTasks;
-  // };
 
   const addListToTasks = (tasks, lists) => {
     return tasks.map(task => {
@@ -196,24 +165,43 @@ const MonthlyBoard = () => {
               <tr key={week}>
                 {days.map((day) => {
                   const date = getDate(week, day);
+                  if (!date) return null;
+
+                  // const showdate = date.getDate().toString();
+                  // const TaskStartDate = new Date(tasks.startDate);
+                  // const dateForStart = TaskStartDate.getDate();
+                  // const isTaskEndDate = dateForStart === parseInt(showdate);
+
+                  const isCurrentMonth = date.getMonth() === selectedDate.getMonth();
+                  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                  const currentMonth = monthNames[selectedDate.getMonth()];
                   const todayClass = isToday(date) ? 'today-cell' : 'date-cell';
+                  const outsideMonthClass = isCurrentMonth ? '' : 'outside-month';
                   const dayTasksForPeriod = filterTasksForPeriod(date);
-                  // const dayTasksForDate = filterTasksForDate(date);
                   const dayTasks = addListToTasks(dayTasksForPeriod, lists);
+
                   return (
-                    <td key={day} ref={isToday(date) ? todayRef : null} className="calendar-cell">
+                    <td key={day} ref={isToday(date) ? todayRef : null} className={`calendar-cell ${outsideMonthClass}`}>
                       <div className="day-cell">
-                        <div className={todayClass}>{date.getDate()}</div>
+                        <div className={todayClass}>
+                          {date.getDate() === 1 && <span>{currentMonth} </span>}
+                          {date.getDate()}
+                        </div>
                         <div className="task-cell" onClick={(e) => handleTaskCellClick(e, date)}>
-                          {dayTasks.map(task => (
-                            task.list ? (
+                          {dayTasks.map(task => {
+                            const TaskStartDate = new Date(task.startDate); // 수정된 부분
+                            const dateForStart = TaskStartDate.getDate();
+                            const showdate = date.getDate().toString();
+                            const isTaskEndDate = dateForStart === parseInt(showdate);
+
+                            return task.list ? (
                               <TaskBoxForCal
                                 key={task.no}
-                                showdate={date.getDate().toString()}
+                                showdate={showdate}
                                 tasks={task}
                                 updateTask={updateTask}
                                 deleteTask={deleteTask}
-                                className={isTaskEndDate(task, date) ? 'task-end-date' : ''}
+                                className={isTaskEndDate ? '' : 'task-end-date'}
                                 lists={lists}
                                 addList={addList}
                                 updateList={updateList}
@@ -229,7 +217,7 @@ const MonthlyBoard = () => {
                                 handleReopen={handleReopen}
                               />
                             ) : null
-                          ))}
+                          })}
                         </div>
                       </div>
                     </td>

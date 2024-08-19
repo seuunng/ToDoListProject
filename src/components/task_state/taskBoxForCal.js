@@ -7,31 +7,31 @@ import { LuRepeat } from "react-icons/lu";
 import { FaRegBell } from "react-icons/fa";
 import instance from '../../api/axios';
 
-const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
+const TaskBoxForCal = ({ tasks, showdate, updateTask, deleteTask, className,
   lists, addList, updateList, deleteList, showTitle = true, style, refreshTasks,
   checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange, handleReopen }) => {
-  const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
-  const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
-  const alarmMapping = {
-    "정각": "ONTIME",
-    "5분전": "FIVEMINS",
-    "30분전": "THIRTYMINS",
-    "하루전": "DAYEARLY"
-  };
-  const initialAlarm = savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
+  // const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
+  // const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
+  // const alarmMapping = {
+  //   "정각": "ONTIME",
+  //   "5분전": "FIVEMINS",
+  //   "30분전": "THIRTYMINS",
+  //   "하루전": "DAYEARLY"
+  // };
+  // const initialAlarm = savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
 
-  const [isRepeat, setIsRepeat] = useState(tasks.isRepeated || 'NOREPEAT');
-  const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALARM');
+  // const [isRepeat, setIsRepeat] = useState(tasks.isRepeated || 'NOREPEAT');
+  // const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALARM');
   const [taskTitle, setTaskTitle] = useState(tasks.title);
 
   const readTaskModalRef = useRef(null);
   const taskBoxRef = useRef(null);
-  const listNo = tasks.list ? tasks.list.no : null;
+  // const listNo = tasks.list ? tasks.list.no : null;
   useEffect(() => {
     if (tasks && tasks.title) {
       setTaskTitle(tasks.title);
-      setIsRepeat(tasks.isRepeated || 'NOREPEAT');
-      setIsNotified(tasks.isNotified || 'NOALARM');
+      // setIsRepeat(tasks.isRepeated || 'NOREPEAT');
+      // setIsNotified(tasks.isNotified || 'NOALARM');
     }
   }, []);
 
@@ -62,10 +62,14 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
         ? 'task-cancelled'
         : '';
 
+  const TaskStartDate = new Date(tasks.startDate);
+  const dateForStart = TaskStartDate.getDate();
+  const isTaskStart = dateForStart === parseInt(showdate);
+
   return (
     <div className={`task-box ${className}`} style={style}>
       <div ref={taskBoxRef}
-        className={`TaskBoxForCal ${taskStatusClassName}`}>
+        className={`TaskBoxForCal ${taskStatusClassName} ${isTaskStart ? '' : 'false-Task'}`}>
 
         {/* 메모 반복 및 알림 설정여부 아이콘: 추후 구현 예정 */}
         {/* <div className="color-box row">
@@ -75,7 +79,10 @@ const TaskBoxForCal = ({ tasks, updateTask, deleteTask, className,
             </span>
           )} */}
         {showTitle && (
-          <span className={`task-title col-8 ${taskStatusClassName}`}>{tasks.title}</span>
+          <span className={`task-title ${taskStatusClassName}`}
+          style={{color: isTaskStart ? '': lists.color}}>
+              {isTaskStart ? tasks.title : '.'}
+          </span>
         )}
         {/* 
           {(tasks.isNotified !== 'NOALARM')&& (
