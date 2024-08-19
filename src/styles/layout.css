@@ -18,4 +18,11 @@
   margin-left: 15px; /* 날짜 아이콘과 날짜 사이에 공백 추가 */
   margin-bottom: 15px;
   width: 90%;
+  font-family: 'establishRoomNo703OTF', sans-serif;
+}
+@font-face {
+  font-family: 'establishRoomNo703OTF';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2112@1.0/establishRoomNo703OTF.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
 }

@@ -50,9 +50,6 @@ const TaskBoxContent = ({
       setStartDate(getValidDate(task.startDate));
       setEndDate(task.endDate ? getValidDate(task.endDate) : null);
       setSelectedButton(task.dateStatus || 'DATE');
-      setIsRepeat(task.isRepeated || 'NOREPEAT');
-      setIsNotified(task.isNotified || 'NOALARM');
-
       setChecked(task.taskStatus === 'COMPLETED');
       setIsCancelled(task.taskStatus === 'CANCELLED');
 
@@ -116,33 +113,6 @@ const TaskBoxContent = ({
     // await refreshTasks();
   };
 
-  const handleRepeatClick = (option) => {
-    const repeatMapping = {
-      "반복없음": "NOREPEAT",
-      "매일": "DAILY",
-      "매주": "WEEKLY",
-      "매달": "MONTHLY",
-      "매년": "YEARLY"
-    };
-    const isRepeated = repeatMapping[option] || "NOREPEAT";
-    const updatedTasks = { ...task, isRepeated: isRepeated };
-    updateTask(updatedTasks);
-  };
-
-  const handleAlarmClick = async (option) => {
-    const alarmMapping = {
-      "알림없음": "NOALARM",
-      "정각": "ONTIME",
-      "5분전": "FIVEMINS",
-      "30분전": "THIRTYMINS",
-      "하루전": "DAYEARLY"
-    };
-    const isNotified = alarmMapping[option] || "NOALARM";
-    setIsNotified(isNotified);
-    const updatedTasks = { ...task, isNotified: isNotified };
-    // await updateTask(updatedTasks);
-  };
-
   const taskStatusClassName = task.taskStatus === 'OVERDUE'
     ? 'task-overdue'
     : task.taskStatus === 'COMPLETED'
@@ -163,7 +133,7 @@ const TaskBoxContent = ({
   };
 
   return (
-    <div className={`${taskStatusClassName}`} style={{ position: 'relative', zIndex: 1 }}>
+    <div className={`${taskStatusClassName}`} style={{ position: 'relative'}}>
       <Row xs="auto">
         <Col sm={8}
           style={{
@@ -190,7 +160,7 @@ const TaskBoxContent = ({
             />
           </span>
         </Col>
-        <Col md={3} className='righted' style={{ padding: "0" }}>
+        <Col md={3} className='righted' style={{ padding: "0" ,position: "relative"}}>
 
           {/* 메모 반복 및 알림 여부 아이콘 표시 기능: 추후구현 예정 */}
           {/* {task.isRepeated !== 'NOREPEAT' && (
@@ -214,13 +184,9 @@ const TaskBoxContent = ({
             startDate={startDate}
             endDate={endDate}
             onDateChange={handleDateChange}
-            onRepeatClick={handleRepeatClick}
-            onAlarmClick={handleAlarmClick}
             selectedButton={selectedButton}
             setSelectedButton={handleSelectedButtonChange}
             initialRepeat={isRepeat}
-            initialAlarm={initialAlarm}
-            isNotified={isNotified}
             dateFormat={'MM/dd'}
             isTaskBox={true}
             isTimeSet={timeSetMap[task.no] || false}

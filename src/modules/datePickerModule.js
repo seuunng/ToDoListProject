@@ -150,7 +150,8 @@ const DatePickerModule = ({ show, startDate, endDate, onDateChange,
                             backgroundColor: "#f0f0f0",
                             width: "90%",
                             marginLeft: "10px",
-                            marginTop: "5px",
+                            marginTop: "4px",
+                            marginBottom: "4px",
                             paddingBottom: "4px",
                             borderRadius: "7px",
                             paddingLeft: "-8px",
@@ -202,7 +203,7 @@ const DatePickerModule = ({ show, startDate, endDate, onDateChange,
     );
 
     const CustomTimeInput = ({ onChange }) => (
-        <div className='row'>
+        <div className='row' style={{position: "relative"}}>
             <Col>
                 <input
                     type="time"
@@ -265,7 +266,7 @@ const DatePickerModule = ({ show, startDate, endDate, onDateChange,
     );
 
     return (
-        <div className="custom-date-picker" >
+        <div className="custom-date-picker" style={{position: "relative"}}>
             <DatePicker
                 selected={dateRange[0]}
                 onChange={handleDateChange}

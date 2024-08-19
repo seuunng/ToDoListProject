@@ -10,13 +10,13 @@
   align-items: left;
   /*수직 중앙 정렬*/
   /* justify-content: center; 수평 중앙 정렬 */
-  height: 100vh;
+  height: 90vh;
   /* Viewport Height */
 }
 
 .calendar-table {
   width: 90vw;
-  height: 90vh;
+  height: 85vh;
   border-collapse: collapse;
   table-layout: fixed;
   /* 테이블 레이아웃을 고정으로 설정 */
@@ -70,26 +70,6 @@
   margin-left: 0;
   margin-right: 0;
 }
-
-/* 기본 스타일 정의 */
-.alram {
-  display: block;
-  /* 기본적으로 아이콘을 보이게 설정 */
-}
-
-/* 화면 너비가 576px 이하일 때 아이콘을 숨깁니다 */
-@media (max-width: 1200px) {
-  .taskBoxForCal-alram {
-    display: none;
-  }
-}
-
-@media (max-width: 1000px) {
-  .taskBoxForCal-repeat {
-    display: none;
-  }
-}
-
 .month-year-title .react-datepicker__input-container input {
   font-size: 36px;
   margin-bottom: 8px;

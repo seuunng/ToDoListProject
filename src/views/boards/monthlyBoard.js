@@ -180,6 +180,12 @@ const MonthlyBoard = () => {
                   const dayTasksForPeriod = filterTasksForPeriod(date);
                   const dayTasks = addListToTasks(dayTasksForPeriod, lists);
 
+                  const sortedTasks = dayTasks.sort((a, b) => {
+                    if (a.dateStatus < b.dateStatus) return 1;
+                    if (a.dateStatus > b.dateStatus) return -1;
+                    return 0;
+                  });
+
                   return (
                     <td key={day} ref={isToday(date) ? todayRef : null} className={`calendar-cell ${outsideMonthClass}`}>
                       <div className="day-cell">
@@ -188,36 +194,37 @@ const MonthlyBoard = () => {
                           {date.getDate()}
                         </div>
                         <div className="task-cell" onClick={(e) => handleTaskCellClick(e, date)}>
-                          {dayTasks.map(task => {
-                            const TaskStartDate = new Date(task.startDate); // 수정된 부분
-                            const dateForStart = TaskStartDate.getDate();
-                            const showdate = date.getDate().toString();
-                            const isTaskEndDate = dateForStart === parseInt(showdate);
+                          {sortedTasks.map(task => {
+                            
+                              const TaskStartDate = new Date(task.startDate); // 수정된 부분
+                              const dateForStart = TaskStartDate.getDate();
+                              const showdate = date.getDate().toString();
+                              const isTaskEndDate = dateForStart === parseInt(showdate);
 
-                            return task.list ? (
-                              <TaskBoxForCal
-                                key={task.no}
-                                showdate={showdate}
-                                tasks={task}
-                                updateTask={updateTask}
-                                deleteTask={deleteTask}
-                                className={isTaskEndDate ? '' : 'task-end-date'}
-                                lists={lists}
-                                addList={addList}
-                                updateList={updateList}
-                                deleteList={deleteList}
-                                style={{ backgroundColor: getTaskListColor(task) }}
-                                refreshTasks={tasks}
-                                checked={checked}
-                                setChecked={setChecked}
-                                isCancelled={isCancelled}
-                                setIsCancelled={setIsCancelled}
-                                handleCancel={handleCancel}
-                                handleCheckboxChange={handleCheckboxChange}
-                                handleReopen={handleReopen}
-                              />
-                            ) : null
-                          })}
+                              return task.list ? (
+                                <TaskBoxForCal
+                                  key={task.no}
+                                  showdate={showdate}
+                                  tasks={task}
+                                  updateTask={updateTask}
+                                  deleteTask={deleteTask}
+                                  className={isTaskEndDate ? '' : 'task-end-date'}
+                                  lists={lists}
+                                  addList={addList}
+                                  updateList={updateList}
+                                  deleteList={deleteList}
+                                  style={{ backgroundColor: getTaskListColor(task) }}
+                                  refreshTasks={tasks}
+                                  checked={checked}
+                                  setChecked={setChecked}
+                                  isCancelled={isCancelled}
+                                  setIsCancelled={setIsCancelled}
+                                  handleCancel={handleCancel}
+                                  handleCheckboxChange={handleCheckboxChange}
+                                  handleReopen={handleReopen}
+                                />
+                              ) : null
+                            })}
                         </div>
                       </div>
                     </td>

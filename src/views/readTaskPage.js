@@ -16,26 +16,14 @@ const ReadTaskPageContent = ({
   // checked,  setChecked,  isCancelled,  setIsCancelled,
   handleCancel, handleCheckboxChange, handleReopen
 }) => {
-  const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
-  const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
-  const alarmMapping = {
-    "정각": "ONTIME",
-    "5분전": "FIVEMINS",
-    "30분전": "THIRTYMINS",
-    "하루전": "DAYEARLY"
-  };
-  const initialAlarm = savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
-
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [taskTitle, setTaskTitle] = useState(task.title);
-  const [taskStatus, setTaskStatus] = useState();
+  const [taskStatus, setTaskStatus] = useState(task.taskStatus);
   const [taskContent, setTaskContent] = useState(task.content);
   const [startDate, setStartDate] = useState(new Date(task.startDate));
   const [endDate, setEndDate] = useState(task.endDate ? new Date(task.endDate) : null);
   const [timeSetMap, setTimeSetMap] = useState({});
   const [selectedButton, setSelectedButton] = useState(task.dateStatus || 'DATE');
-  const [isRepeat, setIsRepeat] = useState(task.isRepeated || 'NOREPEAT');
-  const [isNotified, setIsNotified] = useState(task.isNotified || initialAlarm);
   const [selectedList, setSelectedList] = useState(null);
 
   const [checked, setChecked] = useState(task.taskStatus === 'COMPLETED');
@@ -48,8 +36,6 @@ const ReadTaskPageContent = ({
       setStartDate(new Date(task.startDate));
       setEndDate(task.endDate ? new Date(task.endDate) : null);
       setSelectedButton(task.dateStatus || 'DATE');
-      setIsRepeat(task.isRepeated || 'NOREPEAT');
-      setIsNotified(task.isNotified || initialAlarm);
       setSelectedList(lists.find(list => list.no === task.listNo) || null);
 
       setChecked(task.taskStatus === 'COMPLETED');
@@ -70,7 +56,6 @@ const ReadTaskPageContent = ({
         endDate,
         taskStatus,
         dateStatus: selectedButton,
-        isNotified: isNotified,
         isTimeSet: timeSetMap[task.no]
 
       };
@@ -92,17 +77,19 @@ const ReadTaskPageContent = ({
   const handleTitleChange = async (e) => {
     const newTitle = e.target.value;
     setTaskTitle(newTitle);
+    await updateTask({ ...task, title: newTitle });
+    await refreshTasks(); // 수정 후 즉시 새로고침
   };
 
   const handleTitleKeyPress = async (e) => {
-    if (e.key === 'Enter') {
-      try {
-        await updateTask({ ...task, title: taskTitle });
-        await refreshTasks();
-      } catch (error) {
-        console.error("Error updating task:", error);
-      }
-    }
+    // if (e.key === 'Enter') {
+    //   try {
+    //     await updateTask({ ...task, title: taskTitle });
+    //     await refreshTasks();
+    //   } catch (error) {
+    //     console.error("Error updating task:", error);
+    //   }
+    // }
   };
 
   const handleContentChange = async (e) => {
@@ -157,32 +144,6 @@ const ReadTaskPageContent = ({
     }
   };
 
-  const handleRepeatClick = (option) => {
-    const repeatMapping = {
-      "반복없음": "NOREPEAT",
-      "매일": "DAILY",
-      "매주": "WEEKLY",
-      "매달": "MONTHLY",
-      "매년": "YEARLY"
-    };
-    const isRepeated = repeatMapping[option] || "NOREPEAT";
-    const updatedTask = { ...task, isRepeated: isRepeated };
-    updateTask(updatedTask);
-  };
-
-  const handleAlarmClick = (option) => {
-    const alarmMapping = {
-      "알림없음": "NOALARM",
-      "정각": "ONTIME",
-      "5분전": "FIVEMINS",
-      "30분전": "THIRTYMINS",
-      "하루전": "DAYEARLY"
-    };
-    const isNotified = alarmMapping[option] || "NOALARM";
-    setIsNotified(isNotified);
-    // await refreshTasks();
-  };
-
   const handleTimeSetChange = (task, value) => {
     setTimeSetMap((prevMap) => ({
       ...prevMap,
@@ -217,13 +178,8 @@ const ReadTaskPageContent = ({
           endDate={endDate}
           onDateChange={handleDateChange}
           onCalendarClose={handleDatePickerClose}
-          onRepeatClick={handleRepeatClick}
-          onAlarmClick={handleAlarmClick}
           selectedButton={selectedButton}
           setSelectedButton={handleSelectedButtonChange}
-          initialRepeat={isRepeat}
-          initialAlarm={initialAlarm}
-          isNotified={isNotified}
           isTaskBox={false}
           isTimeSet={timeSetMap[task.no] || false}
           setIsTimeSet={(value) => handleTimeSetChange(task, value)}
