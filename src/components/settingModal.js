@@ -141,7 +141,10 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
             </div>
           </div>
           <hr />
+          {/* 알람설정 */}
+            {/* 
           <div>
+
             <div className="d-flex align-items-center line row">
               <Col>
                 <h5><strong>알람 설정</strong></h5>
@@ -153,7 +156,7 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
                 />
               </Col>
             </div>
-            <hr />
+            <hr /> 
             <div className="d-flex align-items-center line row">
               <Col>
                 <h5>기본 알림기간</h5>
@@ -194,7 +197,8 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
               </Col>
             </div>
           </div>
-          <hr />
+          <hr />*/}
+
           <div className="d-flex align-items-center line row">
             <Col>
               <h5><strong>대표 목록 설정</strong></h5>
