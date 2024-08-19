@@ -12,9 +12,12 @@ import { FaCheck } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import { IoReorderThree } from "react-icons/io5";
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 
 const Layout = ({ setUser, user }) => {
+    const navigate = useNavigate();
+
     const [sidebarVisible, setSidebarVisible] = useState(false);
     const [tasks, setTasks] = useState([]);
     const [lists, setLists] = useState([]);
@@ -103,6 +106,7 @@ const Layout = ({ setUser, user }) => {
                 .catch(error => {
                     console.error('Session check failed:', error.response ? error.response.data : error.message);
                     setUser(null);
+                    navigate('/mainAccountInfo');
                 });
         }
     }, [setUser]);
