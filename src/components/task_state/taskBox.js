@@ -3,42 +3,25 @@ import '../../styles/basicStyle.css';
 import '../../styles/taskStatus.css';
 import CheckBox from '../../modules/checkBoxModule'
 import { Row, Col } from 'react-bootstrap';
-import { LuRepeat } from "react-icons/lu";
-import { FaRegBell } from "react-icons/fa";
 import DatePickerModule from '../../modules/datePickerModule';
 import SetTask from './setTask';
 import { TaskBoxProvider, useTaskBox } from '../../contexts/taskBoxContext';
-
+// 테스크 박스(체크박스+제목+날짜+할일 설정 버튼)
 const TaskBoxContent = ({
-  task = {},
-  deleteTask, updateTask, lists, refreshTasks,
-  // checked, setChecked, isCancelled, setIsCancelled,  
+  task = {}, deleteTask, updateTask, refreshTasks,
   handleCheckboxChange, handleCancel, handleReopen
 }) => {
+  // 유효한 날짜인지 확인하는 기능
   const getValidDate = (dateString) => {
     const date = new Date(dateString);
     return isNaN(date.getTime()) ? new Date() : date;
   };
-
-  const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
-  const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
-  const alarmMapping = {
-    "정각": "ONTIME",
-    "5분전": "FIVEMINS",
-    "30분전": "THIRTYMINS",
-    "하루전": "DAYEARLY"
-  };
-  const initialAlarm = savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
-
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [taskTitle, setTaskTitle] = useState(task.title);
   const [startDate, setStartDate] = useState(getValidDate(task.startDate));
   const [endDate, setEndDate] = useState(task.endDate ? getValidDate(task.endDate) : null);
   const [timeSetMap, setTimeSetMap] = useState({});
   const [selectedButton, setSelectedButton] = useState(task.dateStatus || 'DATE');
-  const [isRepeat, setIsRepeat] = useState(task.isRepeated || 'NOREPEAT');
-  const [isNotified, setIsNotified] = useState(task.isNotified || 'NOALARM');
-
   const [checked, setChecked] = useState(false);
   const [isCancelled, setIsCancelled] = useState(false);
 
@@ -58,27 +41,25 @@ const TaskBoxContent = ({
         [task.no]: task.isTimeSet || false,
       }));
     }
-
   }, [task, setChecked, setIsCancelled]);
 
   useEffect(() => {
     setIsTaskBox(true);
     return () => setIsTaskBox(false);
   }, [setIsTaskBox]);
-
+  // 제목 변경 기능
   const handleTitleChange = async (e) => {
     const newTitle = e.target.value;
     setTaskTitle(newTitle);
     await updateTask({ ...task, title: newTitle });
     await refreshTasks();
   };
-
+  // 날짜 변경 기능
   const handleDateChange = async (startDate, endDate) => {
     setStartDate(startDate);
     setEndDate(endDate);
-
+    // 날짜에 따른 체크박스 상태를 자동으로 계산
     let updatedStatus = task.taskStatus;
-
     const now = new Date();
     now.setHours(0, 0, 0, 0); // 시간을 00:00:00으로 초기화하여 날짜 비교만 수행하도록 설정
     const start = new Date(startDate);
@@ -87,8 +68,6 @@ const TaskBoxContent = ({
     if (end) {
       end.setHours(0, 0, 0, 0);
     }
-
-    // 상태를 자동으로 계산
     if (task.taskStatus !== 'COMPLETED' && task.taskStatus !== 'CANCELLED' && task.taskStatus !== 'DELETED') {
       if (end && now <= end) {
         updatedStatus = 'PENDING'; // 마감 기한이 지난 경우
@@ -100,19 +79,15 @@ const TaskBoxContent = ({
         updatedStatus = 'PENDING'; // 그 외의 경우는 PENDING
       }
     }
-
     const updatedTask = { ...task, startDate, endDate, taskStatus: updatedStatus };
-
     await updateTask(updatedTask);
-    // await refreshTasks();
   };
-
+  // 날짜 형식 선택 버튼 
   const handleSelectedButtonChange = async (button) => {
     setSelectedButton(button);
     await updateTask({ ...task, dateStatus: button.toUpperCase() });
-    // await refreshTasks();
   };
-
+  // 체크박스 상태에 따른 클래스네임 정의
   const taskStatusClassName = task.taskStatus === 'OVERDUE'
     ? 'task-overdue'
     : task.taskStatus === 'COMPLETED'
@@ -120,7 +95,7 @@ const TaskBoxContent = ({
       : task.taskStatus === 'CANCELLED'
         ? 'task-cancelled'
         : '';
-
+  // 시간 선택 기능
   const handleTimeSetChange = (task, value) => {
     setTimeSetMap((prevMap) => ({
       ...prevMap,
@@ -186,7 +161,6 @@ const TaskBoxContent = ({
             onDateChange={handleDateChange}
             selectedButton={selectedButton}
             setSelectedButton={handleSelectedButtonChange}
-            initialRepeat={isRepeat}
             dateFormat={'MM/dd'}
             isTaskBox={true}
             isTimeSet={timeSetMap[task.no] || false}

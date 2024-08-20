@@ -1,53 +1,37 @@
 import React, { useState } from 'react';
 import '../../styles/basicStyle.css';
 import '../../styles/simpleInputTask.css';
-import { FaPlus } from "react-icons/fa";
-
-const SimpleInputTask = ({ addTask, lists, listTitle, refreshTasks, listId, isSmartList }) => {
+//BasicBoard 상단 간단 메모입력 창
+const SimpleInputTask = ({ addTask, listTitle, refreshTasks, listId, isSmartList }) => {
   const [newTask, setNewTask] = useState('');
-
-  const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
-  const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
-  const alarmMapping = {
-    "정각": "ONTIME",
-    "5분전": "FIVEMINS",
-    "30분전": "THIRTYMINS",
-    "하루전": "DAYEARLY"
-  };
-  const initialAlarm = savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
-
   const selectedList = JSON.parse(localStorage.getItem('selectedList'));
   const defaultList = JSON.parse(localStorage.getItem('defaultList'));
-  
+  // 입력내용 변경
   const handleInputChange = (e) => {
     setNewTask(e.target.value);
   };
-
+  // 엔터 입력시 메모 저장
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       createTask();
     }
   };
-
+  // 메모 저장 기능
   const createTask = async () => {
     if (newTask.trim()) {
-
+      // 날짜에 따른 메모 체크박스 상태 설정
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-
       const taskStartDate = new Date(today);
       let taskStatus;
       if (taskStartDate.getTime() < today.getTime()) {
-          taskStatus = 'OVERDUE'; // 과거 날짜이면 OVERDUE
+          taskStatus = 'OVERDUE'; 
       } else {
-          taskStatus = 'PENDING'; // 오늘 또는 미래 날짜이면 PENDING
+          taskStatus = 'PENDING'; 
       }
-      
       const task = {
         title: newTask,
         content: '',
-        isNotified: initialAlarm,
-        isRepeated: 'NOREPEAT',
         startDate: today.toISOString(),
         endDate: '',
         priority: 'MEDIUM',

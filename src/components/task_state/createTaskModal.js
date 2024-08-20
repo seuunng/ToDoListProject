@@ -47,17 +47,14 @@ const CreateTaskModal = forwardRef((props, ref) => {
   const [startDate, setStartDate] = useState(isValidDate(new Date(tasks.startDate)) ? new Date(tasks.startDate) : new Date());
   const [endDate, setEndDate] = useState(isValidDate(new Date(tasks.endDate)) ? new Date(tasks.endDate) : null);
   const [timeSetMap, setTimeSetMap] = useState({});
-
   //모달이 열릴 때 실행
   useEffect(() => {
     if (show) {
       //모달 내용 초기화
       handleShow();
-      //startDate를 선택한 달력의 날짜로 렌더링
       setStartDate(isValidDate(date) ? date : new Date()); 
     }
   }, [show]);
-
   //모달 열릴때 모달 데이터
   const handleShow = () => {
     setSelectedList(selectedList_localSrotage || defaultList);
@@ -67,7 +64,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
       startDate: isValidDate(date) ? date : new Date(),
       endDate: null,
       dateStatus: tasks.dateStatus || 'DATE',
-      listNo: selectedList_localSrotage?.no || '',
+      listNo: selectedList_localSrotage?.no || defaultList.no,
       isTimeSet: tasks.isTimeSet || false,
     });
     setTimeSetMap(prevMap => ({
@@ -76,12 +73,10 @@ const CreateTaskModal = forwardRef((props, ref) => {
     }));
     setShow(true);
   };
-
   //날짜 변경 기능
   const handleDateChange = (start, end) => {
     setStartDate(start);
     setEndDate(end);
-
     setNewTask(prevState => ({
       ...prevState,
       startDate: start,
@@ -113,9 +108,9 @@ const CreateTaskModal = forwardRef((props, ref) => {
 
       let taskStatus;
       if (startDate.toISOString() < today.toISOString()) {
-        taskStatus = 'OVERDUE'; // 과거 날짜이면 OVERDUE
+        taskStatus = 'OVERDUE'; 
       } else {
-        taskStatus = 'PENDING'; // 오늘 또는 미래 날짜이면 PENDING
+        taskStatus = 'PENDING';
       }
 
       if (tasks.no && timeSetMap[tasks.no] !== (tasks.isTimeSet || false)) {
@@ -139,7 +134,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
 
       await addTask(task);
 
-      setNewTask({  // 상태를 초기화합니다.
+      setNewTask({  
         title: '',
         content: '',
         startDate: today,
@@ -150,12 +145,11 @@ const CreateTaskModal = forwardRef((props, ref) => {
     }
     handleClose();
   }
-
+  // 모달 보이기 기능을 위한 useImperativeHandle
   useImperativeHandle(ref, () => ({
     showModal: handleShow,
   }));
-
-  //입력필드 값이 변경될때 newTask상태 업데이트
+  // 입력필드 값이 변경될때 newTask상태 업데이트
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewTask(prevState => ({
@@ -171,14 +165,6 @@ const CreateTaskModal = forwardRef((props, ref) => {
   };
   //모달 종료+메모 저장
   const handleClose = () => {
-    setNewTask({  // 상태를 초기화합니다.
-      title: '',
-      content: '',
-      startDate: startDate.toISOString(),
-      endDate: null,
-      dateStatus: 'DATE',
-      listNo: selectedList?.no || '',
-    });
     setShow(false);
   };
   return (
@@ -198,6 +184,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
           />
         </div>
       </Modal.Header>
+
       <Modal.Body>
         <div className="d-flex align-items-center line">
           <span className="task-title">
@@ -219,9 +206,11 @@ const CreateTaskModal = forwardRef((props, ref) => {
             placeholder="내용을 입력하세요"
             value={newTask.content}
             onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
           ></textarea>
         </div>
       </Modal.Body>
+      
       <Modal.Footer>
         <div className="d-flex align-items-center line row"
           style={{ width: "100vw" }}>

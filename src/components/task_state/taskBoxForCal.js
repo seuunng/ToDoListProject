@@ -3,35 +3,20 @@ import '../../styles/basicStyle.css';
 import '../../styles/taskBoxForCal.css';
 import '../../styles/taskStatus.css';
 import ReadTaskModal from '../task_state/readTaskModal';
-import { LuRepeat } from "react-icons/lu";
-import { FaRegBell } from "react-icons/fa";
-import instance from '../../api/axios';
-
-const TaskBoxForCal = ({ tasks, showdate, updateTask, deleteTask, className,
+// 캘린더용 테스크 박스(할일, 배경색)
+const TaskBoxForCal = ({ 
+  tasks, showdate, updateTask, deleteTask, className,
   lists, addList, updateList, deleteList, showTitle = true, style, refreshTasks,
-  checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange, handleReopen }) => {
-  // const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
-  // const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
-  // const alarmMapping = {
-  //   "정각": "ONTIME",
-  //   "5분전": "FIVEMINS",
-  //   "30분전": "THIRTYMINS",
-  //   "하루전": "DAYEARLY"
-  // };
-  // const initialAlarm = savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
-
-  // const [isRepeat, setIsRepeat] = useState(tasks.isRepeated || 'NOREPEAT');
-  // const [isNotified, setIsNotified] = useState(tasks.isNotified || 'NOALARM');
+  checked, setChecked, isCancelled, setIsCancelled, 
+  handleCancel, handleCheckboxChange, handleReopen
+ }) => {
   const [taskTitle, setTaskTitle] = useState(tasks.title);
-
   const readTaskModalRef = useRef(null);
   const taskBoxRef = useRef(null);
-  // const listNo = tasks.list ? tasks.list.no : null;
+
   useEffect(() => {
     if (tasks && tasks.title) {
       setTaskTitle(tasks.title);
-      // setIsRepeat(tasks.isRepeated || 'NOREPEAT');
-      // setIsNotified(tasks.isNotified || 'NOALARM');
     }
   }, []);
 
@@ -41,7 +26,6 @@ const TaskBoxForCal = ({ tasks, showdate, updateTask, deleteTask, className,
         readTaskModalRef.current.openModal();
       }
     };
-
     const current = taskBoxRef.current;
     if (current) {
       current.addEventListener('click', readMemo);
@@ -51,9 +35,8 @@ const TaskBoxForCal = ({ tasks, showdate, updateTask, deleteTask, className,
         current.removeEventListener('click', readMemo);
       }
     };
-
   }, []);
-
+  // 체크박스 상태에 따른 클래스네임 정의
   const taskStatusClassName = tasks.taskStatus === 'OVERDUE'
     ? 'task-overdue'
     : tasks.taskStatus === 'COMPLETED'
@@ -61,7 +44,7 @@ const TaskBoxForCal = ({ tasks, showdate, updateTask, deleteTask, className,
       : tasks.taskStatus === 'CANCELLED'
         ? 'task-cancelled'
         : '';
-
+  // 날짜 형식 기간 테스크박스의 스타일 수정을 위한 변수정의
   const TaskStartDate = new Date(tasks.startDate);
   const dateForStart = TaskStartDate.getDate();
   const isTaskStart = dateForStart === parseInt(showdate);
@@ -84,8 +67,7 @@ const TaskBoxForCal = ({ tasks, showdate, updateTask, deleteTask, className,
               {isTaskStart ? tasks.title : '.'}
           </span>
         )}
-        {/* 
-          {(tasks.isNotified !== 'NOALARM')&& (
+        {/* {(tasks.isNotified !== 'NOALARM')&& (
             <span className="taskBoxForCal-alram col-2">
               <FaRegBell className={`task-box ${taskStatusClassName}`}/>
             </span>

@@ -9,28 +9,15 @@ import Checkbox from '../../modules/checkBoxModule';
 import { PiLineVerticalThin } from "react-icons/pi";
 import SetTask from './setTask';
 import SelectedList from '../task_list/selectedList.js';
-
+// 메모 조회 모달
 const ReadTaskModal = forwardRef(({
-  tasks,
-  updateTask, deleteTask,
-  lists, addList, updateList, deleteList, refreshTasks,
+  tasks, updateTask, deleteTask,
+  lists,
   checked, setChecked, isCancelled, setIsCancelled,
   handleCancel, handleCheckboxChange, handleReopen
 }, ref) => {
-  const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
-  const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
-  const alarmMapping = {
-    "정각": "ONTIME",
-    "5분전": "FIVEMINS",
-    "30분전": "THIRTYMINS",
-    "하루전": "DAYEARLY"
-  };
-  const initialAlarm = savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
-  
-  // console.log("1",initialAlarm); //THIRTYMINS
-  
+  // 초기 상태 설정
   const [show, setShow] = useState(false);
-
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [taskTitle, setTaskTitle] = useState(tasks.title);
   const [taskDescription, setTaskDescription] = useState(tasks.content);
@@ -38,32 +25,30 @@ const ReadTaskModal = forwardRef(({
   const [endDate, setEndDate] = useState(tasks.endDate ? new Date(tasks.endDate) : null);
   const [timeSetMap, setTimeSetMap] = useState({});
   const [selectedButton, setSelectedButton] = useState(tasks.dateStatus || 'DATE');
-  const [isRepeat, setIsRepeat] = useState(tasks.isRepeated || 'NOREPEAT');
-  const [isNotified, setIsNotified] = useState(tasks.isNotified || initialAlarm);
   const [selectedList, setSelectedList] = useState(null);
-
+  // 
   useEffect(() => {
     setTaskTitle(tasks.title);
     setTaskDescription(tasks.content);
     setStartDate(new Date(tasks.startDate));
     setEndDate(tasks.endDate ? new Date(tasks.endDate) : null);
     setSelectedButton(tasks.dateStatus || 'DATE');
-    setIsRepeat(tasks.isRepeated || 'NOREPEAT');
-    setIsNotified(tasks.isNotified || initialAlarm);
     setSelectedList(lists.find(list => list.no === tasks.list.no) || null);
- 
     setTimeSetMap((prevMap) => ({
       ...prevMap,
       [tasks.no]: tasks.isTimeSet || false,
     }));
-
   }, [tasks, lists]);
 
   useEffect(() => {
     setChecked(checked)
-    setIsCancelled(isCancelled);
-  }, [tasks, checked, isCancelled]);
-
+  }, [tasks, checked]);
+  //모달 보이기 기능
+  const handleShow = () => setShow(true);
+  useImperativeHandle(ref, () => ({
+    openModal: handleShow,
+  }));
+  //모달 숨기기 기능
   const handleClose = () => {
     const updatedTask = {
       ...tasks,
@@ -76,12 +61,7 @@ const ReadTaskModal = forwardRef(({
     updateTask(updatedTask);
     setShow(false);
   }
-
-  const handleShow = () => setShow(true);
-  useImperativeHandle(ref, () => ({
-    openModal: handleShow,
-  }));
-
+  //날짜 수정 기능
   const handleDateChange = async (startDate, endDate) => {
     setStartDate(startDate);
     setEndDate(endDate);
@@ -89,70 +69,40 @@ const ReadTaskModal = forwardRef(({
     let updatedStatus = tasks.taskStatus;
 
     const now = new Date();
-    now.setHours(0, 0, 0, 0); // 시간을 00:00:00으로 초기화하여 날짜 비교만 수행하도록 설정
+    now.setHours(0, 0, 0, 0);
     const start = new Date(startDate);
     start.setHours(0, 0, 0, 0);
     const end = endDate ? new Date(endDate) : null;
     if (end) {
       end.setHours(0, 0, 0, 0);
     }
-  
-    // 상태를 자동으로 계산
+    // 날짜에 따른 메모 상태 설정
     if (tasks.taskStatus !== 'COMPLETED' && tasks.taskStatus !== 'CANCELLED' && tasks.taskStatus !== 'DELETED') {
       if (end && now <= end) {
-          updatedStatus = 'PENDING'; // 마감 기한이 지난 경우
-        } else if (start && now < start) {
-          updatedStatus = 'PENDING'; // 미래의 시작일인 경우
-        } else if (start && now > start) {
-          updatedStatus = 'OVERDUE'; // 시작일이 과거인 경우
-        } else {
-          updatedStatus = 'PENDING'; // 그 외의 경우는 PENDING
-        }
+        updatedStatus = 'PENDING'; // 마감 기한이 지난 경우
+      } else if (start && now < start) {
+        updatedStatus = 'PENDING'; // 미래의 시작일인 경우
+      } else if (start && now > start) {
+        updatedStatus = 'OVERDUE'; // 시작일이 과거인 경우
+      } else {
+        updatedStatus = 'PENDING'; // 그 외의 경우는 PENDING
+      }
     }
     const updatedTask = { ...tasks, startDate, endDate, taskStatus: updatedStatus };
     await updateTask(updatedTask);
-    // await refreshTasks(); 
   };
-
+  //날짜 선택 방식 변경 기능
   const handleSelectedButtonChange = (button) => {
     setSelectedButton(button);
     updateTask({ ...tasks, dateStatus: button.toUpperCase() });
   }
-
-  const handleRepeatClick = (option) => {
-    const repeatMapping = {
-      "반복없음": "NOREPEAT",
-      "매일": "DAILY",
-      "매주": "WEEKLY",
-      "매달": "MONTHLY",
-      "매년": "YEARLY"
-    };
-    const isRepeated = repeatMapping[option] || "NOREPEAT";
-
-    const updatedTasks = { ...tasks, isRepeated: isRepeated };
-    updateTask(updatedTasks);
-  };
-
-  const handleAlarmClick = (option) => {
-    const alarmMapping = {
-      "알림없음": "NOALARM",
-      "정각": "ONTIME",
-      "5분전": "FIVEMINS",
-      "30분전": "THIRTYMINS",
-      "하루전": "DAYEARLY"
-    };
-    const isNotified = alarmMapping[option] || "NOALRAM";
-    setIsNotified(isNotified);
-    const updatedTasks = { ...tasks, isNotified: isNotified };
-    updateTask(updatedTasks);
-  };
-
+  //엔터 키 입력으로 메모 수정하기
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       handleClose();
     }
   };
-
+  //시간 변경 기능
   const handleTimeSetChange = (tasks, value) => {
     setTimeSetMap((prevMap) => ({
       ...prevMap,
@@ -161,11 +111,12 @@ const ReadTaskModal = forwardRef(({
     updateTask({
       ...tasks,
       isTimeSet: value,
-  });
+    });
   };
 
   return (
     <Modal show={show} onHide={handleClose} centered>
+
       <Modal.Header>
         <div className="d-flex align-items-center">
           <Checkbox
@@ -183,19 +134,16 @@ const ReadTaskModal = forwardRef(({
             startDate={startDate}
             endDate={endDate}
             onDateChange={handleDateChange}
-            onRepeatClick={handleRepeatClick}
-            onAlarmClick={handleAlarmClick}
             selectedButton={selectedButton}
-            initialRepeat={isRepeat}
-            initialAlarm={initialAlarm}
-            isNotified={isNotified}
             isTimeSet={timeSetMap[tasks.no] || false}
             setIsTimeSet={(value) => handleTimeSetChange(tasks, value)}
           />
         </div>
       </Modal.Header>
+
       <Modal.Body>
         <div className="d-flex align-items-center line">
+          {/* 제목 */}
           <span className="task-title">
             <input
               type="text"
@@ -208,6 +156,7 @@ const ReadTaskModal = forwardRef(({
             />
           </span>
         </div>
+        {/* 내용 */}
         <div className="description">
           <textarea
             value={taskDescription}
@@ -219,10 +168,12 @@ const ReadTaskModal = forwardRef(({
           ></textarea>
         </div>
       </Modal.Body>
+
       <Modal.Footer>
         <div className="d-flex align-items-center line row"
           style={{ width: "100vw" }}>
           <div className="list-title col lefted">
+            {/* 리스트 선택  */}
             <SelectedList
               lists={lists}
               selectedList={selectedList}
@@ -234,6 +185,7 @@ const ReadTaskModal = forwardRef(({
             />
           </div>
           <div className="setting-icon col righted">
+            {/* 할일 설정 드롭다운 */}
             <SetTask
               task={tasks}
               deleteTask={deleteTask}
