@@ -11,10 +11,11 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import GoogleLoginComponent from '../acountInfo/googleLogin';
+import axios from '../../api/axios';
 
 const MainAccountInfo = ({ user, setUser }) => {
     const navigate = useNavigate();
-
+    
     const handleGuestLogin = async () => {
         try {
             const response = await instance.post('/auth/guest-login');

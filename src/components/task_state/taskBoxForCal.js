@@ -52,6 +52,8 @@ const TaskBoxForCal = ({
   return (
     <div className={`task-box ${className}`} style={style}>
       <div ref={taskBoxRef}
+        // 테스크 상태에 따른 스타일을 위한 클래스 네임
+        // dateStatus에 따른 스타일을 위한 클래스 네임
         className={`TaskBoxForCal ${taskStatusClassName} ${isTaskStart ? '' : 'false-Task'}`}>
 
         {/* 메모 반복 및 알림 설정여부 아이콘: 추후 구현 예정 */}
@@ -61,6 +63,8 @@ const TaskBoxForCal = ({
               <LuRepeat className={`task-box ${taskStatusClassName}`}/>
             </span>
           )} */}
+        
+        {/* 제목 */}
         {showTitle && (
           <span className={`task-title ${taskStatusClassName}`}
           style={{color: isTaskStart ? '': lists.color}}>

@@ -6,22 +6,20 @@ import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+// 로그인한 계정 정보 확인 모달
 const AcountInfoModal = ({ onHide, user = {}, setUser, show }) => {
   const defaultUser = {
     email: '',
     nickname: '',
     created_at: ''
   };
-
   const safeUser = user || defaultUser;
+  // 수정모드시 데이터 설정
   const [isEditing, setIsEditing] = useState({
     email: false,
     nickname: false,
     created_at: false
   });
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isGuest, setIsGuest] = useState(false);
   const [editableEmail, setEditableEmail] = useState(safeUser.email);
   const [editableNickname, setEditableNickname] = useState(safeUser.nickname);
   const [editableCreatedAt, setEditableCreatedAt] = useState(safeUser.created_at);
@@ -34,16 +32,8 @@ const AcountInfoModal = ({ onHide, user = {}, setUser, show }) => {
 
   const navigate = useNavigate();
 
-  // const handleUpdateSimplePW = () => {
-  //   onHide();
-  //   navigate('/updateSimplePW');
-  // };
 
-  const handleUpdatePW = () => {
-    onHide();
-    navigate('/updatePW');
-  };
-
+  //로그아웃 기능
   const handleLogout = async () => {
     try {
       await axios.post('/auth/logout');
@@ -73,13 +63,20 @@ const AcountInfoModal = ({ onHide, user = {}, setUser, show }) => {
       });
     }
   };
+  // 비밀번호수정 페이지로 이동 기능+모달 숨기기
+  const handleUpdatePW = () => {
+    onHide();
+    navigate('/updatePW');
+  };
+  // 변경내용 수정 기능+모달 숨기기
   const savedSetting = () => {
     onHide();
   }
+  // 더블클릭시 수정모드로 전환 기능
   const handleDoubleClick = (field) => {
     setIsEditing((prev) => ({ ...prev, [field]: true }));
   };
-
+  // 포커스해제시 보이기모드로 전환 기능
   const handleBlur = (field) => {
     setIsEditing((prev) => ({ ...prev, [field]: false }));
   };
@@ -92,7 +89,7 @@ const AcountInfoModal = ({ onHide, user = {}, setUser, show }) => {
     return date.toISOString().split('T')[0]; // This formats the date as YYYY-MM-DD
   }
 
-  if (!user) {
+  if (!user) {                                                                               
     return null; // 또는 적절한 fallback UI를 반환
   }
 
