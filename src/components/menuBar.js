@@ -3,15 +3,13 @@ import React, { useState } from 'react';
 import '../styles/basicStyle.css';
 import '../styles/menuBar.css';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCat, faGear, faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 import { faSquareCheck } from '@fortawesome/free-regular-svg-icons';
 import AccountInfo from '../components/acountInfoModal';
 import Setting from '../components/settingModal';
 import { AiFillAppstore } from "react-icons/ai";
-import ModalModule from '../modules/modalModule';
-import axios from '../api/axios';
 
 const MenuBar = ({ setUser, user, lists, smartLists,
   checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange,

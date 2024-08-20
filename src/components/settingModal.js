@@ -4,12 +4,10 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../styles/basicStyle.css';
 import DropdownBtn from '../modules/dropdownModule';
 import SwitchBtn from '../modules/switchButtonModule';
-import BasicBtn from '../modules/BasicButton';
 import Col from 'react-bootstrap/Col';
 import { Modal, Button } from 'react-bootstrap';
 import { useSettings } from '../contexts/SettingsContext';
 import SelectedList from '../components/task_list/selectedList'
-import { useParams, useOutletContext, useLocation } from 'react-router-dom';
 import { FaTools } from "react-icons/fa";
 
 const SettingModal = ({ show, onHide, lists, smartLists }) => {

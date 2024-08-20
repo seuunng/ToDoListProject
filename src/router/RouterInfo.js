@@ -1,5 +1,5 @@
 
-import React, {useState} from 'react';
+import React from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 import Layout from '../layout/layout.js'
@@ -10,14 +10,9 @@ import Logout from '../views/acountInfo/logout.js';
 import Login from '../views/acountInfo/login.js';
 import MainAccountInfo from '../views/acountInfo/mainAcountInfo.js';
 import SignUp from '../views/acountInfo/signUp.js';
-import UpdateSimplePW from '../views/acountInfo/updateSimplePW.js';
 import MainBoard from '../views/boards/mainBoard.js';
 import BasicBoard from '../views/boards/basicBoard.js';
-import DailyBoard from '../views/boards/dailyBoard.js';
-import KanbanBoard from '../views/boards/kanbanBoard.js';
 import MonthlyBoard from '../views/boards/monthlyBoard.js';
-import TimeLineBoard from '../views/boards/timeLineBoard.js';
-import WeeklyBoard from '../views/boards/weeklyBoard.js';
 import ReadTaskPage from '../views/readTaskPage.js';
 import LoginSuccess from '../views/acountInfo/loginSuccess.js';
 
@@ -36,11 +31,6 @@ export const RouterInfo = (user = {}, setUser = () => {}) => createBrowserRouter
       {path: "mainBoard/:boardType", element: <MainBoard  user={user} setUser={setUser} />,},
       {path: "basicBoard/:listId", element: <BasicBoard  user={user} setUser={setUser} />,},
       {path: "monthlyBoard", element: <MainBoard  user={user} setUser={setUser} />,},
-      {path: "dailyBoard", element: <DailyBoard  user={user} setUser={setUser} />,},
-      {path: "kanbanBoard", element: <KanbanBoard  user={user} setUser={setUser} />,},
-      {path: "updateSimplePW", element: <UpdateSimplePW  user={user} setUser={setUser} />,},
-      {path: "timeLineBoard", element: <TimeLineBoard  user={user} setUser={setUser} />,},
-      {path: "weeklyBoard", element: <WeeklyBoard  user={user} setUser={setUser} />,},
       {path: "readTaskPage", element: <ReadTaskPage  user={user} setUser={setUser} />,},
       {path: "updatePW", element: <UpdatePW  user={user} setUser={setUser} />,},
       {path: "oauth2/authorization/google",

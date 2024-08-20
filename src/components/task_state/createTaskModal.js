@@ -1,4 +1,4 @@
-import React, { useState, useRef, useImperativeHandle, useEffect, forwardRef } from 'react';
+import React, { useState, useImperativeHandle, useEffect, forwardRef } from 'react';
 import '../../styles/basicStyle.css';
 import '../../styles/createTask.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -10,7 +10,7 @@ import { Modal } from 'react-bootstrap';
 import { FaCalendarCheck } from "react-icons/fa";
 import SetTask from './setTask';
 import SelectedList from '../task_list/selectedList.js';
-
+//할일 생성 모달
 const CreateTaskModal = forwardRef((props, ref) => {
   const { addTask, date, tasks = {}, deleteTask, lists = [], } = props;
 
@@ -18,26 +18,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
   const isValidDate = (date) => {
     return date instanceof Date && !isNaN(date);
   };
-  //Setting모달 설정값
-  const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
-  const savedselectedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
-  const alarmMapping = {
-    "정각": "ONTIME",
-    "5분전": "FIVEMINS",
-    "30분전": "THIRTYMINS",
-    "하루전": "DAYEARLY"
-  };
-  const initialAlarm = savedAllSwitchesAlarm ? alarmMapping[savedselectedOptions.alarmTime] : "NOALARM";
-
-  //DatePicker
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedButton, setSelectedButton] = useState(tasks?.dateStatus || 'DATE');
-  const [startDate, setStartDate] = useState(isValidDate(new Date(tasks.startDate)) ? new Date(tasks.startDate) : new Date());
-  const [endDate, setEndDate] = useState(isValidDate(new Date(tasks.endDate)) ? new Date(tasks.endDate) : null);
-  const [timeSetMap, setTimeSetMap] = useState({});
-  const [isRepeat, setIsRepeat] = useState(tasks?.isRepeated || 'NOREPEAT');
-  const [isNotified, setIsNotified] = useState(initialAlarm || 'NOALARM');
-
+  //setting모달 저장한 값 불러오기
   const getStoredItem = (key) => {
     try {
       const storedItem = localStorage.getItem(key);
@@ -49,74 +30,33 @@ const CreateTaskModal = forwardRef((props, ref) => {
   };
   const selectedList_localSrotage = getStoredItem('selectedList');
   const defaultList = getStoredItem('defaultList');
-
-  const [selectedList, setSelectedList] = useState(selectedList_localSrotage || defaultList);
-
+  //초기상태설정
   const [show, setShow] = useState(false);
+  const [selectedList, setSelectedList] = useState(selectedList_localSrotage || defaultList);
   const [newTask, setNewTask] = useState({
     title: '',
     content: '',
     startDate: date,
     endDate: null,
-    isNotified: initialAlarm,
-    isRepeated: 'NOREPEAT',
     dateStatus: 'DATE',
     listNo: selectedList?.no || '',
   });
+  //DatePicker관련 상태설정
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedButton, setSelectedButton] = useState(tasks?.dateStatus || 'DATE');
+  const [startDate, setStartDate] = useState(isValidDate(new Date(tasks.startDate)) ? new Date(tasks.startDate) : new Date());
+  const [endDate, setEndDate] = useState(isValidDate(new Date(tasks.endDate)) ? new Date(tasks.endDate) : null);
+  const [timeSetMap, setTimeSetMap] = useState({});
 
-  const initializeTaskState = () => {
-    if (tasks && lists.length > 0) {
-      setNewTask(prevState => ({
-        ...prevState,
-        startDate: isValidDate(new Date(tasks.startDate)) ? new Date(tasks.startDate) : new Date(),
-        endDate: null,
-        dateStatus: tasks.dateStatus || 'DATE',
-        isRepeated: tasks.isRepeated || 'NOREPEAT',
-        isNotified: tasks.isNotified || initialAlarm,
-        listNo: selectedList_localSrotage?.no || '',
-      }));
-      setTimeSetMap((prevMap) => ({
-        ...prevMap,
-        [tasks.no]: tasks.isTimeSet || false,
-      }));
-    }
-  };
-
+  //모달이 열릴 때 실행
   useEffect(() => {
     if (show) {
-      initializeTaskState();
-
-      setSelectedList(selectedList_localSrotage);
-
-      setStartDate(isValidDate(date) ? date : new Date());
-
-      setNewTask(prevState => ({
-        ...prevState,
-        dateStatus: 'DATE',
-        startDate: date,
-        endDate: null,
-        listNo: selectedList_localSrotage?.no || '',
-      }));
-      // setStartDate(date);
+      //모달 내용 초기화
+      handleShow();
+      //startDate를 선택한 달력의 날짜로 렌더링
+      setStartDate(isValidDate(date) ? date : new Date()); 
     }
-
   }, [show]);
-
-  useEffect(() => {
-    if (tasks.no && timeSetMap[tasks.no] !== (tasks.isTimeSet || false)) {
-      setTimeSetMap((prevMap) => ({
-        ...prevMap,
-        [tasks.no]: tasks.isTimeSet || false,
-      }));
-    }
-  }, [tasks, timeSetMap, tasks.no]);
-
-  useEffect(() => {
-    setNewTask(prevState => ({
-      ...prevState,
-      listNo: selectedList?.no || '',
-    }));
-  }, [selectedList]);
 
   //모달 열릴때 모달 데이터
   const handleShow = () => {
@@ -124,19 +64,20 @@ const CreateTaskModal = forwardRef((props, ref) => {
     setNewTask({
       title: '',
       content: '',
-      startDate: date,
+      startDate: isValidDate(date) ? date : new Date(),
       endDate: null,
-      isNotified: isNotified,
-      isRepeated: 'NOREPEAT',
-      dateStatus: 'DATE',
+      dateStatus: tasks.dateStatus || 'DATE',
       listNo: selectedList_localSrotage?.no || '',
-      isTimeSet: false,
+      isTimeSet: tasks.isTimeSet || false,
     });
-    // setStartDate(date)
+    setTimeSetMap(prevMap => ({
+      ...prevMap,
+      [tasks.no]: tasks.isTimeSet || false,
+    }));
     setShow(true);
   };
 
-  //날짜 입력필드 변경
+  //날짜 변경 기능
   const handleDateChange = (start, end) => {
     setStartDate(start);
     setEndDate(end);
@@ -147,59 +88,23 @@ const CreateTaskModal = forwardRef((props, ref) => {
       endDate: end
     }));
   };
-
+  //날짜입력 방식 선택 기능
   const handleSelectedButtonChange = (button) => {
     setSelectedButton(button);
     setNewTask({ ...tasks, dateStatus: button.toUpperCase() });
   }
-
+  //시간 입력 기능
   const handleTimeSetChange = (task, value) => {
-
     setTimeSetMap((prevMap) => ({
       ...prevMap,
       [task.no]: value,
     }));
-
     setNewTask({
       ...tasks,
       isTimeSet: value,
     });
-
   };
-  //반복 선택 변경
-  const handleRepeatClick = (option) => {
-    const repeatMapping = {
-      "반복없음": "NOREPEAT",
-      "매일": "DAILY",
-      "매주": "WEEKLY",
-      "매달": "MONTHLY",
-      "매년": "YEARLY"
-    };
-    const isRepeated = repeatMapping[option] || "NOREPEAT";
-    setIsRepeat(isRepeated);
-    setNewTask(prevState => ({
-      ...prevState,
-      isRepeated: isRepeated,
-    }));
-  };
-  //알림 선택 변경
-  const handleAlarmClick = (option) => {
-    const alarmMapping = {
-      "알림없음": "NOALARM",
-      "정각": "ONTIME",
-      "5분전": "FIVEMINS",
-      "30분전": "THIRTYMINS",
-      "하루전": "DAYEARLY"
-    };
-    const isNotified = alarmMapping[option] || "NOALARM";
-    setIsNotified(isNotified);
-    setNewTask(prevState => ({
-      ...prevState,
-      isNotified: isNotified,
-    }));
-  };
-
-  //메모 저장
+  //메모 저장 기능
   const createTask = async () => {
     if (newTask.title && newTask.title.trim()) {
 
@@ -213,11 +118,16 @@ const CreateTaskModal = forwardRef((props, ref) => {
         taskStatus = 'PENDING'; // 오늘 또는 미래 날짜이면 PENDING
       }
 
+      if (tasks.no && timeSetMap[tasks.no] !== (tasks.isTimeSet || false)) {
+        setTimeSetMap((prevMap) => ({
+          ...prevMap,
+          [tasks.no]: tasks.isTimeSet || false,
+        }));
+      }
+
       const task = {
         title: newTask.title,
         content: newTask.content,
-        isNotified: isNotified,
-        isRepeated: isRepeat,
         startDate: startDate.toISOString(),
         endDate: endDate ? endDate.toISOString() : null,
         priority: 'MEDIUM',
@@ -226,7 +136,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
         isTimeSet: timeSetMap[tasks.no] || false,
         dateStatus: selectedButton
       };
-      
+
       await addTask(task);
 
       setNewTask({  // 상태를 초기화합니다.
@@ -234,12 +144,9 @@ const CreateTaskModal = forwardRef((props, ref) => {
         content: '',
         startDate: today,
         endDate: null,
-        isNotified: initialAlarm,
-        isRepeated: 'NOREPEAT',
         dateStatus: 'DATE',
         listNo: selectedList?.no || '',
       });
-      // refreshTasks();
     }
     handleClose();
   }
@@ -264,6 +171,14 @@ const CreateTaskModal = forwardRef((props, ref) => {
   };
   //모달 종료+메모 저장
   const handleClose = () => {
+    setNewTask({  // 상태를 초기화합니다.
+      title: '',
+      content: '',
+      startDate: startDate.toISOString(),
+      endDate: null,
+      dateStatus: 'DATE',
+      listNo: selectedList?.no || '',
+    });
     setShow(false);
   };
   return (
@@ -276,15 +191,8 @@ const CreateTaskModal = forwardRef((props, ref) => {
             startDate={startDate}
             endDate={endDate}
             onDateChange={handleDateChange}
-            onRepeatClick={handleRepeatClick}
-            onAlarmClick={handleAlarmClick}
             selectedButton={selectedButton}
             setSelectedButton={handleSelectedButtonChange}
-            initialRepeat={isRepeat}
-            initialAlarm={initialAlarm}
-            // onSave={handleSaveSettings}
-            isNotified={isNotified}
-            setIsNotified={setIsNotified}
             isTimeSet={timeSetMap[tasks.no] || false}
             setIsTimeSet={(value) => handleTimeSetChange(tasks, value)}
           />
@@ -303,9 +211,6 @@ const CreateTaskModal = forwardRef((props, ref) => {
               onKeyDown={handleKeyDown}
             />
           </span>
-          {/* <span className="flag-icon">
-          <i className="fa-regular fa-flag"></i>
-        </span> */}
         </div>
         <div className="description">
           <textarea

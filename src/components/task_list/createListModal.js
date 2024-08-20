@@ -1,18 +1,31 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import EmojiPicker from 'emoji-picker-react';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { TfiMenu } from "react-icons/tfi";
-import { MdSignalCellularNull } from 'react-icons/md';
 
-const CreateList = ({ show, onHide, lists, count, addList, updateList, isEditMode }) => {
-  const modalRef = useRef(null);
+//List 생성 및 수정 모달 
+const CreateList = ({ show, onHide, lists, addList, updateList, isEditMode }) => {
+  //상태관리
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [newList, setNewList] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState(lists?.icon || '');
   const [selectedColor, setSelectedColor] = useState(lists?.color || '');
-
+  //리스트 컬러 옵션: 추가 가능
+  const colorOptions = [
+    'lightPink',        // 밝은 핑크
+    'lightBlue',        // 밝은 파랑
+    'lightSalmon',      // 밝은 연어색
+    'lightSkyBlue',     // 밝은 하늘색
+    'lavender',         // 라벤더
+    'peachPuff',        // 복숭아 색
+    'powderBlue',       // 가루 파랑
+    'moccasin',         // 모카신
+    'navajoWhite',      // 나바호 화이트
+    'thistle',          // 엉겅퀴 색
+  ]
+  //모달이 수정을 위해 열릴때 수정전 값을 렌더링
   useEffect(() => {
     if (isEditMode && lists) {
       setNewList(lists.title);
@@ -20,17 +33,20 @@ const CreateList = ({ show, onHide, lists, count, addList, updateList, isEditMod
       setSelectedColor(lists.color);
     }
   }, [isEditMode, lists]);
-
-  const handleEmojiClick = (emojiObject, event) => {
-    setSelectedEmoji(emojiObject.emoji);
-    setShowEmojiPicker(false);
-  }
+  //이모지피커 열리고 닫는 기능
   const toggleEmojiPicker = () => {
     setShowEmojiPicker(!showEmojiPicker);
   };
+  //이모지 선택시 저장하는 기능+이모지피커 닫기
+  const handleEmojiClick = (emojiObject) => {
+    setSelectedEmoji(emojiObject.emoji);
+    setShowEmojiPicker(false);
+  }
+  //리스트 색 선택시 저장하는 기능
   const handleColorClick = (color) => {
     setSelectedColor(color);
   };
+  //저장 클릭시 실행, 수정모드일때는 수정, 생성모드일때는 생성
   const handleSave = () => {
     if (newList.trim()) {
       const updatedList = {
@@ -39,32 +55,33 @@ const CreateList = ({ show, onHide, lists, count, addList, updateList, isEditMod
         icon: selectedEmoji,
         color: selectedColor,
       };
-
       if (isEditMode) {
         updateList(updatedList);
       } else {
         addList(updatedList);
       }
-
+      //모달 양식 초기화
       setNewList('');
       setSelectedEmoji('');
       setSelectedColor('');
       onHide();
     }
   };
-  const colorOptions = ['lightPink', 'lightGreen', 'lightBlue'];
 
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header>
         <Modal.Title>{isEditMode ? 'Edit List' : 'Add List'}</Modal.Title>
       </Modal.Header>
+
       <Modal.Body>
         <div className="modal-body">
           <InputGroup className="mb-3">
+            {/* 이모지피커 */}
             <Button variant="outline-secondary" id="button-addon1" onClick={toggleEmojiPicker}>
               {selectedEmoji ? selectedEmoji : <TfiMenu />}
             </Button>
+            {/* 리스트제목 */}
             <Form.Control
               aria-label="Example text with button addon"
               aria-describedby="basic-addon1"
@@ -80,6 +97,7 @@ const CreateList = ({ show, onHide, lists, count, addList, updateList, isEditMod
           )}
           <div className="d-flex align-items-center choseColor item">
             <div className="colorTitle box" style={{ color: "black" }}>Color&emsp;</div>
+            {/* 컬러팔레트 */}
             <div className="colorItem box">
               {colorOptions.map(color => (
                 <div
@@ -121,10 +139,10 @@ const CreateList = ({ show, onHide, lists, count, addList, updateList, isEditMod
               <input type="checkbox" />&emsp;
               스마트 목록에서 안보이게하고 싶어요
             </div> */}
-            
           </div>
         </div>
       </Modal.Body>
+
       <Modal.Footer>
         <Button variant="outline-secondary" onClick={onHide}>
           취소

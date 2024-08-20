@@ -2,13 +2,8 @@ import React, { useState, useEffect } from 'react';
 import '../../styles/basicStyle.css';
 import '../../styles/logout.css';
 import { Button } from 'react-bootstrap';
-import { MdEmail } from "react-icons/md";
-import { FcGoogle } from "react-icons/fc";
-import { PiSignInBold } from "react-icons/pi";
 import { useNavigate } from 'react-router-dom';
 import instance from '../../api/axios';
-import ToastModule from '../../modules/toastModule';
-import { FaRegEdit } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

@@ -20,15 +20,12 @@
 /* .task-overdue {
   color: rgb(177, 70, 70) !important;
 }
-
 .task-overdue .custom-input {
   color: rgb(177, 70, 70);
 }
-
 .task-overdue svg {
   color: lightgray;
 } */
-
 .task-cancelled {
   color: lightgray;
 }
@@ -44,13 +41,12 @@
 .TaskBoxForCal.task-cancelled  svg{
   color: gray;
 }
-/* 
-.TaskBoxForCal.task-cancelled .taskBoxForCal-alram{
-  background-color: lightgray; */
-/* } */
+/* .TaskBoxForCal.task-cancelled .taskBoxForCal-alram{
+  background-color: lightgray;
+} */
 /* .task-title .task-cancelled{
-  color: gray; */
-/* } */
+  color: gray;
+} */
 .task-cancelled svg {
   color: lightgray;
 }

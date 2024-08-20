@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/basicStyle.css';
 import '../../styles/logout.css';
-import { Button } from 'react-bootstrap';
-import { MdEmail } from "react-icons/md";
-import { FcGoogle } from "react-icons/fc";
-import { PiSignInBold } from "react-icons/pi";
 import { useNavigate, useLocation } from 'react-router-dom';
-import instance from '../../api/axios';
 import AlertModalModule from '../../modules/alertModalModule';
-import { FaRegEdit } from "react-icons/fa";
 
 const Logout = () => {
     const location = useLocation();

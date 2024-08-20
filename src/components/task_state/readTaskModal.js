@@ -1,8 +1,6 @@
 import React, { useImperativeHandle, forwardRef, useState, useEffect } from 'react';
 import '../../styles/basicStyle.css';
-import '../../styles/readTaskModal.css';
-import { Modal, Button } from 'react-bootstrap';
-import { format, isValid } from 'date-fns';
+import { Modal } from 'react-bootstrap';
 import DatePickerModule from '../../modules/datePickerModule';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -118,9 +116,6 @@ const ReadTaskModal = forwardRef(({
 
   const handleSelectedButtonChange = (button) => {
     setSelectedButton(button);
-    
-    console.log("selectedList", selectedList)
-
     updateTask({ ...tasks, dateStatus: button.toUpperCase() });
   }
 

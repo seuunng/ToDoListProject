@@ -3,7 +3,6 @@ import '../../styles/basicStyle.css';
 import '../../styles/logout.css';
 import { Button, Modal } from 'react-bootstrap';
 import { MdEmail } from "react-icons/md";
-import { FcGoogle } from "react-icons/fc";
 import { PiSignInBold } from "react-icons/pi";
 import { useNavigate } from 'react-router-dom';
 import instance from '../../api/axios';
