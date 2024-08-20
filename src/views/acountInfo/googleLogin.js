@@ -44,7 +44,7 @@ const handleGoogleLogin = useCallback(async (credentialResponse) => {
     try {
         const userInfo = await fetchGoogleUserInfo(credentialResponse.access_token);
         console.log("credentialResponse:", userInfo);
-            const response = await instance.post('http://localhost:9099/auth/google',
+            const response = await instance.post('https://port-0-todo-list-back-lzy143lgf0f1c3f8.sel4.cloudtype.app/auth/google',
                 { accessToken: credentialResponse.access_token }, // 요청 본문에 accessToken 포함
             {
                 headers: {
