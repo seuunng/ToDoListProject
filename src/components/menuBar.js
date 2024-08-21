@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import '../styles/basicStyle.css';
 import '../styles/menuBar.css';
@@ -17,6 +17,7 @@ const MenuBar = ({ setUser, user, lists, smartLists,
 
   const [showAccountInfo, setShowAccountInfo] = useState(false);
   const [showSettingModal, setShowSettingModal] = useState(false);
+  const [defaultList, setDefaultList] = useState('');
 
   const getStoredItem = (key) => {
      try {
@@ -28,11 +29,22 @@ const MenuBar = ({ setUser, user, lists, smartLists,
     }
   };
   const selectedList = getStoredItem('selectedList');
-  const defaultList = getStoredItem('defaultList');
+  // const defaultList = getStoredItem('defaultList');
 
   const selectedListNo = selectedList?.no || defaultList?.no || '';
 
   // console.log(defaultList, selectedListNo, selectedList, );
+  useEffect(() => {
+    if (lists && lists.length > 0) {
+      const defaultList = lists.find(list => list.title === "기본함");
+      if (defaultList) {
+        setDefaultList(defaultList);
+      } else {
+        setDefaultList(lists[0]);  // 기본함이 없으면 첫 번째 리스트로 설정
+      }
+      console.log("MenuBar", defaultList)
+    }
+  }, []);
 
   return (
     <div>
