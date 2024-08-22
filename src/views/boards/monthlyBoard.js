@@ -236,7 +236,7 @@ const MonthlyBoard = () => {
         </table>
       </div>
       <CreateTask
-        ref={createTaskModalRef} date={startDate} addTask={addTask} lists={lists} />
+        ref={createTaskModalRef} date={startDate} addTask={addTask} lists={lists} user={user}/>
     </div>
   );
 };

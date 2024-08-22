@@ -16,27 +16,44 @@ const MenuBar = ({ setUser, user, lists, smartLists,
 }) => {
   const [showAccountInfo, setShowAccountInfo] = useState(false);
   const [showSettingModal, setShowSettingModal] = useState(false);
+  const [selectedList, setSelectedList] = useState(null);
+  const [defaultList, setDefaultList] = useState(null);
 
   // localstorage에 저장된 값 꺼내기
   const getStoredItem = (key) => {
     try {
       const storedItem = localStorage.getItem(key);
-    if (!storedItem || storedItem === "undefined") {
-      return null;
-    }
-    return JSON.parse(storedItem);
+      if (!storedItem || storedItem === "undefined") {
+        return null;
+      }
+      return JSON.parse(storedItem);
     } catch (error) {
       console.error(`Error parsing ${key} from localStorage`, error);
       return null;
     }
   };
-  const selectedList = getStoredItem('selectedList') || {};
-  const defaultList = getStoredItem('defaultList') || {};
-  const selectedListNo = selectedList?.no || defaultList?.no || '';
+  // 
+  useEffect(() => {
+    const savedSelectedList = getStoredItem('selectedList');
+    const foundList = lists.find(list => list.title === "기본함");
+    setDefaultList(foundList); // 기본 리스트 설정
 
-  // console.log("menuBar selectedList",selectedList);
-  // console.log("menuBar defaultList",defaultList);
-  // console.log("menuBar selectedListNo",selectedListNo);
+    if (savedSelectedList !== null) {
+      const isSelectedListValid = lists.some(list => list.no === savedSelectedList.no);
+      if (isSelectedListValid) {
+        setSelectedList(savedSelectedList);
+      } else {
+        setSelectedList(foundList);
+        localStorage.setItem('selectedList', JSON.stringify(foundList));
+      }
+    } else {
+      setSelectedList(foundList);
+      localStorage.setItem('selectedList', JSON.stringify(foundList));
+    }
+  }, [user, lists]);
+
+  const selectedListNo = selectedList?.no || '';
+
   return (
     <div>
       {user ?
@@ -49,7 +66,7 @@ const MenuBar = ({ setUser, user, lists, smartLists,
           <Link
             to={{
               pathname: user ? `/basicBoard/${selectedListNo}` : '',
-              state: { checked, isCancelled, selectedList: selectedList?.no || defaultList?.no || '' }
+              state: { checked, isCancelled, selectedList: selectedList?.no || '' }
             }}
             className="item"
             onClick={(e) => {

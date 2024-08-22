@@ -61,8 +61,8 @@ const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
     if (savedAllSwitchesList !== null) {
       setAllSwitchesList(savedAllSwitchesList);
     }
+    const foundList = lists.find(list => list.title === "기본함");
     if (lists && lists.length > 0 && user) {
-      const foundList = lists.find(list => list.title === "기본함");
       setDefaultList(foundList);
     }
     if (savedSelectedList !== null) {
@@ -70,17 +70,14 @@ const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
       if (isSelectedListValid) {
         setSelectedList(savedSelectedList);
       } else {
-        setSelectedList(defaultList);
+        setSelectedList(foundList);
         localStorage.setItem('selectedList', JSON.stringify(selectedList));
       }
     } else {
-      setSelectedList(defaultList);
+      setSelectedList(foundList);
       localStorage.setItem('selectedList', JSON.stringify(selectedList));
     }
-    
-    console.log("defaultList",defaultList);
-    console.log("selectedList",selectedList);
-  }, [lists, smartLists]);
+  }, [user, lists, smartLists]);
   // 옵션 선택 기능
   const handleOptionSelected = (type, option) => {
     setSelectedOptions({ ...selectedOptions, [type]: option });
@@ -107,6 +104,10 @@ const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
     localStorage.setItem('defaultList', JSON.stringify(defaultList));
     onHide();
   }
+
+  console.log("defaultList",defaultList);
+  console.log("selectedList",selectedList);
+
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header>

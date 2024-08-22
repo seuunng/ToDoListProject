@@ -4,7 +4,6 @@ import '../../styles/createTask.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import DatePicker from '../../modules/datePickerModule';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import { Modal } from 'react-bootstrap';
 import { FaCalendarCheck } from "react-icons/fa";
@@ -12,32 +11,35 @@ import SetTask from './setTask';
 import SelectedList from '../task_list/selectedList.js';
 //할일 생성 모달
 const CreateTaskModal = forwardRef((props, ref) => {
-  const { addTask, date, tasks = {}, deleteTask, lists = [], } = props;
+  const { addTask, date, tasks = {}, deleteTask, lists = []} = props;
 
   //입력된 날짜가 유효한지 확인
   const isValidDate = (date) => {
     return date instanceof Date && !isNaN(date);
   };
-  //setting모달 저장한 값 불러오기
-  const getStoredItem = (key) => {
+  // 로컬 스토리지에서 값을 가져오는 함수
+   const getStoredItem = (key) => {
     try {
       const storedItem = localStorage.getItem(key);
-      // 빈 문자열이나 undefined가 아닌지 확인
-    if (!storedItem || storedItem === "undefined") {
-      return null;
-    }
-
-    return JSON.parse(storedItem);
+      if (!storedItem || storedItem === "undefined" || storedItem === "null") {
+        return null;
+      }
+      return JSON.parse(storedItem);
     } catch (error) {
       console.error(`Error parsing ${key} from localStorage`, error);
       return null;
     }
   };
-  const selectedList_localSrotage = getStoredItem('selectedList');
-  const defaultList = getStoredItem('defaultList');
+
+  // 로컬 스토리지에서 선택된 리스트와 기본 리스트 가져오기
+  const selectedList_localStorage = getStoredItem('selectedList');
+  const foundList = lists.find(list => list.title === "기본함");
+  const defaultList = getStoredItem('defaultList') || foundList;
+
   //초기상태설정
   const [show, setShow] = useState(false);
-  const [selectedList, setSelectedList] = useState(selectedList_localSrotage || defaultList);
+  const [selectedList, setSelectedList] = useState(selectedList_localStorage || defaultList);
+
   const [newTask, setNewTask] = useState({
     title: '',
     content: '',
@@ -62,8 +64,9 @@ const CreateTaskModal = forwardRef((props, ref) => {
   }, [show]);
   //모달 열릴때 모달 데이터
   const handleShow = () => {
-    setSelectedList(selectedList_localSrotage || defaultList);
-    const listNo = selectedList_localSrotage?.no || defaultList?.no || null;
+    setSelectedList(selectedList_localStorage || defaultList);
+    const listNo = selectedList_localStorage?.no || defaultList?.no || null;
+    console.log("listNo", listNo)
     setNewTask({
       title: '',
       content: '',

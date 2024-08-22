@@ -4,8 +4,22 @@ import '../../styles/simpleInputTask.css';
 //BasicBoard 상단 간단 메모입력 창
 const SimpleInputTask = ({ addTask, listTitle, refreshTasks, listId, isSmartList }) => {
   const [newTask, setNewTask] = useState('');
-  const selectedList = JSON.parse(localStorage.getItem('selectedList'));
-  const defaultList = JSON.parse(localStorage.getItem('defaultList'));
+  // 로컬 스토리지에서 데이터 가져오기 및 유효성 검사
+  const getStoredItem = (key) => {
+    const storedItem = localStorage.getItem(key);
+    if (storedItem && storedItem !== "undefined" && storedItem !== "null") {
+      try {
+        return JSON.parse(storedItem);
+      } catch (error) {
+        console.error(`Error parsing ${key} from localStorage`, error);
+        return null;
+      }
+    }
+    return null;
+  };
+
+  const selectedList = getStoredItem('selectedList');
+  const defaultList = getStoredItem('defaultList');
   // 입력내용 변경
   const handleInputChange = (e) => {
     setNewTask(e.target.value);
