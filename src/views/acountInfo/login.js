@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/basicStyle.css';
 import '../../styles/logout.css';
+import 'react-toastify/dist/ReactToastify.css';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import instance from '../../api/axios';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-const Login = ({ user, setUser }) => {
+// 로그인 컴포넌트
+const Login = ({ setUser }) => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
+    // 로그인 기능
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
@@ -46,10 +46,11 @@ const Login = ({ user, setUser }) => {
             });
         }
     };
-
+    // 비밀번호 찾기로 이동
     const handleFindPW = () => {
         navigate('/findPW');
     };
+    // 회원가입페이지로 이동
     const handleSignUp = () => {
         navigate('/signUp');
     };

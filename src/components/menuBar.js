@@ -18,8 +18,7 @@ const MenuBar = ({ setUser, user, lists, smartLists,
   const [showSettingModal, setShowSettingModal] = useState(false);
   const [selectedList, setSelectedList] = useState(null);
   const [defaultList, setDefaultList] = useState(null);
-
-  // localstorage에 저장된 값 꺼내기
+  // localstorage에 저장된 아이템 
   const getStoredItem = (key) => {
     try {
       const storedItem = localStorage.getItem(key);
@@ -32,12 +31,11 @@ const MenuBar = ({ setUser, user, lists, smartLists,
       return null;
     }
   };
-  // 
+  // 기본리스트 설정
   useEffect(() => {
     const savedSelectedList = getStoredItem('selectedList');
     const foundList = lists.find(list => list.title === "기본함");
-    setDefaultList(foundList); // 기본 리스트 설정
-
+    setDefaultList(foundList); 
     if (savedSelectedList !== null) {
       const isSelectedListValid = lists.some(list => list.no === savedSelectedList.no);
       if (isSelectedListValid) {
@@ -51,7 +49,7 @@ const MenuBar = ({ setUser, user, lists, smartLists,
       localStorage.setItem('selectedList', JSON.stringify(foundList));
     }
   }, [user, lists]);
-
+  // 베이직보드로 연결되는 리스트 번호 선택
   const selectedListNo = selectedList?.no || '';
 
   return (

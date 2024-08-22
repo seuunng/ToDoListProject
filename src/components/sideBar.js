@@ -8,7 +8,6 @@ const SideBar = ({ toggleSidebar,
   lists, addList, updateList, deleteList,
   smartLists, setIsSmartList,
   checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange }) => {
-
   const [showCreateListModal, setShowCreateListModal] = useState(false);
   //로컬스토리지 저장된 설정값 불러오기
   const switches = JSON.parse(localStorage.getItem('switches')) || {

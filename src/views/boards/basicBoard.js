@@ -6,10 +6,9 @@ import TaskCont from '../../components/task_list/taskCont';
 import { Row, Col } from 'react-bootstrap';
 import ReadTaskPage from '../readTaskPage';
 import instance from '../../api/axios';
-import { useParams, useOutletContext, useLocation } from 'react-router-dom';
-
+import { useParams, useOutletContext } from 'react-router-dom';
+// 리스트형 목록 
 const BasicBoard = () => {
-
   const {
     tasks, addTask, updateTask, deleteTask,
     lists,
@@ -17,22 +16,20 @@ const BasicBoard = () => {
     checked, setChecked, isCancelled, setIsCancelled,
     handleCancel, handleCheckboxChange, setIsSmartList, isSmartList, handleReopen
   } = useOutletContext();
-
   const [tasksByLists, setTasksByLists] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const { listId } = useParams();
   const [listTitle, setListTitle] = useState('');
   const [listIcon, setListIcon] = useState('');
   const [selectedList, setSelectedList] = useState(null);
-
-  useEffect(() => {
+  // selectedList에 따른 태스크 및 리스트 상태 초기화
+  useEffect(() => { 
     fetchListAndTasks()
   }, [selectedList])
-
+  // smartList 제목에 따라 페이지 이동
   const fetchListAndTasks = async () => {
     try {
       let endpoint;
-
       if (isSmartList) {
         switch (listTitle) {
           case '모든 할 일':
@@ -61,25 +58,21 @@ const BasicBoard = () => {
       else {
         endpoint = `/tasks/byList?listId=${listId}`;
       }
-
       const response_tasks = await instance.get(endpoint);
       // 'DELETED' 상태의 태스크들을 제외하고 리스트에 표시
       const filteredTasks = listTitle === '취소한 할 일'
       ? response_tasks.data.filter(task => task.taskStatus === 'CANCELLED')
       : response_tasks.data.filter(task => task.taskStatus !== 'DELETED' && task.taskStatus !== 'CANCELLED');
-
     setTasksByLists(filteredTasks);
-
     } catch (error) {
       console.error('Error fetching tasks by list:', error);
     }
   };
-
+  // list에 따라서 list업데이트 
   useEffect(() => {
     if (listId) {
       const list = lists.find(list => list.no === parseInt(listId));
       const smartList = smartLists.find(smartList => smartList.no === parseInt(listId));
-
       if (list) {
         setListTitle(list.title);
         setListIcon(list.icon);
@@ -94,10 +87,9 @@ const BasicBoard = () => {
       fetchListAndTasks();
     }
   }, [listId, lists, smartLists]);
-
+  // task 선택
   const handleTaskClick = (task) => {
     setSelectedTask(task);
-    // fetchListAndTasks()
   };
 
   return (

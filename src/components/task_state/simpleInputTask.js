@@ -17,9 +17,7 @@ const SimpleInputTask = ({ addTask, listTitle, refreshTasks, listId, isSmartList
     }
     return null;
   };
-
   const selectedList = getStoredItem('selectedList');
-  const defaultList = getStoredItem('defaultList');
   // 입력내용 변경
   const handleInputChange = (e) => {
     setNewTask(e.target.value);

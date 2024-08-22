@@ -4,67 +4,17 @@ import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/basicStyle.css';
 import '../styles/datePickerModule.css';
 import { Button, Col } from 'react-bootstrap';
-import DropdownBtn from './dropdownModule';
-import { IoMdTime } from "react-icons/io";
 import { TaskBoxContext } from '../contexts/taskBoxContext';
 
 const DatePickerModule = ({ show, startDate, endDate, onDateChange,
-    onRepeatClick, initialRepeat, onAlarmClick, initialAlarm, isNotified,
-    dateFormat, selectedButton, setSelectedButton, onHide, onSave,
+    dateFormat, selectedButton, setSelectedButton,
     isTimeSet, setIsTimeSet, onCalendarClose}) => {
-
     const [dateRange, setDateRange] = useState([startDate, endDate]);
     const [timeValue, setTimeValue] = useState('');
-
-    const dropdownOptionsAlarmTime = ["알림없음", "정각", "5분전", "30분전", "하루전"];
-    const dropdownOptionsRepeat = ["반복없음", "매일", "매주", "매달", "매년"];
     const savedSeleted = JSON.parse(localStorage.getItem('selectedOptions')) || {};
     const [dateFormatTimeInput, setDateFormatTimeInput] = useState(savedSeleted?.time === "24시간" ? "yyyy/MM/dd H:mm" : "yyyy/MM/dd h:mm aa");
     const { isTaskBox } = useContext(TaskBoxContext);
-
-    const repeatMappingToKorean = {
-        "NOREPEAT": "반복없음",
-        "DAILY": "매일",
-        "WEEKLY": "매주",
-        "MONTHLY": "매달",
-        "YEARLY": "매년"
-    };
-
-    const alarmMappingToKorean = {
-        "NOALARM": "알림없음",
-        "ONTIME": "정각",
-        "FIVEMINS": "5분전",
-        "THIRTYMINS": "30분전",
-        "DAYEARLY": "하루전"
-    };
-
-    const [selectedOptions, setSelectedOptions] = useState({
-        alarmTime: alarmMappingToKorean[isNotified] || initialAlarm,
-        repeat: repeatMappingToKorean[initialRepeat] || "반복없음",
-    });
-
-    useEffect(() => {
-        setDateRange([startDate, endDate]);
-    }, [startDate, endDate]);
-
-    const [alarmChanged, setAlarmChanged] = useState(false);
-
-    useEffect(() => {
-        if (alarmChanged) {
-            setSelectedOptions((prevOptions) => ({
-                ...prevOptions,
-                alarmTime: alarmMappingToKorean[isNotified] || "알림없음",
-            }));
-        }
-    }, [isNotified, alarmChanged]);
-
-    useEffect(() => {
-        setSelectedOptions((prevOptions) => ({
-            ...prevOptions,
-            repeat: repeatMappingToKorean[initialRepeat] || "반복없음",
-        }));
-    }, [initialRepeat,]);
-
+    // 날짜 입력 방식 선택에 따른 TimeValue 설정
     useEffect(() => {
         if (dateRange[0]) {
             const date = new Date(dateRange[0]);
@@ -75,16 +25,15 @@ const DatePickerModule = ({ show, startDate, endDate, onDateChange,
             setTimeValue('');
         }
     }, [dateRange]);
-
+    // 날짜 출력 형식
     useEffect(() => {
         setDateFormatTimeInput(savedSeleted?.time === "24시간" ? "yyyy/MM/dd H:mm" : "yyyy/MM/dd h:mm aa");
     }, [savedSeleted.time]);
-
+    //  날짜|기간 선택에 따른 상태 변경
     const handleButtonClick = (buttonType) => {
         setSelectedButton(buttonType);
     };
-
-    
+    // 날짜 수정 기능
     const handleDateChange = (update) => {
         setDateRange(update);
         if (selectedButton === 'PERIOD') {
@@ -93,34 +42,13 @@ const DatePickerModule = ({ show, startDate, endDate, onDateChange,
             onDateChange(update, null);
         }
     };
-
-    const handleOptionSelected = (type, option) => {
-        const updatedOptions = ({ ...selectedOptions, [type]: option });
-        setSelectedOptions(updatedOptions);
-        if (type === 'repeat') {
-            onRepeatClick(option);
-        }
-        if (type === 'alarmTime') {
-            setAlarmChanged(true);
-            onAlarmClick(option);
-        }
-    };
-
+    // timeValue에 따라 IsTimeSet설정 
     useEffect(() => {
         if (timeValue) {
             setIsTimeSet(true);
         } 
     }, []);
-
-    // const handleKeyDown = (e) => {
-    //     if (e.key === 'Enter') {
-    //       // onKeyDown이 prop으로 전달된 경우 실행
-    //       if (onKeyDown) {
-    //         onKeyDown(e);
-    //       }
-    //     }
-    //   };
-
+    // 타임 인풋창의 커스텀
     const CustomInput = forwardRef(({ value, onClick, className }, ref) => (
         <button className={className} onClick={onClick} ref={ref}
             style={{
@@ -138,7 +66,7 @@ const DatePickerModule = ({ show, startDate, endDate, onDateChange,
         </button>
     ),
     );
-
+    // 데이터 피커 달력 위 컴포넌트
     const MyContainer = ({ className, children }) => {
         return (
             <div >
@@ -195,13 +123,13 @@ const DatePickerModule = ({ show, startDate, endDate, onDateChange,
             </div>
         );
     };
-
+    // 데이터피커 달력 아래 시간 설정 제목
     const CustomTimeLabel = () => (
         <span style={{ fontSize: "16px", marginLeft: "-6px" }}>
             시간 설정
         </span>
     );
-
+    // 데이터피커 달력 아래 시간 설정 버튼
     const CustomTimeInput = ({ onChange }) => (
         <div className='row' style={{position: "relative"}}>
             <Col>

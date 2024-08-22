@@ -1,30 +1,23 @@
 
 import React from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-
 import Layout from '../layout/layout.js'
-
 import FindPW from '../views/acountInfo/findPW.js';
 import UpdatePW from '../views/acountInfo/updatePW.js';
-import Logout from '../views/acountInfo/logout.js';
 import Login from '../views/acountInfo/login.js';
 import MainAccountInfo from '../views/acountInfo/mainAcountInfo.js';
 import SignUp from '../views/acountInfo/signUp.js';
 import MainBoard from '../views/boards/mainBoard.js';
 import BasicBoard from '../views/boards/basicBoard.js';
-import MonthlyBoard from '../views/boards/monthlyBoard.js';
 import ReadTaskPage from '../views/readTaskPage.js';
-import LoginSuccess from '../views/acountInfo/loginSuccess.js';
-
 
 export const RouterInfo = (user = {}, setUser = () => {}) => createBrowserRouter([
   {
     path: "/",
     element: <Layout  user={user} setUser={setUser}  />,
     children: [ 
-      { path: "/", element: <MainAccountInfo  user={user} setUser={setUser} />}, 
+      {path: "/", element: <MainAccountInfo  user={user} setUser={setUser} />}, 
       {path: "findPW", element: <FindPW  user={user} setUser={setUser} />, },
-      {path: "logout", element: <Logout  user={user} setUser={setUser} />,},
       {path: "signUp", element: <SignUp  user={user} setUser={setUser} />, },
       {path: "mainAccountInfo", element: <MainAccountInfo  user={user} setUser={setUser} />, },
       {path: "login", element: <Login  user={user} setUser={setUser} />, },
@@ -36,9 +29,6 @@ export const RouterInfo = (user = {}, setUser = () => {}) => createBrowserRouter
       {path: "oauth2/authorization/google",
         element: <Navigate to="http://localhost:9099/oauth2/authorization/google" />
       },
-      {path: "login/oauth2/code/google", element: <LoginSuccess  user={user} setUser={setUser} />,},
-      // {path:"/mainBoard", element: <MainBoard />},
-      // {path:"/", element: <Navigate to="/mainBoard" />}
     ]
   }
 ])

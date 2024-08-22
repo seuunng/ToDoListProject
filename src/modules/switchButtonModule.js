@@ -1,19 +1,12 @@
 import React, { useState } from 'react'
 import Form from 'react-bootstrap/Form';
 import '../styles/basicStyle.css';
-
+// 스위치버튼
 const SwitchButtonModule = ({ label, disabled, checked, onChange, }) => {
-  //   const [isChecked, setIsChecked] = useState(false);
-
-  // const handleChange = () => {
-  //   setIsChecked(!isChecked);
-  // };
-
   return (
     <Form>
         <Form.Check 
             type="switch"
-            // checked={isChecked}
             onChange={onChange}
             checked={checked}
             disabled={disabled}

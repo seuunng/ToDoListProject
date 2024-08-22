@@ -1,8 +1,7 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
-
+// 경고문 모달
 const AlertModalModule = ({ show, onHide, handleALertClick, title, alert, hideBtn, saveBtn }) => {
-
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header closeButton>

@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/basicStyle.css';
-import instance from '../../api/axios'
 import BasicBoard from './basicBoard';
 import MonthlyBoard from './monthlyBoard';
 import { useParams, useOutletContext } from 'react-router-dom';
-
-
+// 메인게시판
 const BoardMain = () => {
     const { boardType } = useParams();
-    const { tasks, addTask, updateTask, deleteTask, lists, addList, updateList, deleteList } = useOutletContext();
-
+    const { tasks, addTask, updateTask, deleteTask, 
+        lists, addList, updateList, deleteList } = useOutletContext();
     return (
         <div>
             {boardType === 'basic' ? (

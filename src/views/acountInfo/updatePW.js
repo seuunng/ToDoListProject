@@ -5,41 +5,41 @@ import { useNavigate } from 'react-router-dom';
 import instance from '../../api/axios';
 import Button from 'react-bootstrap/Button';
 import { toast } from 'react-toastify';
-
+// 비밀번호 변경
 const UpdatePW = () => {
-  
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [isValid, setIsValid] = useState(true);
   const [isValidPW, setIsValidPW] = useState(true);
   const [isValidNewPW, setIsValidNewPW] = useState(true);
-
+  // 현재비밀번호 입력
   const handleChangePW = (e) => {
     setPassword(e.target.value);
     setIsValidPW(true);
   };
+  // 새로운 비밀번호 입력
   const handleChangeNewPW = (e) => {
     setNewPassword(e.target.value);
     setIsValidNewPW(true);
   };
-
+  // 입력한 비밀번호 제출 
   const handleSubmit = async (e) => {
-
+    // 비밀번호 형식 점검
     if (!validatePassword(password)) {
-      console.log("heandleSumit 실행")
       setIsValidPW(false);
       return;
     }
+    // 새로운 비밀번호 형식 점검
     if (!validatePassword(newPassword)) {
       setIsValidNewPW(false);
       return;
     }
+    // 비밀번호 일치 여부 확인
     if (!validatePassword2(password, newPassword)) {
       setIsValidNewPW(false);
       return;
     }
-
     try {
       const response = await instance.post('/auth/updatePW', {
         email,
@@ -81,18 +81,18 @@ const UpdatePW = () => {
       });
     }
   };
+  // 비밀번호 형식 정의
   const validatePassword = (password) => {
     return password.length >= 8;
   };
   const validatePassword2 = (password, newPassword) => {
     return password !== newPassword
   };
-
-  const navigate = useNavigate();
-
+  // 로그인페이지로 이동
   const handleLogin = () => {
     navigate('/login');
   };
+  // 회원가입페이지로 이동
   const handleSignUp = () => {
     navigate('/signUp');
   };

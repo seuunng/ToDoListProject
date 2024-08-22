@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import '../../styles/basicStyle.css';
 import '../../styles/logout.css';
 import { Button, Modal } from 'react-bootstrap';
@@ -9,13 +9,12 @@ import instance from '../../api/axios';
 import { FaRegEdit } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import GoogleLoginComponent from '../acountInfo/googleLogin';
-import axios from '../../api/axios';
-
+// 메인 화면
 const MainAccountInfo = ({ user, setUser }) => {
     const navigate = useNavigate();
-    
+    // 게스트 로그인 실행
     const handleGuestLogin = async () => {
         try {
             const response = await instance.post('/auth/guest-login');
@@ -48,15 +47,15 @@ const MainAccountInfo = ({ user, setUser }) => {
             });
         }
     };
-    
+    // 로그인페이지로 이동
     const handleLogin = () => {
         navigate('/login');
     };
-
+    // 회원가입페이지로 이동
     const handleSignUp = () => {
         navigate('/signUp');
     };
-
+    // 구글로 부터 Api스크립트 로드
     useEffect(() => {
         const script = document.createElement('script');
         script.src = 'https://accounts.google.com/gsi/client';
@@ -67,8 +66,6 @@ const MainAccountInfo = ({ user, setUser }) => {
         };
         document.body.appendChild(script);
     }, []); 
-
-    
 
     return (
         <div className="contents">

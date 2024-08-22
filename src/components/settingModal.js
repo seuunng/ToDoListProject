@@ -50,8 +50,6 @@ const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
     const savedSwitches = getStoredItem('switches', {});
     const savedSelectedList = getStoredItem('selectedList', null);
     const savedAllSwitchesList = getStoredItem('allSwitchesList', true);
-    const savedDefaultList = getStoredItem('defaultList', null);
-
     if (savedOptions) {
       setSelectedOptions(savedOptions);
     }
@@ -104,9 +102,6 @@ const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
     localStorage.setItem('defaultList', JSON.stringify(defaultList));
     onHide();
   }
-
-  console.log("defaultList",defaultList);
-  console.log("selectedList",selectedList);
 
   return (
     <Modal show={show} onHide={onHide} centered>

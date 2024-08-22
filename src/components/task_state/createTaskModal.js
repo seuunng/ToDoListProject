@@ -30,16 +30,13 @@ const CreateTaskModal = forwardRef((props, ref) => {
       return null;
     }
   };
-
   // 로컬 스토리지에서 선택된 리스트와 기본 리스트 가져오기
   const selectedList_localStorage = getStoredItem('selectedList');
   const foundList = lists.find(list => list.title === "기본함");
   const defaultList = getStoredItem('defaultList') || foundList;
-
   //초기상태설정
   const [show, setShow] = useState(false);
   const [selectedList, setSelectedList] = useState(selectedList_localStorage || defaultList);
-
   const [newTask, setNewTask] = useState({
     title: '',
     content: '',
@@ -57,7 +54,6 @@ const CreateTaskModal = forwardRef((props, ref) => {
   //모달이 열릴 때 실행
   useEffect(() => {
     if (show) {
-      //모달 내용 초기화
       handleShow();
       setStartDate(isValidDate(date) ? date : new Date()); 
     }
@@ -114,24 +110,20 @@ const CreateTaskModal = forwardRef((props, ref) => {
   //메모 저장 기능
   const createTask = async () => {
     if (newTask.title && newTask.title.trim()) {
-
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-
       let taskStatus;
       if (startDate.toISOString() < today.toISOString()) {
         taskStatus = 'OVERDUE'; 
       } else {
         taskStatus = 'PENDING';
       }
-
       if (tasks.no && timeSetMap[tasks.no] !== (tasks.isTimeSet || false)) {
         setTimeSetMap((prevMap) => ({
           ...prevMap,
           [tasks.no]: tasks.isTimeSet || false,
         }));
       }
-
       const task = {
         title: newTask.title,
         content: newTask.content,
@@ -143,9 +135,7 @@ const CreateTaskModal = forwardRef((props, ref) => {
         isTimeSet: timeSetMap[tasks.no] || false,
         dateStatus: selectedButton
       };
-
       await addTask(task);
-
       setNewTask({  
         title: '',
         content: '',

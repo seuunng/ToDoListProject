@@ -2,22 +2,20 @@ import React, { useState } from 'react';
 import '../../styles/basicStyle.css';
 import '../../styles/logout.css';
 import { useNavigate } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
 import { toast } from 'react-toastify';
+import Button from 'react-bootstrap/Button';
 import instance from '../../api/axios';
-
-
+// 비밀번호 찾기
 const FindPW = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
-
+  // 이메일 입력시 변경 
   const handleChange = (e) => {
     setEmail(e.target.value);
   };
-
+  // 임시비밀번호전송 기능
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await instance.post('/auth/findPW', { email });
       toast.success('임시 비밀번호가 이메일로 전송되었습니다!', {
@@ -41,10 +39,11 @@ const FindPW = () => {
       });
     }
   };
+  // 로그인 페이지로 이동
   const handleLogin = () => {
     navigate('/login');
   };
-
+  // 회원가입 페이지로 이동
   const handleSignUp = () => {
     navigate('/signUp');
 };

@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../../styles/basicStyle.css';
 import '../../styles/logout.css';
-import { Button } from 'react-bootstrap';
-import { MdEmail } from "react-icons/md";
-import { FcGoogle } from "react-icons/fc";
-import { PiSignInBold } from "react-icons/pi";
-import { useNavigate } from 'react-router-dom';
-import instance from '../../api/axios';
-import { FaRegEdit } from "react-icons/fa";
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import instance from '../../api/axios';
+import { Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+// 회원가입 페이지
 const SignUp = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -18,12 +14,14 @@ const SignUp = () => {
   const [nickname, setNickname] = useState('');
   const [isValid, setIsValid] = useState(true);
   const [isValidPW, setIsValidPW] = useState(true);
-
+  // 회원가입 기능
   const handleSignUp = async () => {
+    // 이메일 형식 점검
     if (!validateEmail(email)) {
       setIsValid(false);
       return;
     }
+    // 비밀번호 형식 점검
     if (!validatePassword(password)) {
       setIsValidPW(false);
       return;
@@ -39,7 +37,6 @@ const SignUp = () => {
         }
       });
       if (response.status === 201) {
-
         toast.success(`회원가입되었습니다. 로그인해주세요!`, {
           position: "top-right",
           autoClose: 4000,
@@ -74,28 +71,35 @@ const SignUp = () => {
       });
     }
   };
+  // 이메일 형식 정의
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
   };
+  // 비밀번호 형식 정의
   const validatePassword = (password) => {
     return password.length >= 8;
   };
+  // 이메일 입력 
   const handleChange = (e) => {
     setEmail(e.target.value);
     setIsValid(true);
   };
+  // 비밀번호 입력
   const handleChangePW = (e) => {
     setPassword(e.target.value);
     setIsValidPW(true);
   };
+  // 입력사항 제출
   const handleSubmit = (e) => {
     e.preventDefault();
     handleSignUp();
   };
+  // 로그인페이지로 이동
   const handleLogin = () => {
     navigate('/login');
   };
+  // 메인페이지로 이동
   const handlemainAccountInfo = () => {
     navigate('/mainAccountInfo');
   };
@@ -165,6 +169,7 @@ const SignUp = () => {
           </div>
         </div>
         <br></br>
+        {/* 이메일 및 비밀번호 형식에 대한 안내문구 */}
         <span className='explain'
           style={{ width: '350px' }}>
           {!isValid && 

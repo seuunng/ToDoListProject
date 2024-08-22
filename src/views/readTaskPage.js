@@ -8,12 +8,11 @@ import { FaCalendarCheck } from "react-icons/fa";
 import DatePickerModule from '../modules/datePickerModule';
 import SetTask from '../components/task_state/setTask';
 import SelectedList from '../components/task_list/selectedList.js';
-import { TaskBoxProvider, useTaskBox } from '../contexts/taskBoxContext.js';
-
+import { TaskBoxProvider } from '../contexts/taskBoxContext.js';
+//  BasicBoard 우측 메모 읽기 페이지
 const ReadTaskPageContent = ({
   task,
-  updateTask, deleteTask, lists, refreshTasks, onTaskClick,
-  // checked,  setChecked,  isCancelled,  setIsCancelled,
+  updateTask, deleteTask, lists, refreshTasks, 
   handleCancel, handleCheckboxChange, handleReopen
 }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -47,7 +46,7 @@ const ReadTaskPageContent = ({
       }));
     }
   }, [task, lists, setChecked, setIsCancelled]);
-
+  // 데이터피커 숨기기 
   const handleDatePickerClose = async () => {
     try {
       const updatedTask = {
@@ -57,7 +56,6 @@ const ReadTaskPageContent = ({
         taskStatus,
         dateStatus: selectedButton,
         isTimeSet: timeSetMap[task.no]
-
       };
       await updateTask(updatedTask);
       await refreshTasks();
@@ -65,38 +63,26 @@ const ReadTaskPageContent = ({
       console.error("Error updating task:", error);
     }
   };
-
+  // 리스트를 선택 기능
   const handleSelectedListChange = (selectedList) => {
     setSelectedList(selectedList);
     if (selectedList && selectedList.no) {
       updateTask({ ...task, listNo: selectedList.no });
-      // refreshTasks();
     }
   };
-
+  // 제목 변경 기능
   const handleTitleChange = async (e) => {
     const newTitle = e.target.value;
     setTaskTitle(newTitle);
     await updateTask({ ...task, title: newTitle });
-    await refreshTasks(); // 수정 후 즉시 새로고침
+    await refreshTasks(); 
   };
-
-  const handleTitleKeyPress = async (e) => {
-    // if (e.key === 'Enter') {
-    //   try {
-    //     await updateTask({ ...task, title: taskTitle });
-    //     await refreshTasks();
-    //   } catch (error) {
-    //     console.error("Error updating task:", error);
-    //   }
-    // }
-  };
-
+  // 설명 변경 기능
   const handleContentChange = async (e) => {
     const newContent = e.target.value;
     setTaskContent(newContent);
   };
-
+  // 엔터키 입력하면 함수 실행
   const handleContentKeyPress = async (e) => {
     if (e.key === 'Enter') {
       try {
@@ -107,7 +93,7 @@ const ReadTaskPageContent = ({
       }
     }
   };
-
+  // 날짜 변경 기능
   const handleDateChange = async (startDate, endDate) => {
     setStartDate(startDate);
     setEndDate(endDate);
@@ -115,7 +101,7 @@ const ReadTaskPageContent = ({
     let updatedStatus = task.taskStatus;
 
     const now = new Date();
-    now.setHours(0, 0, 0, 0); // 시간을 00:00:00으로 초기화하여 날짜 비교만 수행하도록 설정
+    now.setHours(0, 0, 0, 0); 
     const start = new Date(startDate);
     start.setHours(0, 0, 0, 0);
     const end = endDate ? new Date(endDate) : null;
@@ -126,31 +112,31 @@ const ReadTaskPageContent = ({
     // 상태를 자동으로 계산
     if (task.taskStatus !== 'COMPLETED' && task.taskStatus !== 'CANCELLED' && task.taskStatus !== 'DELETED') {
       if (end && now <= end) {
-        updatedStatus = 'PENDING'; // 마감 기한이 지난 경우
+        updatedStatus = 'PENDING';
       } else if (start && now < start) {
-        updatedStatus = 'PENDING'; // 미래의 시작일인 경우
+        updatedStatus = 'PENDING';
       } else if (start && now > start) {
-        updatedStatus = 'OVERDUE'; // 시작일이 과거인 경우
+        updatedStatus = 'OVERDUE'; 
       } else {
-        updatedStatus = 'PENDING'; // 그 외의 경우는 PENDING
+        updatedStatus = 'PENDING'; 
       }
     }
     setTaskStatus(updatedStatus);
   };
-
+  // 기간|날짜 선택 기능
   const handleSelectedButtonChange = async (button) => {
     if (button !== task.dateStatus) {
       setSelectedButton(button);
     }
   };
-
+  // 시간 입력 기능 
   const handleTimeSetChange = (task, value) => {
     setTimeSetMap((prevMap) => ({
       ...prevMap,
       [task.no]: value,
     }));
   };
-
+  // 상태에 따른 스타일 적용을 위한 클래스네임
   const taskStatusClassName = task.taskStatus === 'OVERDUE'
     ? 'task-overdue'
     : task.taskStatus === 'COMPLETED'
@@ -190,7 +176,6 @@ const ReadTaskPageContent = ({
           type="text"
           value={taskTitle}
           onChange={handleTitleChange}
-          onKeyDown={handleTitleKeyPress}
           className="form-control"
           placeholder="Task Title"
           style={{ border: "none" }}

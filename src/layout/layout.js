@@ -32,7 +32,7 @@ const Layout = ({ setUser, user }) => {
             console.error('User ID is not available');
             return;
         }
-              
+
         try {
             // task 조회
             const response_taskData = await instance.get(`/tasks/task/${user.id}`);
@@ -67,7 +67,7 @@ const Layout = ({ setUser, user }) => {
                 ...smartList,
                 icon: getSmartListIcon(smartList.title),
             }));
-
+            // 할일이 속한 리스트 번호와 일치하는 리스트만 필터링
             const tasksWithLists = data.map(task => {
                 if (!task.listNo) {
                     console.warn(`Task with ID ${task.no} does not have a listNo property.`);
@@ -76,16 +76,14 @@ const Layout = ({ setUser, user }) => {
                 const list = data_list.find(list => list.no === task.listNo);
                 return { ...task, list: list || null };
             });
-
             setTasks(tasksWithLists);
             setLists(data_list);
             setSmartLists(smartListsWithIcons);
-
+            // 상태가 completed인 할일의 상태를 저장하는 기능
             const initialChecked = tasksWithLists.reduce((acc, task) => {
                 acc[task.no] = task.taskStatus === 'COMPLETED';
                 return acc;
             }, {});
-
             setCheckedTasks(initialChecked);
         } catch (error) {
             console.error('Error getting data:', error);
@@ -93,7 +91,7 @@ const Layout = ({ setUser, user }) => {
             setLists([]);
         }
     };
-
+    // 현재 세션이 유효한지 확인하는 기능
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
@@ -109,17 +107,17 @@ const Layout = ({ setUser, user }) => {
                 });
         }
     }, [setUser]);
-
+    // 유저가 있을때 테스크와 리스트를 초기화
     useEffect(() => {
         if (user) {
             fetchTableData();
         }
     }, [user]);
-
+    // 새로고침으로 테스크와 리스틀르 다시 받아오는 함수
     const refreshTasks = async () => {
         await fetchTableData();
     };
-
+    // 할일 생성
     const addTask = async (newTask) => {
         try {
             const response = await instance.post('/tasks/task', {
@@ -132,7 +130,7 @@ const Layout = ({ setUser, user }) => {
             console.error('Error adding task:', error);
         }
     };
-
+    // 할일 수정
     const updateTask = async (updatedTask) => {
         try {
             const response = await instance.put(`/tasks/task/${updatedTask.no}`, updatedTask);
@@ -145,7 +143,7 @@ const Layout = ({ setUser, user }) => {
             console.error('Error updating task:', error);
         }
     };
-
+    // 할일 삭제
     const deleteTask = async (taskId) => {
         try {
             const response = await instance.put(`/tasks/${taskId}/status`, {
@@ -171,7 +169,7 @@ const Layout = ({ setUser, user }) => {
             throw error;
         }
     };
-
+    // 리스트 추가
     const addList = async (newList) => {
         try {
             const response = await instance.post('/lists/list', newList);
@@ -181,7 +179,7 @@ const Layout = ({ setUser, user }) => {
             console.error('Error adding list:', error);
         }
     };
-
+    // 리스트 수정
     const updateList = async (updatedList) => {
         try {
             const response = await instance.put(`/lists/list/${updatedList.no}`, updatedList);
@@ -193,7 +191,7 @@ const Layout = ({ setUser, user }) => {
             console.error('Error updating list:', error);
         }
     };
-
+    // 리스트 삭제
     const deleteList = async (deletedList) => {
         try {
             const response = await instance.put(`/lists/list/${deletedList.no}`, {
@@ -222,17 +220,17 @@ const Layout = ({ setUser, user }) => {
             console.error('Error updating list:', error);
         }
     };
-
+    // 사이드바 토글 기능
     const toggleSidebar = () => {
         setSidebarVisible(!sidebarVisible);
     };
-
+    // 배경 선택시 사이드바 숨김 기능
     const hideSidebar = () => {
         if (sidebarVisible) {
             setSidebarVisible(false);
         }
     };
-
+    // 할일의 상태 수정
     const updateTaskStatus = async (taskId, newStatus) => {
         try {
             const response = await instance.put(`/tasks/${taskId}/status`, {
@@ -249,7 +247,7 @@ const Layout = ({ setUser, user }) => {
             throw error;
         }
     }
-
+    // 체크박스 상태 변경 기능
     const handleCheckboxChange = async (taskId) => {
         let newStatus;
         const task = tasks.find(task => task.no === taskId);
@@ -257,26 +255,20 @@ const Layout = ({ setUser, user }) => {
             console.warn('Task not found');
             return;
         }
-
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const taskStartDate = new Date(task.startDate);
-
         if (checkedTasks[taskId]) {
             if (taskStartDate.getTime() < today.getTime()) {
-                newStatus = 'OVERDUE'; // 과거 날짜이면 OVERDUE
-            } else {
-                newStatus = 'PENDING'; // 오늘 또는 미래 날짜이면 PENDING
+                newStatus = 'OVERDUE'; 
+                newStatus = 'PENDING'; 
             }
         } else {
-            // 완료되지 않은 상태에서 클릭한 경우
             newStatus = 'COMPLETED';
         };
-
         setCheckedTasks(prevChecked => ({ ...prevChecked, [taskId]: !prevChecked[taskId] }));
         setChecked(newStatus === 'COMPLETED');
         setIsCancelled(newStatus === 'CANCELLED');
-        
         try {
             await updateTaskStatus(taskId, newStatus);
             await refreshTasks(); // 상태 변경 후 테스크를 새로고침
@@ -284,7 +276,7 @@ const Layout = ({ setUser, user }) => {
             console.error('Error updating task status:', error);
         }
     }
-
+    // 체크박스상태를 취소로 수정
     const handleCancel = async (task) => {
         if (!task || !task.no) {
             console.warn('Task object is missing or task.no is undefined');
@@ -313,19 +305,17 @@ const Layout = ({ setUser, user }) => {
             console.error('Task object is missing or task.no is undefined');
         }
     };
-
+    // 체크 박스 상태의 취소를 취소
     const handleReopen = async (task) => {
         let newStatus;
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-
         const taskStartDate = new Date(task.startDate);
         if (taskStartDate.getTime() < today.getTime()) {
             newStatus = 'OVERDUE'; // 과거 날짜이면 OVERDUE
         } else {
             newStatus = 'PENDING'; // 오늘 또는 미래 날짜이면 PENDING
         }
-
         if (task && task.no) {
             try {
                 const response = await instance.put(`/tasks/${task.no}/status`, {
@@ -348,7 +338,7 @@ const Layout = ({ setUser, user }) => {
             console.error('Task object is missing or task.no is undefined');
         }
     };
-
+    
     return (
         <div onClick={hideSidebar}>
             <MenuBar
