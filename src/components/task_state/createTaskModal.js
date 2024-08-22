@@ -22,7 +22,12 @@ const CreateTaskModal = forwardRef((props, ref) => {
   const getStoredItem = (key) => {
     try {
       const storedItem = localStorage.getItem(key);
-      return storedItem ? JSON.parse(storedItem) : null;
+      // 빈 문자열이나 undefined가 아닌지 확인
+    if (!storedItem || storedItem === "undefined") {
+      return null;
+    }
+
+    return JSON.parse(storedItem);
     } catch (error) {
       console.error(`Error parsing ${key} from localStorage`, error);
       return null;

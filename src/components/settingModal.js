@@ -10,48 +10,38 @@ import { useSettings } from '../contexts/SettingsContext';
 import SelectedList from '../components/task_list/selectedList'
 import { FaTools } from "react-icons/fa";
 
-const SettingModal = ({ show, onHide, lists, smartLists }) => {
+const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
   
-//   const { 
-//     tasks = [], 
-//     updateTask = () => {}, 
-//     lists = [], 
-//     smartLists = [], 
-//     setSmartLists = () => {}, 
-// } = useOutletContext() || {};
-
   const { selectedOptions, setSelectedOptions, switches, setSwitches } = useSettings(null);
-  // const [show, setShow] = useState(false);
-  // const settingModalRef = useRef(null);
   const [allSwitchesList, setAllSwitchesList] = useState(true);
   const [allSwitchesAlarm, setAllSwitchesAlarm] = useState(true);
-  const [selectedList, setSelectedList] = useState(true);
+  const [selectedList, setSelectedList] = useState(null);
   const [defaultList, setDefaultList] = useState(null);
 
   const dropdownOptionsWeek = ["월요일", "일요일"];
   const dropdownOptionsTime = ["12시간", "24시간"];
-  const dropdownOptionsAlarmTime = ["정각", "5분전", "30분전", "하루전"];
-  const dropdownOptionsAlarmMethod = ["이메일", "카톡알림", "팝업"];
-  const dropdownOptionsAlarmSound = ["벨소리", "진동", "무음"];
 
-  useEffect(() => {
-    if (lists && lists.length > 0) {
-      const defaultList = lists.find(list => list.title === "기본함");
-      if (defaultList) {
-        setDefaultList(defaultList);
+  const getStoredItem = (key, fallbackValue = null) => {
+    try {
+      const storedItem = localStorage.getItem(key);
+      // Check for invalid values like undefined, null, or "undefined"
+      if (!storedItem || storedItem === "undefined") {
+        return fallbackValue;
       }
-      console.log("SettingModal", defaultList)
+      return JSON.parse(storedItem);
+    } catch (error) {
+      console.error(`Error parsing ${key} from localStorage`, error);
+      return fallbackValue;
     }
-  }, []);
-
+  };
   useEffect(() => {
     // 로컬 스토리지에서 설정 값 불러오기
-    const savedOptions = JSON.parse(localStorage.getItem('selectedOptions'));
-    const savedSwitches = JSON.parse(localStorage.getItem('switches'));
-    const savedSelectedList = JSON.parse(localStorage.getItem('selectedList'));
-    const savedAllSwitchesList = JSON.parse(localStorage.getItem('allSwitchesList'));
-    const savedAllSwitchesAlarm = JSON.parse(localStorage.getItem('allSwitchesAlarm'));
-    const savedDefaultList = JSON.parse(localStorage.getItem('defaultList'));
+    const savedOptions = getStoredItem('selectedOptions', {});
+    const savedSwitches = getStoredItem('switches', {});
+    const savedSelectedList = getStoredItem('selectedList', null);
+    const savedAllSwitchesList = getStoredItem('allSwitchesList', true);
+    const savedAllSwitchesAlarm = getStoredItem('allSwitchesAlarm', true);
+    const savedDefaultList = getStoredItem('defaultList', null);
    
     if (savedOptions) {
       setSelectedOptions(savedOptions);
@@ -62,15 +52,29 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
     if (savedAllSwitchesList !== null) {
       setAllSwitchesList(savedAllSwitchesList);
     }
-    if (savedAllSwitchesAlarm !== null) {
-      setAllSwitchesAlarm(savedAllSwitchesAlarm);
+    // if (savedAllSwitchesAlarm !== null) {
+    //   setAllSwitchesAlarm(savedAllSwitchesAlarm);
+    // }
+    if (savedDefaultList && lists && lists.length > 0 && user) {
+      const foundList =  lists.find(list => list.title === "기본함"); 
+      setDefaultList(foundList);
     }
     if (savedSelectedList !== null) {
-      setSelectedList(savedSelectedList);
+      const isSelectedListValid = lists.some(list => list.no === savedSelectedList.no);
+      if (isSelectedListValid) {
+        setSelectedList(savedSelectedList);
+      } else {
+        setSelectedList(defaultList); // selectedList가 유효하지 않으면 defaultList로 대체
+        localStorage.setItem('selectedList', JSON.stringify(defaultList)); // 로컬 스토리지에 저장
+      }
+    } else {
+      setSelectedList(defaultList); // selectedList가 null일 경우 defaultList로 대체
+      localStorage.setItem('selectedList', JSON.stringify(defaultList)); // 로컬 스토리지에 저장
     }
-    if (savedDefaultList) {
-      setDefaultList(savedDefaultList); // 기본 리스트 설정
-    }
+    console.log("defaultList", defaultList);
+    console.log("selectedList", selectedList);
+    console.log("lists",lists);
+    
   }, [lists, smartLists]);
 
   const handleOptionSelected = (type, option) => {
@@ -90,10 +94,6 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
     });
   };
 
-  const toggleAllSwitchesAlarm = () => {
-    setAllSwitchesAlarm(!allSwitchesAlarm);
-  };
-
   const savedSetting = () => {
     localStorage.setItem('selectedOptions', JSON.stringify(selectedOptions));
     localStorage.setItem('switches', JSON.stringify(switches));
@@ -108,6 +108,7 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
       <Modal.Header>
         <Modal.Title><FaTools /> 설정</Modal.Title>
       </Modal.Header>
+
       <Modal.Body>
         <div className="setting container">
           <div>
@@ -299,6 +300,7 @@ const SettingModal = ({ show, onHide, lists, smartLists }) => {
           </div>
         </div>
       </Modal.Body>
+      
       <Modal.Footer>
         <Button onClick={savedSetting}>
           저장

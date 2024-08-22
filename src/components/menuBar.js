@@ -13,37 +13,42 @@ import { AiFillAppstore } from "react-icons/ai";
 // 페이지 좌측 메뉴바
 const MenuBar = ({ setUser, user, lists, smartLists,
   checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange,
-  }) => {
+}) => {
   const [showAccountInfo, setShowAccountInfo] = useState(false);
   const [showSettingModal, setShowSettingModal] = useState(false);
-  const [defaultList, setDefaultList] = useState('');
+  // const [defaultList, setDefaultList] = useState('');
 
+  //setting설정하지 않은 사용자의 기본리스트 초기화
+  // useEffect(() => {
+  //   if (user && lists && lists.length > 0) {
+  //     const foundList = lists.find(list => list.no === user.defaultListNo);
+  //     if (foundList) {
+  //       setDefaultList(foundList);
+  //     } else {
+  //       const fallbackList = lists.find(list => list.title === "기본함") || lists[0];
+  //       setDefaultList(fallbackList);
+  //     }
+  //   }
+  // }, [user]);
+
+  // localstorage에 저장된 값 꺼내기
   const getStoredItem = (key) => {
-     try {
+    try {
       const storedItem = localStorage.getItem(key);
-      return storedItem ? JSON.parse(storedItem) : null;
+      // 빈 문자열이나 undefined가 아닌지 확인
+    if (!storedItem || storedItem === "undefined") {
+      return null;
+    }
+
+    return JSON.parse(storedItem);
     } catch (error) {
       console.error(`Error parsing ${key} from localStorage`, error);
       return null;
     }
   };
-  const selectedList = getStoredItem('selectedList');
-  // const defaultList = getStoredItem('defaultList');
-
+  const selectedList = getStoredItem('selectedList') || {};
+  const defaultList = getStoredItem('defaultList') || {};
   const selectedListNo = selectedList?.no || defaultList?.no || '';
-
-  // console.log(defaultList, selectedListNo, selectedList, );
-  useEffect(() => {
-    if (lists && lists.length > 0) {
-      const defaultList = lists.find(list => list.title === "기본함");
-      if (defaultList) {
-        setDefaultList(defaultList);
-      } else {
-        setDefaultList(lists[0]);  // 기본함이 없으면 첫 번째 리스트로 설정
-      }
-      console.log("MenuBar", defaultList)
-    }
-  }, [user]);
 
   return (
     <div>
@@ -70,7 +75,7 @@ const MenuBar = ({ setUser, user, lists, smartLists,
           </Link>
 
           {/* 먼슬리보드로 이동 */}
-          <Link 
+          <Link
             to={{
               pathname: user ? "/monthlyBoard" : '',
               state: { checked, isCancelled }
@@ -91,15 +96,17 @@ const MenuBar = ({ setUser, user, lists, smartLists,
           </div>
         </div>
         : ''}
+      {/* 어카운트인포 모달 */}
       <AccountInfo
         user={user}
         setUser={setUser}
         show={showAccountInfo}
         onHide={() => setShowAccountInfo(false)}
       />
+      {/* 설정 모달 */}
       <Setting
         show={showSettingModal}
-        
+        user={user}
         lists={lists}
         smartLists={smartLists}
         onHide={() => setShowSettingModal(false)}

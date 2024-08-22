@@ -17,7 +17,6 @@ const Login = ({ user, setUser }) => {
         try {
             const response = await instance.post('/auth/login', { email, password });
 
-            console.log(response.data)
             if (response.status === 200) {
                 const data = response.data;
                 localStorage.setItem('token', data.token);

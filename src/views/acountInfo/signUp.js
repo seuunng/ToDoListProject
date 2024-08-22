@@ -33,6 +33,10 @@ const SignUp = () => {
         nickname,
         email,
         password
+      }, {
+        headers: {
+          'Authorization': null // Authorization 헤더 제거
+        }
       });
       if (response.status === 201) {
 
