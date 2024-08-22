@@ -34,6 +34,9 @@ const MenuBar = ({ setUser, user, lists, smartLists,
   const defaultList = getStoredItem('defaultList') || {};
   const selectedListNo = selectedList?.no || defaultList?.no || '';
 
+  // console.log("menuBar selectedList",selectedList);
+  // console.log("menuBar defaultList",defaultList);
+  // console.log("menuBar selectedListNo",selectedListNo);
   return (
     <div>
       {user ?

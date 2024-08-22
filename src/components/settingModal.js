@@ -61,7 +61,7 @@ const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
     if (savedAllSwitchesList !== null) {
       setAllSwitchesList(savedAllSwitchesList);
     }
-    if (savedDefaultList && lists && lists.length > 0 && user) {
+    if (lists && lists.length > 0 && user) {
       const foundList = lists.find(list => list.title === "기본함");
       setDefaultList(foundList);
     }
@@ -71,10 +71,15 @@ const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
         setSelectedList(savedSelectedList);
       } else {
         setSelectedList(defaultList);
+        localStorage.setItem('selectedList', JSON.stringify(selectedList));
       }
     } else {
       setSelectedList(defaultList);
+      localStorage.setItem('selectedList', JSON.stringify(selectedList));
     }
+    
+    console.log("defaultList",defaultList);
+    console.log("selectedList",selectedList);
   }, [lists, smartLists]);
   // 옵션 선택 기능
   const handleOptionSelected = (type, option) => {

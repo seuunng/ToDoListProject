@@ -63,15 +63,19 @@ const CreateTaskModal = forwardRef((props, ref) => {
   //모달 열릴때 모달 데이터
   const handleShow = () => {
     setSelectedList(selectedList_localSrotage || defaultList);
+    const listNo = selectedList_localSrotage?.no || defaultList?.no || null;
     setNewTask({
       title: '',
       content: '',
       startDate: isValidDate(date) ? date : new Date(),
       endDate: null,
       dateStatus: tasks.dateStatus || 'DATE',
-      listNo: selectedList_localSrotage?.no || defaultList.no,
+      listNo: listNo,
       isTimeSet: tasks.isTimeSet || false,
     });
+    if (listNo === null) {
+      console.warn("No valid list found. Please select a valid list.");
+  }
     setTimeSetMap(prevMap => ({
       ...prevMap,
       [tasks.no]: tasks.isTimeSet || false,
