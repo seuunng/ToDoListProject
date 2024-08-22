@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../styles/basicStyle.css';
 import '../styles/sideBar.css';
-import instance from '../api/axios'
 import ListItemsBox from './task_state/listItemsBox';
 import CreateList from './task_list/createListModal';
-import { useOutletContext } from 'react-router-dom';
 
 const SideBar = ({ toggleSidebar,
   lists, addList, updateList, deleteList,
-  smartLists, isSmartList, setIsSmartList,
+  smartLists, setIsSmartList,
   checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange }) => {
 
   const [showCreateListModal, setShowCreateListModal] = useState(false);

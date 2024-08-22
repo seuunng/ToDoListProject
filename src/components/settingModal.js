@@ -57,6 +57,7 @@ const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
     // }
     if (savedDefaultList && lists && lists.length > 0 && user) {
       const foundList =  lists.find(list => list.title === "기본함"); 
+      console.log(lists, foundList)
       setDefaultList(foundList);
     }
     if (savedSelectedList !== null) {
