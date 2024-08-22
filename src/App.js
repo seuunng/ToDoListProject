@@ -2,7 +2,6 @@ import './App.css';
 import React, { useState } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { RouterInfo } from './router/RouterInfo';
-import { SettingsProvider } from './contexts/SettingsContext';
 import { TaskBoxProvider } from './contexts/taskBoxContext';
 import { ToastContainer } from 'react-toastify';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -15,11 +14,9 @@ function App() {
     <div>
       <ToastContainer />
       <GoogleOAuthProvider>
-        <SettingsProvider>
           <TaskBoxProvider>
             <RouterProvider router={RouterInfo(user, setUser)} />
           </TaskBoxProvider>
-        </SettingsProvider>
       </GoogleOAuthProvider>
     </div>
   );

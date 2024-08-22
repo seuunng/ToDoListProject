@@ -6,21 +6,31 @@ import DropdownBtn from '../modules/dropdownModule';
 import SwitchBtn from '../modules/switchButtonModule';
 import Col from 'react-bootstrap/Col';
 import { Modal, Button } from 'react-bootstrap';
-import { useSettings } from '../contexts/SettingsContext';
 import SelectedList from '../components/task_list/selectedList'
 import { FaTools } from "react-icons/fa";
-
+// 설정 모달
 const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
-  
-  const { selectedOptions, setSelectedOptions, switches, setSwitches } = useSettings(null);
+
   const [allSwitchesList, setAllSwitchesList] = useState(true);
-  const [allSwitchesAlarm, setAllSwitchesAlarm] = useState(true);
   const [selectedList, setSelectedList] = useState(null);
   const [defaultList, setDefaultList] = useState(null);
 
   const dropdownOptionsWeek = ["월요일", "일요일"];
   const dropdownOptionsTime = ["12시간", "24시간"];
-
+  const [selectedOptions, setSelectedOptions] = useState({
+    week: "선택",
+    time: "선택",
+    alarmTime: "선택",
+    alarmMethod: "선택",
+    alarmSound: "선택",
+  });
+  const [switches, setSwitches] = useState({
+    today: false,
+    tomorrow: false,
+    next7Days: false,
+    defaultBox: false,
+  });
+  // 로컬스토리지 값 불러오기
   const getStoredItem = (key, fallbackValue = null) => {
     try {
       const storedItem = localStorage.getItem(key);
@@ -34,15 +44,14 @@ const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
       return fallbackValue;
     }
   };
+  // 설정값들 초기화
   useEffect(() => {
-    // 로컬 스토리지에서 설정 값 불러오기
     const savedOptions = getStoredItem('selectedOptions', {});
     const savedSwitches = getStoredItem('switches', {});
     const savedSelectedList = getStoredItem('selectedList', null);
     const savedAllSwitchesList = getStoredItem('allSwitchesList', true);
-    const savedAllSwitchesAlarm = getStoredItem('allSwitchesAlarm', true);
     const savedDefaultList = getStoredItem('defaultList', null);
-   
+
     if (savedOptions) {
       setSelectedOptions(savedOptions);
     }
@@ -52,12 +61,8 @@ const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
     if (savedAllSwitchesList !== null) {
       setAllSwitchesList(savedAllSwitchesList);
     }
-    // if (savedAllSwitchesAlarm !== null) {
-    //   setAllSwitchesAlarm(savedAllSwitchesAlarm);
-    // }
     if (savedDefaultList && lists && lists.length > 0 && user) {
-      const foundList =  lists.find(list => list.title === "기본함"); 
-      console.log(lists, foundList)
+      const foundList = lists.find(list => list.title === "기본함");
       setDefaultList(foundList);
     }
     if (savedSelectedList !== null) {
@@ -65,23 +70,17 @@ const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
       if (isSelectedListValid) {
         setSelectedList(savedSelectedList);
       } else {
-        setSelectedList(defaultList); // selectedList가 유효하지 않으면 defaultList로 대체
-        localStorage.setItem('selectedList', JSON.stringify(defaultList)); // 로컬 스토리지에 저장
+        setSelectedList(defaultList);
       }
     } else {
-      setSelectedList(defaultList); // selectedList가 null일 경우 defaultList로 대체
-      localStorage.setItem('selectedList', JSON.stringify(defaultList)); // 로컬 스토리지에 저장
+      setSelectedList(defaultList);
     }
-    console.log("defaultList", defaultList);
-    console.log("selectedList", selectedList);
-    console.log("lists",lists);
-    
   }, [lists, smartLists]);
-
+  // 옵션 선택 기능
   const handleOptionSelected = (type, option) => {
     setSelectedOptions({ ...selectedOptions, [type]: option });
   };
-
+  // 스위치 버튼 선택 기능
   const toggleAllSwitchesList = () => {
     const newState = !allSwitchesList;
     setAllSwitchesList(newState);
@@ -94,14 +93,13 @@ const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
       deleted: newState,
     });
   };
-
+  // 설정값 로컬스토리지에 저장+모달 닫기
   const savedSetting = () => {
     localStorage.setItem('selectedOptions', JSON.stringify(selectedOptions));
     localStorage.setItem('switches', JSON.stringify(switches));
     localStorage.setItem('allSwitchesList', JSON.stringify(allSwitchesList));
-    localStorage.setItem('allSwitchesAlarm', JSON.stringify(allSwitchesAlarm));
     localStorage.setItem('selectedList', JSON.stringify(selectedList));
-    localStorage.setItem('defaultList', JSON.stringify(defaultList)); 
+    localStorage.setItem('defaultList', JSON.stringify(defaultList));
     onHide();
   }
   return (
@@ -142,7 +140,7 @@ const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
           </div>
           <hr />
           {/* 알람설정 */}
-            {/* 
+          {/* 
           <div>
 
             <div className="d-flex align-items-center line row">
@@ -208,7 +206,7 @@ const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
                 lists={lists}
                 selectedList={selectedList}
                 setSelectedList={setSelectedList}
-                updateTask={()=>{}}
+                updateTask={() => { }}
               />
             </Col>
           </div>
@@ -301,7 +299,7 @@ const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
           </div>
         </div>
       </Modal.Body>
-      
+
       <Modal.Footer>
         <Button onClick={savedSetting}>
           저장

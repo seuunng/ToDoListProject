@@ -13,8 +13,8 @@ import { IoClose } from "react-icons/io5";
 import { IoReorderThree } from "react-icons/io5";
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-
-
+// 전체 애플리케이션의 레이아웃을 구성하는 컴포넌트: 메뉴바, 사이드바, 각페이지
+// 할일 및 목록의 데이터를 백으로 부터 받아와 로컬 상태로 관리
 const Layout = ({ setUser, user }) => {
     const navigate = useNavigate();
 
@@ -26,25 +26,23 @@ const Layout = ({ setUser, user }) => {
     const [checkedTasks, setCheckedTasks] = useState({});
     const [isCancelled, setIsCancelled] = useState(false);
     const [isSmartList, setIsSmartList] = useState(null);
-
+    // task 및 list 조회
     const fetchTableData = async () => {
         if (!user || !user.id) {
             console.error('User ID is not available');
             return;
         }
-      
-        
+              
         try {
+            // task 조회
             const response_taskData = await instance.get(`/tasks/task/${user.id}`);
             const data = Array.isArray(response_taskData.data) ? response_taskData.data : [];
-            // console.log("response_taskData", response_taskData);
-
+            // list 조회
             const response_listData = await instance.get('/lists/list');
             const data_list = Array.isArray(response_listData.data) ? response_listData.data : [];
-
+            // smartList 조회
             const response_smartListsData = await instance.get('/smartLists/list');
             const data_smartList = Array.isArray(response_smartListsData.data) ? response_smartListsData.data : [];
-
             // 아이콘을 타이틀에 따라 설정하는 함수
             const getSmartListIcon = (title) => {
                 switch (title) {
@@ -64,7 +62,6 @@ const Layout = ({ setUser, user }) => {
                         return <IoReorderThree />;
                 }
             };
-
             // 스마트리스트에 아이콘 추가
             const smartListsWithIcons = data_smartList.map(smartList => ({
                 ...smartList,
@@ -150,12 +147,6 @@ const Layout = ({ setUser, user }) => {
     };
 
     const deleteTask = async (taskId) => {
-        // try {
-        //     await instance.delete(`/tasks/task/${deletedTask.no}`);
-        //     setTasks(tasks.filter(task => task.no !== deletedTask.no));
-        // } catch (error) {
-        //     console.error('Error deleting task:', error);
-        // }
         try {
             const response = await instance.put(`/tasks/${taskId}/status`, {
                 status: "DELETED",
@@ -267,7 +258,6 @@ const Layout = ({ setUser, user }) => {
             return;
         }
 
-        
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const taskStartDate = new Date(task.startDate);
@@ -286,9 +276,6 @@ const Layout = ({ setUser, user }) => {
         setCheckedTasks(prevChecked => ({ ...prevChecked, [taskId]: !prevChecked[taskId] }));
         setChecked(newStatus === 'COMPLETED');
         setIsCancelled(newStatus === 'CANCELLED');
-
-        console.log("checked : ", checked);
-        console.log("task.taskStatus : ", task.taskStatus);
         
         try {
             await updateTaskStatus(taskId, newStatus);

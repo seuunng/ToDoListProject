@@ -16,30 +16,14 @@ const MenuBar = ({ setUser, user, lists, smartLists,
 }) => {
   const [showAccountInfo, setShowAccountInfo] = useState(false);
   const [showSettingModal, setShowSettingModal] = useState(false);
-  // const [defaultList, setDefaultList] = useState('');
-
-  //setting설정하지 않은 사용자의 기본리스트 초기화
-  // useEffect(() => {
-  //   if (user && lists && lists.length > 0) {
-  //     const foundList = lists.find(list => list.no === user.defaultListNo);
-  //     if (foundList) {
-  //       setDefaultList(foundList);
-  //     } else {
-  //       const fallbackList = lists.find(list => list.title === "기본함") || lists[0];
-  //       setDefaultList(fallbackList);
-  //     }
-  //   }
-  // }, [user]);
 
   // localstorage에 저장된 값 꺼내기
   const getStoredItem = (key) => {
     try {
       const storedItem = localStorage.getItem(key);
-      // 빈 문자열이나 undefined가 아닌지 확인
     if (!storedItem || storedItem === "undefined") {
       return null;
     }
-
     return JSON.parse(storedItem);
     } catch (error) {
       console.error(`Error parsing ${key} from localStorage`, error);
