@@ -2,7 +2,7 @@ import axios from 'axios';
 
 //인스턴스 생성
 const instance = axios.create({
-  baseURL: 'https://port-0-todo-list-back-lzy143lgf0f1c3f8.sel4.cloudtype.app',
+  baseURL: 'https://port-0-todo-list-back-lzy143lgf0f1c3f8.sel4.cloudtype.app', 
   withCredentials: true, 
   headers: {
     'Content-Type': 'application/json'

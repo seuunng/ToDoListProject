@@ -40,6 +40,7 @@ const SimpleInputTask = ({ addTask, listTitle, refreshTasks, listId, isSmartList
       };
       await addTask(task);
       setNewTask('');
+      //메모 저장후 새로고침
       refreshTasks();
     }
   };

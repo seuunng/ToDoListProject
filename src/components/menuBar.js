@@ -10,11 +10,10 @@ import { faSquareCheck } from '@fortawesome/free-regular-svg-icons';
 import AccountInfo from '../components/acountInfoModal';
 import Setting from '../components/settingModal';
 import { AiFillAppstore } from "react-icons/ai";
-
+// 페이지 좌측 메뉴바
 const MenuBar = ({ setUser, user, lists, smartLists,
   checked, setChecked, isCancelled, setIsCancelled, handleCancel, handleCheckboxChange,
   }) => {
-
   const [showAccountInfo, setShowAccountInfo] = useState(false);
   const [showSettingModal, setShowSettingModal] = useState(false);
   const [defaultList, setDefaultList] = useState('');
@@ -44,7 +43,7 @@ const MenuBar = ({ setUser, user, lists, smartLists,
       }
       console.log("MenuBar", defaultList)
     }
-  }, []);
+  }, [user]);
 
   return (
     <div>

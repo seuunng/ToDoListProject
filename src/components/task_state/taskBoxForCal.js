@@ -11,15 +11,17 @@ const TaskBoxForCal = ({
   handleCancel, handleCheckboxChange, handleReopen
  }) => {
   const [taskTitle, setTaskTitle] = useState(tasks.title);
+  //모달창관리
   const readTaskModalRef = useRef(null);
+  //isTaskBox여부 관리
   const taskBoxRef = useRef(null);
-
+  //monthlyBoard가 열릴떄 taskTitle 초기화
   useEffect(() => {
     if (tasks && tasks.title) {
       setTaskTitle(tasks.title);
     }
   }, []);
-
+  // 할일박스를 클릭할 때 열리는 모달의 통제를 위한 설정
   useEffect(() => {
     const readMemo = (e) => {
       if (readTaskModalRef.current) {

@@ -24,9 +24,9 @@ const TaskBoxContent = ({
   const [selectedButton, setSelectedButton] = useState(task.dateStatus || 'DATE');
   const [checked, setChecked] = useState(false);
   const [isCancelled, setIsCancelled] = useState(false);
-
+  //taskBox인지 확인하기: datePicker형식 차별화 목적
   const { setIsTaskBox } = useTaskBox();
-
+  //할일의 내용이 변경될 떄마다 초기화
   useEffect(() => {
     if (task && task.title) {
       setTaskTitle(task.title);
@@ -42,7 +42,7 @@ const TaskBoxContent = ({
       }));
     }
   }, [task, setChecked, setIsCancelled]);
-
+  // 데이트피커 날짜형식 저장을 위한 해당 테스크가 
   useEffect(() => {
     setIsTaskBox(true);
     return () => setIsTaskBox(false);
@@ -82,7 +82,7 @@ const TaskBoxContent = ({
     const updatedTask = { ...task, startDate, endDate, taskStatus: updatedStatus };
     await updateTask(updatedTask);
   };
-  // 날짜 형식 선택 버튼 
+  // 날짜 형식 선택 버튼클릭시 시행
   const handleSelectedButtonChange = async (button) => {
     setSelectedButton(button);
     await updateTask({ ...task, dateStatus: button.toUpperCase() });
@@ -168,6 +168,7 @@ const TaskBoxContent = ({
           />
         </Col>
         <Col md={1} style={{ padding: "0" }} className='centered'>
+          {/* 할일 설정 드롭다운 버튼 */}
           <SetTask
             task={task}
             deleteTask={deleteTask}
@@ -184,6 +185,7 @@ const TaskBoxContent = ({
 };
 
 const TaskBox = (props) => (
+  // 모든 Task에 isTaskBox여부를 전달하는 목적
   <TaskBoxProvider>
     <TaskBoxContent {...props} />
   </TaskBoxProvider>

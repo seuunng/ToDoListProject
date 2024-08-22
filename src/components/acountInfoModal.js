@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 // 로그인한 계정 정보 확인 모달
 const AcountInfoModal = ({ onHide, user = {}, setUser, show }) => {
+  const navigate = useNavigate();
   const defaultUser = {
     email: '',
     nickname: '',
@@ -23,17 +24,13 @@ const AcountInfoModal = ({ onHide, user = {}, setUser, show }) => {
   const [editableEmail, setEditableEmail] = useState(safeUser.email);
   const [editableNickname, setEditableNickname] = useState(safeUser.nickname);
   const [editableCreatedAt, setEditableCreatedAt] = useState(safeUser.created_at);
-
+  // 사용자가 변경될때 정보 초기화 
   useEffect(() => {
     setEditableEmail(safeUser.email);
     setEditableNickname(safeUser.nickname);
     setEditableCreatedAt(formatDate(safeUser.created_at));
   }, [user]);
-
-  const navigate = useNavigate();
-
-
-  //로그아웃 기능
+  // 로그아웃 기능
   const handleLogout = async () => {
     try {
       await axios.post('/auth/logout');
@@ -80,24 +77,23 @@ const AcountInfoModal = ({ onHide, user = {}, setUser, show }) => {
   const handleBlur = (field) => {
     setIsEditing((prev) => ({ ...prev, [field]: false }));
   };
-
-  const userCreatedAtFormatted = formatDate(safeUser.created_at);
-
+  // 데이트 형식 지정
   function formatDate(dateString) {
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toISOString().split('T')[0]; // This formats the date as YYYY-MM-DD
   }
-
+  const userCreatedAtFormatted = formatDate(safeUser.created_at);
+  // 선택된 user가 없으면 실행되지 않음
   if (!user) {                                                                               
     return null; // 또는 적절한 fallback UI를 반환
   }
-
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header>
         <Modal.Title>Account Info</Modal.Title>
       </Modal.Header>
+
       <Modal.Body>
         <div className="acountInfo container">
           <div>
@@ -169,6 +165,7 @@ const AcountInfoModal = ({ onHide, user = {}, setUser, show }) => {
           </div>
         </div>
       </Modal.Body>
+      
       <Modal.Footer>
         <Button onClick={handleLogout} variant="outline-dark">
           로그아웃
