@@ -62,7 +62,7 @@ const MainAccountInfo = ({ user, setUser }) => {
         script.async = true;
         script.defer = true;
         script.onload = () => {
-            console.log('Google API 스크립트 로드 완료', script);
+            console.log('Google API 스크립트 로드 완료');
         };
         document.body.appendChild(script);
     }, []); 

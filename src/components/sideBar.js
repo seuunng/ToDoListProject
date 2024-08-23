@@ -28,8 +28,10 @@ const SideBar = ({ toggleSidebar,
     if (list.title === '취소한 할 일') return switches.deleted ?? false;
     return false;
   });
+  console.log("filteredSmartLists", filteredSmartLists)
   //삭제된 리스트 필터
   const filteredLists = lists.filter(list => !list.isDeleted);
+  console.log("filteredList", filteredLists)
   //리스트 생성 모달 보이기 기능
   const showCreateList = () => {
     setShowCreateListModal(true);

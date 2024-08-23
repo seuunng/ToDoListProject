@@ -48,11 +48,8 @@ const MenuBar = ({ setUser, user, lists, smartLists,
       setSelectedList(foundList);
       localStorage.setItem('selectedList', JSON.stringify(foundList));
     }
-    console.log("foundList",foundList)
   }, [user, lists]);
 
-  console.log("defaultList",defaultList)
-  console.log("selectedList",selectedList)
 
 
   // 베이직보드로 연결되는 리스트 번호 선택

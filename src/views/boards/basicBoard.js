@@ -6,7 +6,7 @@ import TaskCont from '../../components/task_list/taskCont';
 import { Row, Col } from 'react-bootstrap';
 import ReadTaskPage from '../readTaskPage';
 import instance from '../../api/axios';
-import { useParams, useOutletContext } from 'react-router-dom';
+import { useParams, useOutletContext, useLocation } from 'react-router-dom';
 // 리스트형 목록 
 const BasicBoard = () => {
   const {
@@ -14,17 +14,50 @@ const BasicBoard = () => {
     lists,
     smartLists,
     checked, setChecked, isCancelled, setIsCancelled,
-    handleCancel, handleCheckboxChange, setIsSmartList, isSmartList, handleReopen
+    handleCancel, handleCheckboxChange, setIsSmartList,  handleReopen,
+    
   } = useOutletContext();
+
   const [tasksByLists, setTasksByLists] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const { listId } = useParams();
   const [listTitle, setListTitle] = useState('');
   const [listIcon, setListIcon] = useState('');
   const [selectedList, setSelectedList] = useState(null);
+  const location = useLocation(); // useLocation 훅 사용
+  console.log("Received state in BasicBoard:", location); 
+  const state = location.state || {}; // location 객체가 undefined일 경우를 대비
+  
+  console.log("Received state in BasicBoard:", state);  // state가 제대로 전달되었는지 확인
+
+  const isSmartList = state.isSmartList;
+  console.log("listId:", listId, "isSmartList:", isSmartList);
+  useEffect(() => {
+    if (listId) {
+      console.log(listId, isSmartList)
+      if (isSmartList) {
+        const smartList = smartLists.find(smartList => smartList.no === parseInt(listId));
+        if (smartList) {
+          setListTitle(smartList.title);
+          setListIcon(smartList.icon);
+          setSelectedList(smartList);
+        }
+      } else {
+        const list = lists.find(list => list.no === parseInt(listId));
+        if (list) {
+          setListTitle(list.title);
+          setListIcon(list.icon);
+          setSelectedList(list);
+        }
+      }
+      fetchListAndTasks();
+    }
+  }, [listId, lists, smartLists, isSmartList]);
   // selectedList에 따른 태스크 및 리스트 상태 초기화
-  useEffect(() => { 
-    fetchListAndTasks()
+  useEffect(() => {
+    if (selectedList) {
+      fetchListAndTasks();
+    }
   }, [selectedList])
   // smartList 제목에 따라 페이지 이동
   const fetchListAndTasks = async () => {
@@ -58,35 +91,20 @@ const BasicBoard = () => {
       else {
         endpoint = `/tasks/byList?listId=${listId}`;
       }
+
+      console.log(listTitle, isSmartList, endpoint)
+
       const response_tasks = await instance.get(endpoint);
       // 'DELETED' 상태의 태스크들을 제외하고 리스트에 표시
       const filteredTasks = listTitle === '취소한 할 일'
-      ? response_tasks.data.filter(task => task.taskStatus === 'CANCELLED')
-      : response_tasks.data.filter(task => task.taskStatus !== 'DELETED' && task.taskStatus !== 'CANCELLED');
-    setTasksByLists(filteredTasks);
+        ? response_tasks.data.filter(task => task.taskStatus === 'CANCELLED')
+        : response_tasks.data.filter(task => task.taskStatus !== 'DELETED' && task.taskStatus !== 'CANCELLED');
+      setTasksByLists(filteredTasks);
     } catch (error) {
       console.error('Error fetching tasks by list:', error);
     }
   };
-  // list에 따라서 list업데이트 
-  useEffect(() => {
-    if (listId) {
-      const list = lists.find(list => list.no === parseInt(listId));
-      const smartList = smartLists.find(smartList => smartList.no === parseInt(listId));
-      if (list) {
-        setListTitle(list.title);
-        setListIcon(list.icon);
-        setSelectedList(list);
-        setIsSmartList(false);
-      } else if (smartList) {
-        setListTitle(smartList.title);
-        setListIcon(smartList.icon);
-        setSelectedList(smartList);
-        setIsSmartList(true);
-      }
-      fetchListAndTasks();
-    }
-  }, [listId, lists, smartLists]);
+
   // task 선택
   const handleTaskClick = (task) => {
     setSelectedTask(task);

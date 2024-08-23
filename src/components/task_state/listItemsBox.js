@@ -7,13 +7,16 @@ import SetList from '../task_list/setList';
 //리스트 목록(아이콘+제목+색+세팅)
 const ListItemsBox = ({ lists, toggleSidebar, deleteList, updateList, isSmartList, 
   checked, isCancelled }) => {
-  
   return (
     <div>
       {lists.map((list, index) => {
         if (!list) {
           return null;
         }
+        // console.log(list, isSmartList)
+
+
+        // console.log("Link state:", { checked, isCancelled, isSmartList });
         return (
           <div key={index} className="list-item">
             <span className="list-content">
@@ -21,16 +24,15 @@ const ListItemsBox = ({ lists, toggleSidebar, deleteList, updateList, isSmartLis
                 <Col style={{ padding: "0" }}>
                   {/* 연결 */}
                   <Link
-                    to={{
-                      pathname: `/basicBoard/${list?.no}`,
-                      state: { checked, isCancelled, isSmartList }
-                    }}
+                    to={`/basicBoard/${list?.no}`}
+                    state= {{ checked, isCancelled, isSmartList }}
                     className="item"
                     style={{ textDecoration: "none" }}
                     onClick={() => {
                       toggleSidebar();
                     }}
                   >
+                    
                     <Row style={{ marginBottom: "8px" }}  >
                       {/* 아이콘 */}
                       <Col sm={2}>
