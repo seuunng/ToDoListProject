@@ -135,6 +135,7 @@ const ReadTaskModal = forwardRef(({
             endDate={endDate}
             onDateChange={handleDateChange}
             selectedButton={selectedButton}
+            setSelectedButton={handleSelectedButtonChange}
             isTimeSet={timeSetMap[tasks.no] || false}
             setIsTimeSet={(value) => handleTimeSetChange(tasks, value)}
           />
@@ -180,7 +181,6 @@ const ReadTaskModal = forwardRef(({
               setSelectedList={setSelectedList}
               tasks={tasks}
               updateTask={updateTask}
-              setSelectedButton={handleSelectedButtonChange}
               onChange={() => handleCheckboxChange(tasks.no)}
             />
           </div>
