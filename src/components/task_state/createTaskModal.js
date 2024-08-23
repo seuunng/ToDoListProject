@@ -62,7 +62,6 @@ const CreateTaskModal = forwardRef((props, ref) => {
   const handleShow = () => {
     setSelectedList(selectedList_localStorage || defaultList);
     const listNo = selectedList_localStorage?.no || defaultList?.no || null;
-    console.log("listNo", listNo)
     setNewTask({
       title: '',
       content: '',

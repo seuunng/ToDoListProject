@@ -8,6 +8,7 @@ import Col from 'react-bootstrap/Col';
 import { Modal, Button } from 'react-bootstrap';
 import SelectedList from '../components/task_list/selectedList'
 import { FaTools } from "react-icons/fa";
+import instance from '../api/axios';
 // 설정 모달
 const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
 
@@ -94,15 +95,35 @@ const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
     });
   };
   // 설정값 로컬스토리지에 저장+모달 닫기
-  const savedSetting = () => {
+  const savedSetting = async () => {
     localStorage.setItem('selectedOptions', JSON.stringify(selectedOptions));
     localStorage.setItem('switches', JSON.stringify(switches));
     localStorage.setItem('allSwitchesList', JSON.stringify(allSwitchesList));
     localStorage.setItem('selectedList', JSON.stringify(selectedList));
     localStorage.setItem('defaultList', JSON.stringify(defaultList));
+    console.log(selectedList)
+    if (selectedList) {
+      const updatedUser = {
+        // ...user,
+        id: user.id,
+        mainListNo: selectedList.no,  // 선택한 대표 목록 번호로 유저 정보를 업데이트
+      };
+      await updateUser(updatedUser);  // 데이터베이스에 저장
+    }
+  
     onHide();
   }
-
+  //유저정보 수정
+  const updateUser = async (updatedUser) => {
+    console.log(updatedUser)
+    try {
+        const response = await instance.put(`/users/user/${updatedUser.id}`, updatedUser);
+        setSelectedList(response.data.mainListNo);
+        console.log(response)
+    } catch (error) {
+        console.error('Error updating user_selectedList:', error);
+    }
+};
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header>
@@ -207,7 +228,7 @@ const SettingModal = ({ user, show, onHide, lists, smartLists }) => {
                 lists={lists}
                 selectedList={selectedList}
                 setSelectedList={setSelectedList}
-                updateTask={() => { }}
+                updateTask={() => {}}
               />
             </Col>
           </div>
