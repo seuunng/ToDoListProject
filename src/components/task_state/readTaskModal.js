@@ -43,6 +43,7 @@ const ReadTaskModal = forwardRef(({
   useEffect(() => {
     setChecked(checked)
   }, [tasks, checked]);
+
   //모달 보이기 기능
   const handleShow = () => setShow(true);
   useImperativeHandle(ref, () => ({
@@ -56,7 +57,8 @@ const ReadTaskModal = forwardRef(({
       content: taskDescription,
       startDate,
       endDate,
-      dateStatus: selectedButton
+      dateStatus: selectedButton,
+      list: selectedList ? selectedList : tasks.list
     };
     updateTask(updatedTask);
     setShow(false);
@@ -113,7 +115,10 @@ const ReadTaskModal = forwardRef(({
       isTimeSet: value,
     });
   };
-
+  // 리스트를 선택 기능
+  const handleSelectedListChange = (selectedList) => {
+    setSelectedList(selectedList);
+  };
   return (
     <Modal show={show} onHide={handleClose} centered>
 
@@ -178,10 +183,10 @@ const ReadTaskModal = forwardRef(({
             <SelectedList
               lists={lists}
               selectedList={selectedList}
-              setSelectedList={setSelectedList}
+              setSelectedList={handleSelectedListChange}
               tasks={tasks}
               updateTask={updateTask}
-              onChange={() => handleCheckboxChange(tasks.no)}
+              // onChange={() => handleCheckboxChange(tasks.no)}
             />
           </div>
           <div className="setting-icon col righted">

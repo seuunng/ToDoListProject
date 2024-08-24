@@ -13,10 +13,6 @@ const ListItemsBox = ({ lists, toggleSidebar, deleteList, updateList, isSmartLis
         if (!list) {
           return null;
         }
-        // console.log(list, isSmartList)
-
-
-        // console.log("Link state:", { checked, isCancelled, isSmartList });
         return (
           <div key={index} className="list-item">
             <span className="list-content">
@@ -32,7 +28,6 @@ const ListItemsBox = ({ lists, toggleSidebar, deleteList, updateList, isSmartLis
                       toggleSidebar();
                     }}
                   >
-                    
                     <Row style={{ marginBottom: "8px" }}  >
                       {/* 아이콘 */}
                       <Col sm={2}>

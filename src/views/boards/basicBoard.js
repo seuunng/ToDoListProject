@@ -15,7 +15,6 @@ const BasicBoard = () => {
     smartLists,
     checked, setChecked, isCancelled, setIsCancelled,
     handleCancel, handleCheckboxChange, setIsSmartList,  handleReopen,
-    
   } = useOutletContext();
 
   const [tasksByLists, setTasksByLists] = useState([]);
@@ -24,17 +23,13 @@ const BasicBoard = () => {
   const [listTitle, setListTitle] = useState('');
   const [listIcon, setListIcon] = useState('');
   const [selectedList, setSelectedList] = useState(null);
-  const location = useLocation(); // useLocation 훅 사용
-  console.log("Received state in BasicBoard:", location); 
-  const state = location.state || {}; // location 객체가 undefined일 경우를 대비
-  
-  console.log("Received state in BasicBoard:", state);  // state가 제대로 전달되었는지 확인
 
+  const location = useLocation(); // useLocation 훅 사용
+  const state = location.state || {}; // location 객체가 undefined일 경우를 대비
   const isSmartList = state.isSmartList;
-  console.log("listId:", listId, "isSmartList:", isSmartList);
+
   useEffect(() => {
     if (listId) {
-      console.log(listId, isSmartList)
       if (isSmartList) {
         const smartList = smartLists.find(smartList => smartList.no === parseInt(listId));
         if (smartList) {
@@ -91,9 +86,6 @@ const BasicBoard = () => {
       else {
         endpoint = `/tasks/byList?listId=${listId}`;
       }
-
-      console.log(listTitle, isSmartList, endpoint)
-
       const response_tasks = await instance.get(endpoint);
       // 'DELETED' 상태의 태스크들을 제외하고 리스트에 표시
       const filteredTasks = listTitle === '취소한 할 일'

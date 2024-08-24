@@ -88,7 +88,6 @@ const MenuBar = ({ setUser, user, lists, smartLists,
             className="item"
             checked={checked}
             onClick={() => {
-              console.log('Calling setChecked:', typeof setChecked);
               setChecked(false);
               setIsCancelled(false);
               handleCheckboxChange();

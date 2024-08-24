@@ -7,7 +7,7 @@ import { Button, Col } from 'react-bootstrap';
 import { TaskBoxContext } from '../contexts/taskBoxContext';
 
 const DatePickerModule = ({ show, startDate, endDate, onDateChange,
-    dateFormat, selectedButton, setSelectedButton,
+    selectedButton, setSelectedButton,
     isTimeSet, setIsTimeSet, onCalendarClose}) => {
     const [dateRange, setDateRange] = useState([startDate, endDate]);
     const [timeValue, setTimeValue] = useState('');
@@ -40,32 +40,37 @@ const DatePickerModule = ({ show, startDate, endDate, onDateChange,
             onDateChange(update[0], update[1]);
         } else {
             onDateChange(update, null);
-        }
+        };
     };
+    useEffect(() => {
+        console.log("DateRange", dateRange);
+    }, [dateRange]);
     // timeValue에 따라 IsTimeSet설정 
     useEffect(() => {
         if (timeValue) {
             setIsTimeSet(true);
         } 
     }, []);
-    // 타임 인풋창의 커스텀
-    const CustomInput = forwardRef(({ value, onClick, className }, ref) => (
-        <button className={className} onClick={onClick} ref={ref}
-            style={{
-                fontSize: "16px",
-                textAlign: "left",
-                marginLeft: "10px",
-                paddingLeft: "0px",
-                paddingRight: "0px",
-                backgroundColor: "white",
-                height: "40px",
-                border: "none"
-            }}
-        >
-            {value}
-        </button>
-    ),
-    );
+    // 날짜 인풋창의 커스텀
+    const CustomInput = forwardRef(({ value, onClick, className }, ref) => {
+        console.log("CustomInput value:", value);  // 이 줄을 통해 value 확인
+        return (
+            <button className={className} onClick={onClick} ref={ref}
+                style={{
+                    fontSize: "16px",
+                    textAlign: "left",
+                    marginLeft: "10px",
+                    paddingLeft: "0px",
+                    paddingRight: "0px",
+                    backgroundColor: "white",
+                    height: "40px",
+                    border: "none"
+                }}
+            >
+                {value || "Select date"}
+            </button>
+        );
+    });
     // 데이터 피커 달력 위 컴포넌트
     const MyContainer = ({ className, children }) => {
         return (
@@ -130,7 +135,9 @@ const DatePickerModule = ({ show, startDate, endDate, onDateChange,
         </span>
     );
     // 데이터피커 달력 아래 시간 설정 버튼
-    const CustomTimeInput = ({ onChange }) => (
+    const CustomTimeInput = ({ onChange }) => {
+
+            return (
         <div className='row' style={{position: "relative"}}>
             <Col>
                 <input
@@ -185,14 +192,13 @@ const DatePickerModule = ({ show, startDate, endDate, onDateChange,
                         color: "black",
                         marginLeft: "-20px",
                         marginRight: "0"
-                    }}
-                >
+                    }} >
                     x
                 </Button>
             </Col>
         </div>
     );
-
+};
     return (
         <div className="custom-date-picker" style={{position: "relative"}}>
             <DatePicker
@@ -206,12 +212,13 @@ const DatePickerModule = ({ show, startDate, endDate, onDateChange,
                 calendarContainer={MyContainer}
                 popperPlacement="bottom-start"
                 style={{ margin: "10px", padding: "10px" }}
-                customInput={<CustomInput className="custom-input" />}
+                customInput={<CustomInput className="custom-date-input" />}
                 timeInputLabel={<CustomTimeLabel />}
                 dateFormat={isTaskBox ? 'MM/dd' : (isTimeSet ? dateFormatTimeInput : "yyyy/MM/dd")}
                 showTimeInput
                 customTimeInput={<CustomTimeInput value={timeValue} onChange={setTimeValue} />}
             >
+                
                 {/* 메모 반복및 알림 기능: 추후구현 예정 */}
                 
                 {/* <div>
